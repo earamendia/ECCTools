@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![Codecov test
+coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master)
 <!-- badges: end -->
 
 The goal of ECCTools is to …
