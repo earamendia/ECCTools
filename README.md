@@ -7,6 +7,8 @@
 
 [![Codecov test
 coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master)
+[![Travis build
+status](https://travis-ci.com/earamendia/ECCTools.svg?branch=master)](https://travis-ci.com/earamendia/ECCTools)
 <!-- badges: end -->
 
 The goal of ECCTools is to …
