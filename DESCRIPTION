@@ -20,3 +20,4 @@ Suggests:
 Language: en-US
 Imports: 
     magrittr
+    dplyr
