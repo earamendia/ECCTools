@@ -73,7 +73,7 @@ total_consumption_by_product <- AB_tidy_data %>%
       TRUE ~ E.dot
     )
   ) %>%
-  group_by(Country, Method, Energy.type, Last.stage, Year, Product) %>%
+  group_by(Country, Method, Energy.type, Last.stage, Year, Product, Unit) %>%
   summarise(
     total_consumption = sum(E.dot)
   ) %>%
