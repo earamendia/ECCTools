@@ -48,19 +48,18 @@ specify_MR_V <- function(.tidy_iea_df,
 
 
 # This function specifies the multiregional Y matrix using the GMA assumption
-# specify_MR_Y_gma <- function(.tidy_iea_df,
-                             #){
+# specify_MR_Y_U_gma <- function(.tidy_iea_df,
+#                              ){
 
   # (1) Differentiating domestically produced and imported products in the Y matrix flows
   # Y_flows_by_origin <- .tidy_iea_df %>%
-  #   filter(.data[[matnames]] == Y_matrix) %>%
   #   specify_imported_products()
 
   # (2) Defining the global market for each product
 
 
 
-  # (3) Creating the MR-Y from (1) and (2)
+  # (3) Creating the MR-Y and MR-U from (1) and (2)
 
 
 
@@ -69,25 +68,73 @@ specify_MR_V <- function(.tidy_iea_df,
 
 # Function that specifies imported versus domestically produced products
 
-# specify_imported_products <- function(.tidy_iea_df,
-#                                       ){
-#
-#   defined_imported_flows <- .tidy_iea_df %>%
-#     filter(.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix, ! str_detect(.data[[flow]], exports)) %>%
-#     left_join(
-#       share_imports_by_products(), by = c()
-#     ) %>%
-#     mutate(
-#       Domestic = E.dot * (1 - Share_Imports),
-#       Imported = E.dot * Share_Imports
-#     ) %>%
-#     select(-E.dot, -total_consumption, -Imports, -Share_Imports) %>%
-#     pivot_longer(cols = c("Domestic", "Imported"), names_to = "Origin", values_to = "E.dot") %>%
-#     relocate(Origin, .after = Product) %>%
-#     filter(E.dot != 0)
-#
-#   return(defined_imported_flows)
-# }
+specify_imported_products <- function(.tidy_iea_df,
+                                      V_matrix = "V",
+                                      Y_matrix = "Y",
+                                      U_feed_matrix = "U_feed",
+                                      U_EIOU_matrix = "U_EIOU",
+                                      matnames = "matnames",
+                                      domestic = "Domestic",
+                                      imported = "Imported",
+                                      origin = "Origin",
+                                      flow = IEATools::iea_cols$flow,
+                                      country = IEATools::iea_cols$country,
+                                      method = IEATools::iea_cols$method,
+                                      energy_type = IEATools::iea_cols$energy_type,
+                                      last_stage = IEATools::iea_cols$last_stage,
+                                      year = IEATools::iea_cols$year,
+                                      product = IEATools::iea_cols$product,
+                                      unit = IEATools::iea_cols$unit,
+                                      e_dot = IEATools::iea_cols$e_dot,
+                                      exports = IEATools::interface_industries$exports,
+                                      imports = IEATools::interface_industries$imports){
+
+  defined_imported_flows <- .tidy_iea_df %>%
+    filter(
+        .data[[matnames]] == Y_matrix |
+        .data[[matnames]] == U_feed_matrix |
+        .data[[matnames]] == U_EIOU_matrix,
+        ! str_detect(.data[[flow]], exports)
+      ) %>%
+    left_join(
+      calc_share_imports_by_products(.tidy_iea_df), by = c({country}, {year}, {product}, {method}, {energy_type}, {last_stage})
+    ) %>%
+    mutate(
+      "{domestic}" := .data[[e_dot]] * (1 - Share_Imports_From_Func),
+      "{imported}" := .data[[e_dot]] * Share_Imports_From_Func
+    ) %>%
+    select(-.data[[e_dot]], -.data[[imports]], -Total_Consumption_From_Func, -Share_Imports_From_Func) %>%
+    pivot_longer(cols = c(.data[[domestic]], .data[[imported]]), names_to = origin, values_to = e_dot) %>%
+    relocate(.data[[origin]], .after = .data[[product]]) %>%
+    filter(.data[[e_dot]] != 0)
+
+  return(defined_imported_flows)
+}
+
+
+
+# Specifying imported products in Y, U_EIOU, U_feed
+
+defining_imported_products <- AB_tidy_data %>%
+  filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>%
+  left_join(
+    share_imports_by_product, by = c("Country", "Year", "Product", "Method", "Energy.type", "Last.stage")
+  ) %>%
+  mutate(
+    Domestic = E.dot * (1 - Share_Imports),
+    Imported = E.dot * Share_Imports
+  ) %>%
+  select(-E.dot, -total_consumption, -Imports, -Share_Imports) %>%
+  pivot_longer(cols = c("Domestic", "Imported"), names_to = "Origin", values_to = "E.dot") %>%
+  mutate(
+    Product = case_when(
+      Origin == "Imported" ~ paste0(Product, " [Imported]"),
+      TRUE ~ Product
+    )
+  ) %>%
+  relocate(Origin, .after = Product) %>%
+  filter(E.dot != 0) %>%
+  print()
 
 
 
@@ -178,28 +225,6 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
 
 
 
-# Specifying imported products in Y, U_EIOU, U_feed
-
-defining_imported_products <- AB_tidy_data %>%
-  filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>%
-  left_join(
-    share_imports_by_product, by = c("Country", "Year", "Product", "Method", "Energy.type", "Last.stage")
-  ) %>%
-  mutate(
-    Domestic = E.dot * (1 - Share_Imports),
-    Imported = E.dot * Share_Imports
-  ) %>%
-  select(-E.dot, -total_consumption, -Imports, -Share_Imports) %>%
-  pivot_longer(cols = c("Domestic", "Imported"), names_to = "Origin", values_to = "E.dot") %>%
-mutate(
-  Product = case_when(
-    Origin == "Imported" ~ paste0(Product, " [Imported]"),
-    TRUE ~ Product
-  )
-) %>%
-relocate(Origin, .after = Product) %>%
-filter(E.dot != 0) %>%
-print()
 
 
 
