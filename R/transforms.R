@@ -91,18 +91,6 @@ specify_MR_V <- function(.tidy_iea_df,
 
 
 
-# share_imports_by_products <- function(.tidy_iea_df){
-#   left_join(total_consumption_by_product(.tidy_iea_df), imports_by_product(.tidy_iea_df), by = ) %>%
-#     select(-Ledger.side, -matnames, -Flow.aggregation.point, -Flow, -Unit) %>%
-#     mutate(
-#       Share_Imports = case_when(
-#         is.na(Imports) ~ 0,
-#         !is.na(Imports) ~ Imports / total_consumption
-#       )
-#     )
-# }
-
-
 # Function that calculates the total consumption by product for each country in each year.
 
 calc_total_consumption_by_product <- function(.tidy_iea_df,
@@ -135,7 +123,7 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%
     dplyr::summarise(
-      total_consumption = sum(.data[[e_dot]])
+      Total_Consumption_From_Func = sum(.data[[e_dot]])
     )
 
   return(tidy_total_consumption_by_product)
@@ -151,48 +139,67 @@ calc_imports_by_product <- function(.tidy_iea_df,
 
   tidy_total_imports_by_product <- .tidy_iea_df %>%
     dplyr::filter(stringr::str_detect(.data[[flow]], imports)) %>%
-    dplyr::rename(imports = .data[[e_dot]])
+    dplyr::rename("{imports}" := .data[[e_dot]])
 
   return(tidy_total_imports_by_product)
 }
 
 
 
-# Share of imported products by product, year, country
-# share_imports_by_product <- total_consumption_by_product %>%
-#   left_join(imports, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
-#   select(-Ledger.side, -matnames, -Flow.aggregation.point, -Flow, -Unit) %>%
-#   mutate(
-#     Share_Imports = case_when(
-#       is.na(Imports) ~ 0,
-#       !is.na(Imports) ~ Imports / total_consumption
-#     )
-#   ) %>%
-#   print()
+# Function that calculates the shares of imports to total consumption, for each product, for each country, for each year.
+
+calc_share_imports_by_products <- function(.tidy_iea_df,
+                                           flow = IEATools::iea_cols$flow,
+                                           country = IEATools::iea_cols$country,
+                                           method = IEATools::iea_cols$method,
+                                           energy_type = IEATools::iea_cols$energy_type,
+                                           last_stage = IEATools::iea_cols$last_stage,
+                                           ledger_side = IEATools::iea_cols$ledger_side,
+                                           flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                           year = IEATools::iea_cols$year,
+                                           product = IEATools::iea_cols$product,
+                                           unit = IEATools::iea_cols$unit,
+                                           e_dot = IEATools::iea_cols$e_dot,
+                                           imports = IEATools::interface_industries$imports,
+                                           matnames = "matnames"){
+
+  share_imports_by_product <- left_join(
+                                  calc_total_consumption_by_product(.tidy_iea_df),
+                                  calc_imports_by_product(.tidy_iea_df),
+                                  by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
+    select(-.data[[ledger_side]], -.data[[matnames]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]]) %>%
+    mutate(
+      Share_Imports_From_Func = case_when(
+          is.na(.data[[imports]]) ~ 0,
+          !is.na(.data[[imports]]) ~ .data[[imports]] / .data[["Total_Consumption_From_Func"]]
+      )
+    )
+}
+
 
 
 # Specifying imported products in Y, U_EIOU, U_feed
 
-# defining_imported_products <- AB_tidy_data %>%
-#   filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>%
-#   left_join(
-#     share_imports_by_product, by = c("Country", "Year", "Product", "Method", "Energy.type", "Last.stage")
-#   ) %>%
-#   mutate(
-#     Domestic = E.dot * (1 - Share_Imports),
-#     Imported = E.dot * Share_Imports
-#   ) %>%
-#   select(-E.dot, -total_consumption, -Imports, -Share_Imports) %>%
-#   pivot_longer(cols = c("Domestic", "Imported"), names_to = "Origin", values_to = "E.dot") %>%
-  # mutate(
-  #   Product = case_when(
-  #     Origin == "Imported" ~ paste0(Product, " [Imported]"),
-  #     TRUE ~ Product
-  #   )
-  # ) %>%
-  # relocate(Origin, .after = Product) %>%
-  # filter(E.dot != 0) %>%
-  # print()
+defining_imported_products <- AB_tidy_data %>%
+  filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>%
+  left_join(
+    share_imports_by_product, by = c("Country", "Year", "Product", "Method", "Energy.type", "Last.stage")
+  ) %>%
+  mutate(
+    Domestic = E.dot * (1 - Share_Imports),
+    Imported = E.dot * Share_Imports
+  ) %>%
+  select(-E.dot, -total_consumption, -Imports, -Share_Imports) %>%
+  pivot_longer(cols = c("Domestic", "Imported"), names_to = "Origin", values_to = "E.dot") %>%
+mutate(
+  Product = case_when(
+    Origin == "Imported" ~ paste0(Product, " [Imported]"),
+    TRUE ~ Product
+  )
+) %>%
+relocate(Origin, .after = Product) %>%
+filter(E.dot != 0) %>%
+print()
 
 
 
