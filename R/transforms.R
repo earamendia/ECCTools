@@ -103,8 +103,9 @@ specify_MR_V <- function(.tidy_iea_df,
 # }
 
 
+# Function that calculates the total consumption by product for each country in each year.
 
-total_consumption_by_product <- function(.tidy_iea_df,
+calc_total_consumption_by_product <- function(.tidy_iea_df,
                                          flow = IEATools::iea_cols$flow,
                                          country = IEATools::iea_cols$country,
                                          method = IEATools::iea_cols$method,
@@ -141,38 +142,21 @@ total_consumption_by_product <- function(.tidy_iea_df,
 }
 
 
-# Total consumption by product, year, country
-# total_consumption_by_product <- AB_tidy_data %>%
-#   filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>% # There shouldn't be anymore exports where there are imports, now.
-#   mutate(
-#     E.dot = case_when(
-#       matnames == "U_feed" ~ - E.dot,
-#       matnames == "U_EIOU" ~ - E.dot,
-#       TRUE ~ E.dot
-#     )
-#   ) %>%
-#   group_by(Country, Method, Energy.type, Last.stage, Year, Product) %>%
-#   summarise(
-#     total_consumption = sum(E.dot)
-#   ) %>%
-#   print()
+# Function that calculates total imports by products, for each country, in each year.
+
+calc_imports_by_product <- function(.tidy_iea_df,
+                               flow = IEATools::iea_cols$flow,
+                               e_dot = IEATools::iea_cols$e_dot,
+                               imports = IEATools::interface_industries$imports){
+
+  tidy_total_imports_by_product <- .tidy_iea_df %>%
+    dplyr::filter(stringr::str_detect(.data[[flow]], imports)) %>%
+    dplyr::rename(imports = .data[[e_dot]])
+
+  return(tidy_total_imports_by_product)
+}
 
 
-
-# imports_by_product <- function(){
-#
-# }
-
-
-
-
-
-
-# Imports by product, year, country
-# imports <- AB_tidy_data %>%
-#   filter(str_detect(Flow, "Imports")) %>%
-#   rename(Imports = E.dot) %>%
-#   print()
 
 # Share of imported products by product, year, country
 # share_imports_by_product <- total_consumption_by_product %>%
