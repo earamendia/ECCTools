@@ -19,6 +19,12 @@ Suggests:
     covr
 Language: en-US
 Imports: 
-    magrittr
-    dplyr
-    tidyr
+    magrittr,
+    dplyr,
+    tidyr,
+    glue,
+    IEATools,
+    Recca,
+    matsbyname,
+    matsindf,
+    stringr
