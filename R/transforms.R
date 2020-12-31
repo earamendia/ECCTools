@@ -217,6 +217,7 @@ calc_global_exports <- function(.tidy_iea_df,
 
 calc_share_exports_by_product <- function(.tidy_iea_df,
                                           flow = IEATools::iea_cols$flow,
+                                          country = IEATools::iea_cols$country,
                                           method = IEATools::iea_cols$method,
                                           energy_type = IEATools::iea_cols$energy_type,
                                           last_stage = IEATools::iea_cols$last_stage,
@@ -225,7 +226,8 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
                                           flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                           product = IEATools::iea_cols$product,
                                           e_dot = IEATools::iea_cols$e_dot,
-                                          exports = IEATools::interface_industries$exports){
+                                          exports = IEATools::interface_industries$exports,
+                                          provenience = "Provenience"){
 
   tidy_share_exports_by_product <- .tidy_iea_df %>%
     dplyr::filter(stringr::str_detect(.data[[flow]], exports)) %>%
@@ -235,7 +237,8 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
     dplyr::left_join(calc_global_exports(.tidy_iea_df), by = c({method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {product})) %>%
     dplyr::mutate(
       Share_Exports_From_Func = .data[[e_dot]] / Total_Exports_From_Func
-    )
+    ) %>%
+    dplyr::rename("{provenience}" := .data[[country]])
 
   return(tidy_share_exports_by_product)
 }
@@ -265,34 +268,25 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
 
   # (3) Specifying foreign consumption
-  tidy_foreign_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
+  tidy_imported_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") #%>%
 # Still some dev to do here. The "Countries" fields do not correspond.
 
 
-  tidy_consumption_MR_gma <- bind_rows(tidy_domestic_consumption_MR_gma, tidy_foreign_consumption_MR_gma)
+  tidy_consumption_MR_gma <- bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma)
 
-  return(tidy_foreign_consumption_MR)
+  return(tidy_imported_consumption_MR)
 
 }
 
 
 
 
-# Third, specifying all consumption flows - actually specifying the country of origin!
-AB_domestic_consumption_MR <- defining_imported_products %>%
-  filter(Origin == "Domestic") %>%
-  mutate(
-    Flow = paste0("{", Country, "}_", Flow),
-    Product = paste0("{", Country, "}_", Product),
-    Country = "World"
-  ) %>%
-  select(-Origin, -Unit.x, -Unit.y) %>%
-  print()
-
 # If we write here testing instead of share_exports_by_origin_destination, we have a decent test.
 AB_imported_consumption_MR <- defining_imported_products %>%
   filter(Origin == "Imported") %>%
+  print()
+
   inner_join(share_exports_by_origin_destination, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
   relocate(Provenience, .before = Country) %>%
   mutate(

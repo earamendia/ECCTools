@@ -88,7 +88,7 @@ imports <- AB_tidy_data %>%
 # Share of imported products by product, year, country
 share_imports_by_product <- total_consumption_by_product %>%
   left_join(imports, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
-  select(-Ledger.side, -matnames, -Flow.aggregation.point, -Flow, -Unit) %>%
+  select(-Ledger.side, -matnames, -Flow.aggregation.point, -Flow) %>%
   mutate(
     Share_Imports = case_when(
       is.na(Imports) ~ 0,
@@ -145,6 +145,7 @@ share_exports <- AB_tidy_data %>%
   mutate(
     Share_Exports = E.dot / Total_Exports
   ) %>%
+  rename(Provenience = Country) %>%
   print()
 
 
