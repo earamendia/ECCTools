@@ -392,10 +392,11 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::select(-Origin)
 
   # (3.i) Specifying foreign consumption with the provided trade matrix
-  tidy_imported_consumption_MR_bta <- tidy_iea_df_specified_imports %>%
+  tidy_imported_consumption_with_bt_matrix <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
     dplyr::left_join(bilateral_trade_matrix_df,
                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::filter(! is.na(.data[["Share_Exports_From_Func"]])) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
@@ -405,10 +406,33 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
   # (3.ii) Specifying the rest with the global market assumption GMA
+  tidy_imported_consumption_with_gma_bt_matrix <- tidy_iea_df_specified_imports %>%
+    dplyr::filter(Origin == "Imported") %>%
+    dplyr::left_join(bilateral_trade_matrix_df,
+                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::filter(is.na(.data[["Share_Exports_From_Func"]])) %>%
+    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]]) %>%
+    dplyr::left_join(
+      calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
+      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})
+    ) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
+      "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
+      "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
+      "{country}" := aggregate_country_name
+    ) %>%
+    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
+
+
+  # (3.iii) Binding both
+  tidy_imported_consumption_MR_bta <- dplyr::bind_rows(tidy_imported_consumption_with_bt_matrix,
+                                                       tidy_imported_consumption_with_gma_bt_matrix)
 
 
   # Binding data frames together and returning result
-  tidy_consumption_MR_bta <- bind_rows(tidy_domestic_consumption_MR_bta, tidy_imported_consumption_MR_bta)
+  tidy_consumption_MR_bta <- dplyr::bind_rows(tidy_domestic_consumption_MR_bta,
+                                              tidy_imported_consumption_MR_bta)
 
   return(tidy_consumption_MR_bta)
 
@@ -430,7 +454,7 @@ transform_to_bta <- function(.tidy_iea_df){
   MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df)
 
   # Binding all rows and returning full data frame
-  tidy_iea_MR_bta_df <- bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta)
+  tidy_iea_MR_bta_df <- dplyr::bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta)
 
   return(tidy_iea_MR_bta_df)
 }
