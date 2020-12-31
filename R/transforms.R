@@ -326,6 +326,85 @@ transform_to_gma <- function(.tidy_iea_df){
 
 
 
+# This function calculates the bilateral trade matrix data frame using the GMA assumption.
+# Basically it has two purposes:
+# (i) if the user doesn't load a trade matrix in the specify_MR_Y_U_bta() function, then the default trade matrix is the one built from the GMA assumption;
+# (ii) if the user loads an incomplete trade matrix in the specify_MR_Y_U_bta() function (likely as trade data is not available for all years!);
+# then the missing information is loaded from the GMA bilateral trade matrix.
+
+calc_bilateral_trade_matrix_df_gma <- function(){
+
+}
+
+
+
+
+# This function specifies the multiregional Y matrix using the BTA assumption, using the specific trade matrix provided as input.
+# For values that are not available in the provided trade matrix, it fills in using the GMA assumption.
+
+specify_MR_Y_U_bta <- function(.tidy_iea_df,
+                               bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(),
+                               flow = IEATools::iea_cols$flow,
+                               product = IEATools::iea_cols$product,
+                               year = IEATools::iea_cols$year,
+                               method = IEATools::iea_cols$method,
+                               energy_type = IEATools::iea_cols$energy_type,
+                               last_stage = IEATools::iea_cols$last_stage,
+                               e_dot = IEATools::iea_cols$e_dot,
+                               country = IEATools::iea_cols$country,
+                               aggregate_country_name = "World",
+                               provenience = "Provenience"){
+
+
+  # (1) Differentiating domestically produced and imported products in the Y and U matrices flows
+  tidy_iea_df_specified_imports <- .tidy_iea_df %>%
+    specify_imported_products()
+
+  # (2) Specifying domestic consumption
+  tidy_domestic_consumption_MR_bta <- tidy_iea_df_specified_imports %>%
+    dplyr::filter(Origin == "Domestic") %>%
+    dplyr::mutate(
+      "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
+      "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
+      "{country}" := aggregate_country_name
+    ) %>%
+    dplyr::select(-Origin)
+
+  # (3) Specifying foreign consumption
+  tidy_imported_consumption_MR_bta <- tidy_iea_df_specified_imports %>%
+    dplyr::filter(Origin == "Imported") %>%
+    dplr::left_join(trade_matrix_df,
+                    by = ) %>%
+
+
+
+
+
+
+  tidy_imported_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
+    dplyr::filter(Origin == "Imported") %>%
+    dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
+                     by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
+      "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
+      "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
+      "{country}" := aggregate_country_name
+    ) %>%
+    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
+
+  # What check should I do here...?
+
+
+  # Binding data frames together and returning result
+  tidy_consumption_MR_bta <- bind_rows(tidy_domestic_consumption_MR_bta, tidy_imported_consumption_MR_bta)
+
+  return(tidy_consumption_MR_bta)
+
+}
+
+
+
 
 # Transform to bta function
 transform_to_bta <- function() {
@@ -344,6 +423,13 @@ transform_to_bta <- function() {
 
   return(tidy_iea_MR_bta_df)
 }
+
+
+
+
+
+
+
 
 
 # Transform to dta function
