@@ -418,7 +418,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
 
 # Transform to bta function
-transform_to_bta <- function() {
+transform_to_bta <- function(.tidy_iea_df){
 
   # (1) Create MR-R matrix data frame
   MR_R_bta <- specify_MR_R(.tidy_iea_df)
