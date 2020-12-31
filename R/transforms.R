@@ -160,9 +160,9 @@ specify_imported_products <- function(.tidy_iea_df,
 
   defined_imported_flows <- .tidy_iea_df %>%
     filter(
-      .data[[matnames]] == Y_matrix |
+        (.data[[matnames]] == Y_matrix |
         .data[[matnames]] == U_feed_matrix |
-        .data[[matnames]] == U_EIOU_matrix,
+        .data[[matnames]] == U_EIOU_matrix) &
       ! str_detect(.data[[flow]], exports)
     ) %>%
     left_join(
@@ -291,6 +291,10 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (4) Testing if we have any NAs in the join...
 
+  if (NA %in% tidy_imported_consumption_MR_gma[[e_dot]]){
+    print("There an NA in the join here, do worry about it.")
+  }
+
 # Careful. Here, if we have an imported product for which THERE ARE NO EXPORTS in the .tidy_iea_df (say A imports nat. gas but no one exports it),
 # we'll be getting some NAs somewhere. Probably a good check to do.
 
@@ -299,29 +303,6 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
   return(tidy_consumption_MR_gma)
 
 }
-
-
-
-
-# If we write here testing instead of share_exports_by_origin_destination, we have a decent test.
-AB_imported_consumption_MR <- defining_imported_products %>%
-  filter(Origin == "Imported") %>%
-  left_join(share_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
-  relocate(Provenience, .before = Country) %>%
-  mutate(
-    E.dot = E.dot * Share_Exports_From_Func,
-    Flow = paste0("{", Country, "}_", Flow),
-    Product = paste0("{", Provenience, "}_", Product)
-  ) %>%
-  select(-Provenience, -Share_Exports_From_Func, -Origin, -Unit.x, -Unit.y) %>%
-  print()
-
-
-# Join both data frames
-AB_consumption_MR <- bind_rows(AB_domestic_consumption_MR, AB_imported_consumption_MR)
-
-
-
 
 
 

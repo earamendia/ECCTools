@@ -217,6 +217,50 @@ AB_imported_consumption_MR <- defining_imported_products %>%
 AB_consumption_MR <- bind_rows(AB_domestic_consumption_MR, AB_imported_consumption_MR)
 
 
+
+
+AB_tidy_data_bis <- AB_tidy_data %>%
+  add_row(Country = c("A", "A"),
+          Method = c("PCM", "PCM"),
+          Energy.type = c("E", "E"),
+          Last.stage = c("Final", "Final"),
+          Year = c(2018, 2018),
+          Ledger.side = c("Consumption", "Consumption"),
+          Flow.aggregation.point = c("Industry", "Total primary energy supply"),
+          Flow = c("Iron and steel", "Imports [of Stinking Coal]"),
+          Product = c("Stinking Coal", "Stinking Coal"),
+          Unit = c("ktoe", "ktoe"),
+          E.dot = c(1000, 900),
+          matnames = c("Y", "V")) %>%
+  print()
+
+
+test <- AB_tidy_data_bis %>% specify_MR_Y_U_gma()
+
+
+# If we write here testing instead of share_exports_by_origin_destination, we have a decent test.
+AB_imported_consumption_MR <- defining_imported_products_added_row %>%
+  filter(Origin == "Imported") %>%
+  left_join(share_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
+  relocate(Provenience, .before = Country) %>%
+  print()
+mutate(
+  E.dot = E.dot * Share_Exports_From_Func,
+  Flow = paste0("{", Country, "}_", Flow),
+  Product = paste0("{", Provenience, "}_", Product)
+) %>%
+  select(-Provenience, -Share_Exports_From_Func, -Origin, -Unit.x, -Unit.y) %>%
+  print()
+
+
+# Join both data frames
+AB_consumption_MR <- bind_rows(AB_domestic_consumption_MR, AB_imported_consumption_MR)
+
+
+
+
+
+
 # Second, checking balances
 Balances <- AB_data %>%
   calc_tidy_iea_df_balances()
