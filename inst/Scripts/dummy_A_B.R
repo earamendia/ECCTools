@@ -128,7 +128,7 @@ total_exports <- AB_tidy_data %>%
   mutate(
     E.dot = abs(E.dot)
   ) %>%
-  group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow) %>%
+  group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Product) %>%
   summarise(
     Total_Exports = sum(E.dot)
   ) %>%
@@ -141,7 +141,7 @@ share_exports <- AB_tidy_data %>%
   mutate(
     E.dot = abs(E.dot)
   ) %>%
-  left_join(total_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow")) %>%
+  left_join(total_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Product")) %>%
   mutate(
     Share_Exports = E.dot / Total_Exports
   ) %>%
