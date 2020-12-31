@@ -226,7 +226,9 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
                                           flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                           product = IEATools::iea_cols$product,
                                           e_dot = IEATools::iea_cols$e_dot,
+                                          unit = IEATools::iea_cols$unit,
                                           exports = IEATools::interface_industries$exports,
+                                          matnames = "matnames",
                                           provenience = "Provenience"){
 
   tidy_share_exports_by_product <- .tidy_iea_df %>%
@@ -238,7 +240,8 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
     dplyr::mutate(
       Share_Exports_From_Func = .data[[e_dot]] / Total_Exports_From_Func
     ) %>%
-    dplyr::rename("{provenience}" := .data[[country]])
+    dplyr::rename("{provenience}" := .data[[country]]) %>%
+    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]], -.data[[e_dot]], -.data[[matnames]], -.data[["Total_Exports_From_Func"]])
 
   return(tidy_share_exports_by_product)
 }
@@ -249,8 +252,14 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
 specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                flow = IEATools::iea_cols$flow,
                                product = IEATools::iea_cols$product,
+                               year = IEATools::iea_cols$year,
+                               method = IEATools::iea_cols$method,
+                               energy_type = IEATools::iea_cols$energy_type,
+                               last_stage = IEATools::iea_cols$last_stage,
+                               e_dot = IEATools::iea_cols$e_dot,
                                country = IEATools::iea_cols$country,
-                               aggregate_country_name = "World"){
+                               aggregate_country_name = "World",
+                               provenience = "Provenience"){
 
   # (1) Differentiating domestically produced and imported products in the Y and U matrices flows
   tidy_iea_df_specified_imports <- .tidy_iea_df %>%
@@ -269,13 +278,25 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (3) Specifying foreign consumption
   tidy_imported_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Imported") #%>%
-# Still some dev to do here. The "Countries" fields do not correspond.
+    dplyr::filter(Origin == "Imported") %>%
+    dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
+                     by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
+      "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
+      "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
+      "{country}" := aggregate_country_name
+    ) %>%
+    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
+  # (4) Testing if we have any NAs in the join...
+
+# Careful. Here, if we have an imported product for which THERE ARE NO EXPORTS in the .tidy_iea_df (say A imports nat. gas but no one exports it),
+# we'll be getting some NAs somewhere. Probably a good check to do.
 
   tidy_consumption_MR_gma <- bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma)
 
-  return(tidy_imported_consumption_MR)
+  return(tidy_consumption_MR_gma)
 
 }
 
@@ -285,16 +306,14 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 # If we write here testing instead of share_exports_by_origin_destination, we have a decent test.
 AB_imported_consumption_MR <- defining_imported_products %>%
   filter(Origin == "Imported") %>%
-  print()
-
-  inner_join(share_exports_by_origin_destination, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
+  left_join(share_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
   relocate(Provenience, .before = Country) %>%
   mutate(
-    E.dot = E.dot * Share_Exports,
+    E.dot = E.dot * Share_Exports_From_Func,
     Flow = paste0("{", Country, "}_", Flow),
     Product = paste0("{", Provenience, "}_", Product)
   ) %>%
-  select(-Provenience, -Share_Exports, -Origin) %>%
+  select(-Provenience, -Share_Exports_From_Func, -Origin, -Unit.x, -Unit.y) %>%
   print()
 
 

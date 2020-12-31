@@ -151,7 +151,6 @@ share_exports <- AB_tidy_data %>%
 
 # So here we create a data frame equivalent to a matrix with n*n countries. Also A to A etc. Missing values are implicitly 0 shares.
 share_exports_by_origin_destination <- share_exports %>%
-  rename(Provenience = Country) %>%
   expand_grid(Country = AB_tidy_data %>%
                 expand(Country) %>%
                 pull()) %>%
@@ -174,7 +173,8 @@ testing <- share_exports_by_origin_destination %>%
           Last.stage = "Final",
           Year = 2018,
           Product = "Natural gas [of Oil and gas extraction]",
-          Share_Exports = 0.5)
+          Share_Exports = 0.5) %>%
+  print()
 
 # Testing the trade matrix
 
@@ -202,7 +202,7 @@ AB_domestic_consumption_MR <- defining_imported_products %>%
 # If we write here testing instead of share_exports_by_origin_destination, we have a decent test.
 AB_imported_consumption_MR <- defining_imported_products %>%
   filter(Origin == "Imported") %>%
-  inner_join(share_exports_by_origin_destination, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
+  left_join(share_exports_by_origin_destination, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
   relocate(Provenience, .before = Country) %>%
   mutate(
     E.dot = E.dot * Share_Exports,
