@@ -244,6 +244,7 @@ AB_imported_consumption_MR <- defining_imported_products_added_row %>%
   left_join(share_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
   relocate(Provenience, .before = Country) %>%
   print()
+
 mutate(
   E.dot = E.dot * Share_Exports_From_Func,
   Flow = paste0("{", Country, "}_", Flow),

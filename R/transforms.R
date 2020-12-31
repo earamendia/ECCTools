@@ -332,11 +332,51 @@ transform_to_gma <- function(.tidy_iea_df){
 # (ii) if the user loads an incomplete trade matrix in the specify_MR_Y_U_bta() function (likely as trade data is not available for all years!);
 # then the missing information is loaded from the GMA bilateral trade matrix.
 
-calc_bilateral_trade_matrix_df_gma <- function(){
+calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
+                                               flow = IEATools::iea_cols$flow,
+                                               product = IEATools::iea_cols$product,
+                                               year = IEATools::iea_cols$year,
+                                               method = IEATools::iea_cols$method,
+                                               energy_type = IEATools::iea_cols$energy_type,
+                                               last_stage = IEATools::iea_cols$last_stage,
+                                               e_dot = IEATools::iea_cols$e_dot,
+                                               country = IEATools::iea_cols$country,
+                                               provenience = "Provenience"){
+
+  bilateral_trade_matrix_df_gma <- calc_share_exports_by_product(.tidy_iea_df) %>%
+    tidyr::expand_grid(
+      "{country}" := .tidy_iea_df %>%
+        tidyr::expand(.data[[country]]) %>%
+        dplyr::pull()
+    ) %>%
+    dplyr::mutate(
+      Share_Exports_From_Func = dplyr::case_when(
+       .data[[provenience]] == .data[[country]] ~ 0,
+       TRUE ~ Share_Exports_From_Func
+      )
+    ) %>%
+    dplyr::relocate(.data[[country]], .after = .data[[provenience]]) %>%
+    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[product]], -.data[[unit]], -.data[[e_dot]], -.data[[matnames]], -.data[["Total_Exports_From_Func"]])
+
+  return(bilateral_trade_matrix_df_gma)
 
 }
 
 
+share_exports_by_origin_destination <- share_exports %>%
+  expand_grid(Country = AB_tidy_data %>%
+                expand(Country) %>%
+                pull()) %>%
+  print()
+  mutate(
+    Share_Exports = case_when(
+      Provenience == Country ~ 0,
+      TRUE ~ Share_Exports
+    )
+  ) %>%
+  relocate(Country, .after = Provenience) %>%
+  select(- Ledger.side, -Flow.aggregation.point, -Flow, -Unit, -E.dot, -matnames, -Total_Exports) %>%
+  print()
 
 
 # This function specifies the multiregional Y matrix using the BTA assumption, using the specific trade matrix provided as input.
@@ -373,7 +413,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
   # (3) Specifying foreign consumption
   tidy_imported_consumption_MR_bta <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
-    dplr::left_join(trade_matrix_df,
+    dplr::left_join(bilateral_trade_matrix_df,
                     by = ) %>%
 
 
@@ -423,10 +463,6 @@ transform_to_bta <- function() {
 
   return(tidy_iea_MR_bta_df)
 }
-
-
-
-
 
 
 
