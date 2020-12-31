@@ -364,7 +364,7 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 # For values that are not available in the provided trade matrix, it fills in using the GMA assumption.
 
 specify_MR_Y_U_bta <- function(.tidy_iea_df,
-                               bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(),
+                               bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
                                flow = IEATools::iea_cols$flow,
                                product = IEATools::iea_cols$product,
                                year = IEATools::iea_cols$year,
@@ -391,21 +391,11 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     ) %>%
     dplyr::select(-Origin)
 
-  # (3) Specifying foreign consumption
+  # (3.i) Specifying foreign consumption with the provided trade matrix
   tidy_imported_consumption_MR_bta <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
-    dplr::left_join(bilateral_trade_matrix_df,
-                    by = ) %>%
-
-
-
-
-
-
-  tidy_imported_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Imported") %>%
-    dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
-                     by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::left_join(bilateral_trade_matrix_df,
+                    by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
@@ -414,7 +404,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     ) %>%
     dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
-  # What check should I do here...?
+  # (3.ii) Specifying the rest with the global market assumption GMA
 
 
   # Binding data frames together and returning result
