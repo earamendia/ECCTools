@@ -327,7 +327,6 @@ AB_consumption_MR <- bind_rows(AB_domestic_consumption_MR, AB_imported_consumpti
 
 # Transform to gma function
 transform_to_gma <- function(.tidy_iea_df){
-  return("hello world")
 
   # (1) Create MR-R matrix data frame
   MR_R_gma <- specify_MR_R(.tidy_iea_df)
@@ -349,7 +348,20 @@ transform_to_gma <- function(.tidy_iea_df){
 
 # Transform to bta function
 transform_to_bta <- function() {
-  return("hello world")
+
+  # (1) Create MR-R matrix data frame
+  MR_R_bta <- specify_MR_R(.tidy_iea_df)
+
+  # (2) Creating MR-V matrix data frame
+  MR_V_bta <- specify_MR_V(.tidy_iea_df)
+
+  # (3) Creating MR-Y and MR-U matrix data frames, with GMA assumption
+  MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df)
+
+  # Binding all rows and returning full data frame
+  tidy_iea_MR_bta_df <- bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta)
+
+  return(tidy_iea_MR_bta_df)
 }
 
 
