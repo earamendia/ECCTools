@@ -19,7 +19,7 @@ library(glue)
 #### Loading and preparing A_B dummy data  ####
 
 # Loading data
-A_B_path <- file.path("inst/A_B_data_full_2018_format.csv")
+A_B_path <- file.path("inst/A_B_data_full_2018_format_stat_diffs_stock_changes.csv")
 # A_B_path <- file.path("Scripts/A_B_Test_TP_industries.csv")
 # A_B_path <- file.path("Scripts/A_B_Test_p_e_supply.csv")
 

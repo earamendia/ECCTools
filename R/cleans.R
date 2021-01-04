@@ -40,3 +40,40 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
   return(tidy_net_trade_df)
 }
+
+
+
+
+# This function removes Statistical differences from the tidy IEA data frame
+
+remove_stat_diffs <- function(.tidy_iea_df,
+                              flow = IEATools::iea_cols$flow,
+                              ledger_side = IEATools::iea_cols$ledger_side,
+                              stat_diffs = "Statistical differences",
+                              balancing = "Balancing"){
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{ledger_side}" := dplyr::case_when(
+        .data[[flow]] == stat_diffs ~ balancing,
+        TRUE ~ .data[[ledger_side]]
+      )
+    )
+}
+
+
+
+# This function removes Stock changes from the tidy IEA data frame
+
+remove_stock_changes <- function(.tidy_iea_df,
+                                 flow = IEATools::iea_cols$flow,
+                                 ledger_side = IEATools::iea_cols$ledger_side,
+                                 stock_changes = "Stock changes",
+                                 balancing = "Balancing"){
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{ledger_side}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], stock_changes) ~ balancing,
+        TRUE ~ .data[[ledger_side]]
+      )
+    )
+}
