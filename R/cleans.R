@@ -83,26 +83,30 @@ remove_stock_changes <- function(.tidy_iea_df,
 # This function gathers producers and autoproducers
 
 gather_producer_autoproducer <- function(.tidy_iea_df,
-                                         flow_aggregation_point = "Flow.aggregation.point",
-                                         eiou = "Energy industry own use",
+                                         flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                          transformation_processes = "Transformation processes",
-                                         flow = "Flow",
-                                         # Industries that receive EIOU but are not in Transformation processes
-                                         own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                         pumped_storage = "Pumped storage plants",
-                                         nuclear_industry = "Nuclear industry",
-                                         e_dot = "E.dot",
+                                         flow = IEATools::iea_cols$flow,
+                                         e_dot = IEATools::iea_cols$e_dot,
                                          negzeropos = ".negzeropos",
-                                         # Places where the EIOU will e reassigned
-                                         main_act_producer_elect = "Main activity producer electricity plants"){
+                                         # Autoproducer industries
+                                         autoproducer_elect = "Autoproducer electricity plants",
+                                         autoproducer_chp = "Autoproducer CHP plants",
+                                         autoproducer_heat = "Autoproducer heat plants",
+                                         # Main activity industries - to which autoproducer industries are re-routed
+                                         main_act_producer_elect = "Main activity producer electricity plants",
+                                         main_act_producer_heat = "Main activity producer heat plants",
+                                         main_act_producer_chp = "Main activity producer CHP plants"){
 
   .tidy_iea_df %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[flow]] == ,
+        (.data[[flow]] == autoproducer_elect & .data[[flow_aggregation_point]] == transformation_processes) ~ main_act_producer_elect,
+        (.data[[flow]] == autoproducer_chp & .data[[flow_aggregation_point]] == transformation_processes) ~ main_act_producer_chp,
+        (.data[[flow]] == autoproducer_heat & .data[[flow_aggregation_point]] == transformation_processes) ~ main_act_producer_heat,
         TRUE ~ .data[[flow]]
       )
     ) %>%
+    # Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
         .data[[e_dot]] < 0 ~ "neg",
@@ -125,13 +129,48 @@ gather_producer_autoproducer <- function(.tidy_iea_df,
 
 
 
-re_route_pumped_storage <- function(){
-
+route_pumped_storage <- function(tidy_iea_df,
+                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                    eiou = "Energy industry own use",
+                                    flow = IEATools::iea_cols$flow,
+                                    # Industries that receive EIOU but are not in Transformation processes
+                                    pumped_storage = "Pumped storage plants",
+                                    e_dot = IEATools::iea_cols$e_dot,
+                                    negzeropos = ".negzeropos",
+                                    # Places where the EIOU will e reassigned
+                                    main_act_producer_elect = "Main activity producer electricity plants"){
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[flow]] == pumped_storage & .data[[flow_aggregation_point]] == eiou ~ main_act_producer_elect
+      )
+    ) %>%
+    # Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      # Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
 }
 
 
 
-re_route_own_use_elect_chp_heat <- function(){
+
+
+route_own_use_elect_chp_heat <- function(){
 
 }
 

@@ -19,7 +19,7 @@ library(glue)
 #### Loading and preparing A_B dummy data  ####
 
 # Loading data
-A_B_path <- file.path("inst/A_B_data_full_2018_format_stat_diffs_stock_changes.csv")
+A_B_path <- file.path("inst/A_B_data_full_2018_format_tp.csv")
 # A_B_path <- file.path("Scripts/A_B_Test_TP_industries.csv")
 # A_B_path <- file.path("Scripts/A_B_Test_p_e_supply.csv")
 
@@ -31,6 +31,14 @@ A_B_path %>% iea_file_OK()
 # First, make tidy dataframe
 AB_data <- A_B_path %>%
   load_tidy_iea_df()
+
+
+# Testing here the specifications
+test <- AB_data %>%
+  specify_primary_production() %>%
+  specify_production_to_resources() %>%
+  specify_tp_eiou_revisited()
+
 
 AB_tidy_data <- AB_data %>%
   specify_all() %>%

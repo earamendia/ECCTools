@@ -392,15 +392,15 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
     matsindf::verify_cols_missing(negzeropos)
 
   .tidy_iea_df %>%
-    gather_producer_autoproducer() %>%
-    re_route_pumped_storage() %>%
-    re_route_own_use_elect_chp_heat() %>%
-    add_nuclear_industry() %>%
-    re_route_non_specified_flows()
+    gather_producer_autoproducer() #%>%
+    route_pumped_storage() %>%
+    #route_own_use_elect_chp_heat() %>%
+    #add_nuclear_industry() %>%
+    #re_route_non_specified_flows()
 
 
-    dplyr::mutate(
-      !!as.name(flow) := dplyr::case_when(
+    # dplyr::mutate(
+    #   !!as.name(flow) := dplyr::case_when(
         # Apply "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
         # This solves a problem in Ghana where "Own use in electricity, CHP and heat plants"
         # would lead to a zero row in the make matrix.
@@ -409,7 +409,7 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
         # electricity production than CHP or heat production in each country,
         # we apply "Own use in electricity, CHP and heat plants" to
         # "Main activity producer electricity plants".
-        !!as.name(flow) == own_use_elect_chp_heat & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+        #!!as.name(flow) == own_use_elect_chp_heat & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
 
         # When pumped storage is in the mix,
         # the IEA data helpfully indicates EIOU assigned to "Pumped storage plants".
@@ -419,11 +419,11 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
         # apply EIOU by Pumped storage plants to
         # the Industry in which production from Pumped storage plants is accounted:
         # Main activity producer electricity plants.
-        !!as.name(flow) == pumped_storage & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+        #!!as.name(flow) == pumped_storage & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
 
         # If Nuclear is used, we need to reclassify EIOU by Nuclear plants
         # to Main activity producer electricity plants.
-        !!as.name(flow) == nuclear_industry & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+        #!!as.name(flow) == nuclear_industry & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
 
         # Non-specified (energy) is an Industry that receives EIOU.
         # However, Non-specified (energy) is not an Industry that makes anything.
@@ -434,31 +434,31 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
         # !!as.name(flow) == non_spec_energy & !!as.name(flow_aggregation_point) == eiou ~ nonspecenergy_reclassify,
 
         # Otherwise, just keep the same value for the flow column.
-        TRUE ~ !!as.name(flow)
-      )
-    ) %>%
-    dplyr::mutate(
+    #      TRUE ~ !!as.name(flow)
+    #   )
+    # ) %>%
+    # dplyr::mutate(
       # Add a column that tells whether E.dot is negative, zero, or positive.
       # The goal is to sum like input or like outputs of a Transformation process.
       # Unless we differentiate by the sign of E.dot,
       # we'll be getting net energy flows, which we don't want.
-      !!as.name(negzeropos) := dplyr::case_when(
-        !!as.name(e_dot) < 0 ~ "neg",
-        !!as.name(e_dot) == 0 ~ "zero",
-        !!as.name(e_dot) > 0 ~ "pos"
-      )
-    ) %>%
+    #   !!as.name(negzeropos) := dplyr::case_when(
+    #     !!as.name(e_dot) < 0 ~ "neg",
+    #     !!as.name(e_dot) == 0 ~ "zero",
+    #     !!as.name(e_dot) > 0 ~ "pos"
+    #   )
+    # ) %>%
     # Now sum similar rows using summarise.
     # Group by everything except the energy flow rate column, "E.dot".
-    matsindf::group_by_everything_except(e_dot) %>%
-    dplyr::summarise(
-      !!as.name(e_dot) := sum(!!as.name(e_dot))
-    ) %>%
-    dplyr::mutate(
+    # matsindf::group_by_everything_except(e_dot) %>%
+    # dplyr::summarise(
+    #   !!as.name(e_dot) := sum(!!as.name(e_dot))
+    # ) %>%
+    # dplyr::mutate(
       # Eliminate the column we added.
-      !!as.name(negzeropos) := NULL
-    ) %>%
-    dplyr::ungroup()
+    #   !!as.name(negzeropos) := NULL
+    # ) %>%
+    # dplyr::ungroup()
 }
 
 
