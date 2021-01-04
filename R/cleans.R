@@ -77,3 +77,72 @@ remove_stock_changes <- function(.tidy_iea_df,
       )
     )
 }
+
+
+
+# This function gathers producers and autoproducers
+
+gather_producer_autoproducer <- function(.tidy_iea_df,
+                                         flow_aggregation_point = "Flow.aggregation.point",
+                                         eiou = "Energy industry own use",
+                                         transformation_processes = "Transformation processes",
+                                         flow = "Flow",
+                                         # Industries that receive EIOU but are not in Transformation processes
+                                         own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
+                                         pumped_storage = "Pumped storage plants",
+                                         nuclear_industry = "Nuclear industry",
+                                         e_dot = "E.dot",
+                                         negzeropos = ".negzeropos",
+                                         # Places where the EIOU will e reassigned
+                                         main_act_producer_elect = "Main activity producer electricity plants"){
+
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[flow]] == ,
+        TRUE ~ .data[[flow]]
+      )
+    ) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      # Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+}
+
+
+
+re_route_pumped_storage <- function(){
+
+}
+
+
+
+re_route_own_use_elect_chp_heat <- function(){
+
+}
+
+
+
+add_nuclear_industry <- function(){
+
+}
+
+
+
+re_route_non_specified_flows <- function(){
+
+}

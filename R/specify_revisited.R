@@ -390,7 +390,15 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
                             main_act_producer_elect = "Main activity producer electricity plants"){
   .tidy_iea_df %>%
     matsindf::verify_cols_missing(negzeropos)
+
   .tidy_iea_df %>%
+    gather_producer_autoproducer() %>%
+    re_route_pumped_storage() %>%
+    re_route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    re_route_non_specified_flows()
+
+
     dplyr::mutate(
       !!as.name(flow) := dplyr::case_when(
         # Apply "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
@@ -431,7 +439,7 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
     ) %>%
     dplyr::mutate(
       # Add a column that tells whether E.dot is negative, zero, or positive.
-      # The goa is to sum like input or like outputs of a Transformation process.
+      # The goal is to sum like input or like outputs of a Transformation process.
       # Unless we differentiate by the sign of E.dot,
       # we'll be getting net energy flows, which we don't want.
       !!as.name(negzeropos) := dplyr::case_when(
