@@ -43,9 +43,51 @@ test <- AB_data %>%
   #specify_tp_eiou_revisited()
 
 
+
 AB_tidy_data <- AB_data %>%
   specify_all() %>%
   add_psut_matnames() # This is part of the prep_psut() function.
+
+
+
+#### Testing route_own_use_elect_chp_heat() - LOAD inst/A_B_data_full_2018_format_tp.csv file. ####
+AB_data <- A_B_path %>%
+  load_tidy_iea_df()
+
+
+# Test here with everything
+test <- AB_data %>%
+  specify_primary_production() %>%
+  specify_production_to_resources() %>%
+  gather_producer_autoproducer() %>%
+  route_pumped_storage() %>%
+  route_own_use_elect_chp_heat()
+
+# Now, test with no autoproducer / main industry in transf. processes; all "Own use" should go to "Main activity electricity plants"
+AB_data_no_main_ind <- AB_data %>%
+  filter(! Flow %in% c("Main activity producer electricity plants", "Main activity producer CHP plants", "Main activity producer heat plants",
+                       "Autoproducer CHP plants", "Autoproducer heat plants", "Autoproducer electricity plants"))
+
+test_no_main <- AB_data_no_main_ind %>%
+  specify_primary_production() %>%
+  specify_production_to_resources() %>%
+  gather_producer_autoproducer() %>%
+  #route_pumped_storage() %>% # Because otherwise that creates a "Main activity" just before and messes up everything.
+  route_own_use_elect_chp_heat()
+# Seems all good.
+
+# Third case when only one is missing - say CHP
+AB_data_third_test <- AB_data %>%
+  filter(! Flow %in% c("Main activity producer CHP plants",
+                       "Autoproducer CHP plants"))
+
+test_third_test <- AB_data_third_test %>%
+  specify_primary_production() %>%
+  specify_production_to_resources() %>%
+  gather_producer_autoproducer() %>%
+  #route_pumped_storage() %>% # Because otherwise that creates a "Main activity" just before and messes up everything.
+  route_own_use_elect_chp_heat()
+
 
 
 # This is basically the code that will get data for the V matrix ready.

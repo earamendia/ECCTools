@@ -271,21 +271,18 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       "{flow}" := .data[["destination_flow"]]
     ) %>%
     select(-destination_flow) %>%
-    dplyr::left_join(
+    dplyr::inner_join(
       share_output_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
       ) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_supply_per_main_activity_From_Func
     ) %>%
     dplyr::select(-Share_supply_per_main_activity_From_Func, -Supply_per_main_activity_From_Func, -Total_supply_main_activity_From_Func)
-# Perhaps add a line for getting rid of potential NAs?
+
 
   tidy_iea_df_routed_own_use <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] != own_use_elect_chp_heat) %>%
     dplyr::bind_rows(routed_own_use) %>%
-    # dplyr::arrange(
-    #   .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]], .data[[flow]], .data[[product]]
-    #   ) %>%
   #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
   dplyr::mutate(
     "{negzeropos}" := dplyr::case_when(
