@@ -3060,7 +3060,7 @@ A,"Own use in electricity, CHP and heat plants (energy)",Electricity,-60
 A,"Own use in electricity, CHP and heat plants (energy)",Heat,0
 A,"Own use in electricity, CHP and heat plants (energy)",Total,0
 A,"Own use in electricity, CHP and heat plants (energy)",Memo: Renewables,0
-A,Pumped storage plants (energy),Hard coal (if no detail),0
+A,Pumped storage plants (energy),Hard coal (if no detail),-299
 A,Pumped storage plants (energy),Brown coal (if no detail),0
 A,Pumped storage plants (energy),Anthracite,0
 A,Pumped storage plants (energy),Coking coal,0
