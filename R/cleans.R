@@ -173,17 +173,18 @@ route_pumped_storage <- function(.tidy_iea_df,
 # Using the shares of each main activity supply.
 
 route_own_use_elect_chp_heat <- function(.tidy_iea_df,
+                                         country = IEATools::iea_cols$country,
                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                         flow = IEATools::iea_cols$flow,
                                          ledger_side = IEATools::iea_cols$ledger_side,
                                          method = IEATools::iea_cols$method,
-                                         ledger_side = IEATools::iea_cols$ledger_side,
-                                         energy_tyoe = IEATools::iea_cols$energy_type,
+                                         energy_type = IEATools::iea_cols$energy_type,
                                          last_stage = IEATools::iea_cols$last_stage,
                                          year = IEATools::iea_cols$year,
+                                         product = IEATools::iea_cols$product,
                                          unit = IEATools::iea_cols$unit,
                                          e_dot = IEATools::iea_cols$e_dot,
                                          supply = "Supply",
-                                         flow = IEATools::iea_cols$flow,
                                          eiou = "Energy industry own use",
                                          transformation_processes = "Transformation processes",
                                          own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
@@ -210,21 +211,25 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
 
   if (n == 0){
-    dplyr::mutate(
+    to_return <- .tidy_iea_df %>% dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou ~ main_act_producer_elect
+        (.data[[flow]] == own_use_elect_chp_heat & .data[[flow_aggregation_point]] == eiou) ~ main_act_producer_elect,
+        TRUE ~ .data[[flow]]
       )
     )
+
+    return(to_return)
   }
 
-  total_main_activity_output <- tidy_iea_df %>%
+
+  total_main_activity_output <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow]] %in% c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
       & .data[[flow_aggregation_point]] == transformation_processes
       & .data[[ledger_side]] == supply
       & .data[[e_dot]] > 0
     ) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]]) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]) %>%
     dplyr::summarise(
       Total_supply_main_activity_From_Func = sum(.data[[e_dot]])
     )
@@ -237,7 +242,9 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
                   & .data[[ledger_side]] == supply
                   & .data[[e_dot]] > 0
       ) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]]) %>% # adding flow
+    dplyr::group_by(
+      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]], .data[[unit]], .data[[ledger_side]], .data[[flow_aggregation_point]]
+      ) %>%
     dplyr::summarise(
       Supply_per_main_activity_From_Func = sum(.data[[e_dot]])
     )
@@ -245,11 +252,12 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
   share_output_per_main_activity <- output_per_main_activity %>%
     dplyr::left_join(
-      total_main_activity_output, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side}, {flow_aggregation_point})
+      total_main_activity_output, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point})
       ) %>%
     dplyr::mutate(
       Share_supply_per_main_activity_From_Func = Supply_per_main_activity_From_Func / Total_supply_main_activity_From_Func
-    )
+    ) %>%
+    dplyr::select(-.data[[flow_aggregation_point]])
 
   routed_own_use <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] == own_use_elect_chp_heat) %>%
@@ -257,56 +265,84 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]], .data[[ledger_side]]
       ) %>%
     tidyr::crossing(
-      destination_flow = c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
-      ) %>%
-    dplyr::right_join(
-      share_output_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side}, {flow_aggregation_point})
+      destination_flow := c(main_act_producer_elect, main_act_producer_chp, main_act_producer_heat)
       ) %>%
     dplyr::mutate(
-      "{flow}" := .data[["destination_flow"]],
+      "{flow}" := .data[["destination_flow"]]
+    ) %>%
+    select(-destination_flow) %>%
+    dplyr::left_join(
+      share_output_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
+      ) %>%
+    dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_supply_per_main_activity_From_Func
     ) %>%
-    dplyr::select(-destination_flow, -Share_supply_per_main_activity_From_Func)
+    dplyr::select(-Share_supply_per_main_activity_From_Func, -Supply_per_main_activity_From_Func, -Total_supply_main_activity_From_Func)
+# Perhaps add a line for getting rid of potential NAs?
 
   tidy_iea_df_routed_own_use <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] != own_use_elect_chp_heat) %>%
-    dplyr::bind_rows(routed_own_use)
+    dplyr::bind_rows(routed_own_use) %>%
+    # dplyr::arrange(
+    #   .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]], .data[[flow]], .data[[product]]
+    #   ) %>%
+  #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
+  dplyr::mutate(
+    "{negzeropos}" := dplyr::case_when(
+      .data[[e_dot]] < 0 ~ "neg",
+      .data[[e_dot]] == 0 ~ "zero",
+      .data[[e_dot]] > 0 ~ "pos"
+    )
+  ) %>%
+  # Now sum similar rows using summarise.
+  # Group by everything except the energy flow rate column, "E.dot".
+  matsindf::group_by_everything_except(e_dot) %>%
+  dplyr::summarise(
+    "{e_dot}" := sum(.data[[e_dot]])
+  ) %>%
+  dplyr::mutate(
+  #Eliminate the column we added.
+    "{negzeropos}" := NULL
+  ) %>%
+  dplyr::ungroup()
 
-  return(tidy_iea_df_routed_own_use)
+   return(tidy_iea_df_routed_own_use)
 }
 
 
 
-add_nuclear_industry <- function(.tidy_iea_df,
-                                 flow_aggregation_point = "Flow.aggregation.point",
-                                 eiou = "Energy industry own use",
-                                 transformation_processes = "Transformation processes",
-                                 flow = "Flow",
-                                 # Industries that receive EIOU but are not in Transformation processes
-                                 own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                 pumped_storage = "Pumped storage plants",
-                                 nuclear_industry = "Nuclear industry",
-                                 e_dot = "E.dot",
-                                 negzeropos = ".negzeropos",
-                                 # Places where the EIOU will e reassigned
-                                 main_act_producer_elect = "Main activity producer electricity plants"){
-
-}
 
 
+# add_nuclear_industry <- function(.tidy_iea_df,
+#                                  flow_aggregation_point = "Flow.aggregation.point",
+#                                  eiou = "Energy industry own use",
+#                                  transformation_processes = "Transformation processes",
+#                                  flow = "Flow",
+#                                  # Industries that receive EIOU but are not in Transformation processes
+#                                  own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
+#                                  pumped_storage = "Pumped storage plants",
+#                                  nuclear_industry = "Nuclear industry",
+#                                  e_dot = "E.dot",
+#                                  negzeropos = ".negzeropos",
+#                                  # Places where the EIOU will e reassigned
+#                                  main_act_producer_elect = "Main activity producer electricity plants"){
+#
+# }
 
-re_route_non_specified_flows <- function(.tidy_iea_df,
-                                         flow_aggregation_point = "Flow.aggregation.point",
-                                         eiou = "Energy industry own use",
-                                         transformation_processes = "Transformation processes",
-                                         flow = "Flow",
-                                         # Industries that receive EIOU but are not in Transformation processes
-                                         own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                         pumped_storage = "Pumped storage plants",
-                                         nuclear_industry = "Nuclear industry",
-                                         e_dot = "E.dot",
-                                         negzeropos = ".negzeropos",
-                                         # Places where the EIOU will e reassigned
-                                         main_act_producer_elect = "Main activity producer electricity plants"){
 
-}
+
+# re_route_non_specified_flows <- function(.tidy_iea_df,
+#                                          flow_aggregation_point = "Flow.aggregation.point",
+#                                          eiou = "Energy industry own use",
+#                                          transformation_processes = "Transformation processes",
+#                                          flow = "Flow",
+#                                          # Industries that receive EIOU but are not in Transformation processes
+#                                          own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
+#                                          pumped_storage = "Pumped storage plants",
+#                                          nuclear_industry = "Nuclear industry",
+#                                          e_dot = "E.dot",
+#                                          negzeropos = ".negzeropos",
+#                                          # Places where the EIOU will e reassigned
+#                                          main_act_producer_elect = "Main activity producer electricity plants"){
+#
+# }

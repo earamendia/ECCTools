@@ -2992,7 +2992,7 @@ A,Gas-to-liquids (GTL) plants  (energy),Electricity,0
 A,Gas-to-liquids (GTL) plants  (energy),Heat,0
 A,Gas-to-liquids (GTL) plants  (energy),Total,0
 A,Gas-to-liquids (GTL) plants  (energy),Memo: Renewables,0
-A,"Own use in electricity, CHP and heat plants (energy)",Hard coal (if no detail),0
+A,"Own use in electricity, CHP and heat plants (energy)",Hard coal (if no detail),-700
 A,"Own use in electricity, CHP and heat plants (energy)",Brown coal (if no detail),0
 A,"Own use in electricity, CHP and heat plants (energy)",Anthracite,0
 A,"Own use in electricity, CHP and heat plants (energy)",Coking coal,0
@@ -8092,8 +8092,8 @@ B,Main activity producer electricity plants (transf.),Electricity,1000
 B,Main activity producer electricity plants (transf.),Heat,300
 B,Main activity producer electricity plants (transf.),Total,0
 B,Main activity producer electricity plants (transf.),Memo: Renewables,0
-B,Autoproducer electricity plants (transf.),Hard coal (if no detail),0
-B,Autoproducer electricity plants (transf.),Brown coal (if no detail),0
+B,Autoproducer electricity plants (transf.),Hard coal (if no detail),-300
+B,Autoproducer electricity plants (transf.),Brown coal (if no detail),600
 B,Autoproducer electricity plants (transf.),Anthracite,0
 B,Autoproducer electricity plants (transf.),Coking coal,0
 B,Autoproducer electricity plants (transf.),Other bituminous coal,0
@@ -8160,7 +8160,7 @@ B,Autoproducer electricity plants (transf.),Electricity,0
 B,Autoproducer electricity plants (transf.),Heat,0
 B,Autoproducer electricity plants (transf.),Total,0
 B,Autoproducer electricity plants (transf.),Memo: Renewables,0
-B,Main activity producer CHP plants (transf.),Hard coal (if no detail),0
+B,Main activity producer CHP plants (transf.),Hard coal (if no detail),50
 B,Main activity producer CHP plants (transf.),Brown coal (if no detail),0
 B,Main activity producer CHP plants (transf.),Anthracite,0
 B,Main activity producer CHP plants (transf.),Coking coal,0
@@ -8228,8 +8228,8 @@ B,Main activity producer CHP plants (transf.),Electricity,0
 B,Main activity producer CHP plants (transf.),Heat,0
 B,Main activity producer CHP plants (transf.),Total,0
 B,Main activity producer CHP plants (transf.),Memo: Renewables,0
-B,Autoproducer CHP plants (transf.),Hard coal (if no detail),0
-B,Autoproducer CHP plants (transf.),Brown coal (if no detail),0
+B,Autoproducer CHP plants (transf.),Hard coal (if no detail),1000
+B,Autoproducer CHP plants (transf.),Brown coal (if no detail),-400
 B,Autoproducer CHP plants (transf.),Anthracite,0
 B,Autoproducer CHP plants (transf.),Coking coal,0
 B,Autoproducer CHP plants (transf.),Other bituminous coal,0
@@ -8296,8 +8296,8 @@ B,Autoproducer CHP plants (transf.),Electricity,0
 B,Autoproducer CHP plants (transf.),Heat,0
 B,Autoproducer CHP plants (transf.),Total,0
 B,Autoproducer CHP plants (transf.),Memo: Renewables,0
-B,Main activity producer heat plants (transf.),Hard coal (if no detail),0
-B,Main activity producer heat plants (transf.),Brown coal (if no detail),0
+B,Main activity producer heat plants (transf.),Hard coal (if no detail),668
+B,Main activity producer heat plants (transf.),Brown coal (if no detail),-800
 B,Main activity producer heat plants (transf.),Anthracite,0
 B,Main activity producer heat plants (transf.),Coking coal,0
 B,Main activity producer heat plants (transf.),Other bituminous coal,0
@@ -8365,9 +8365,9 @@ B,Main activity producer heat plants (transf.),Heat,0
 B,Main activity producer heat plants (transf.),Total,0
 B,Main activity producer heat plants (transf.),Memo: Renewables,0
 B,Autoproducer heat plants (transf.),Hard coal (if no detail),0
-B,Autoproducer heat plants (transf.),Brown coal (if no detail),0
+B,Autoproducer heat plants (transf.),Brown coal (if no detail),-47
 B,Autoproducer heat plants (transf.),Anthracite,0
-B,Autoproducer heat plants (transf.),Coking coal,0
+B,Autoproducer heat plants (transf.),Coking coal,38
 B,Autoproducer heat plants (transf.),Other bituminous coal,0
 B,Autoproducer heat plants (transf.),Sub-bituminous coal,0
 B,Autoproducer heat plants (transf.),Lignite,0
@@ -10336,7 +10336,7 @@ B,Gas-to-liquids (GTL) plants  (energy),Electricity,0
 B,Gas-to-liquids (GTL) plants  (energy),Heat,0
 B,Gas-to-liquids (GTL) plants  (energy),Total,0
 B,Gas-to-liquids (GTL) plants  (energy),Memo: Renewables,0
-B,"Own use in electricity, CHP and heat plants (energy)",Hard coal (if no detail),0
+B,"Own use in electricity, CHP and heat plants (energy)",Hard coal (if no detail),-500
 B,"Own use in electricity, CHP and heat plants (energy)",Brown coal (if no detail),0
 B,"Own use in electricity, CHP and heat plants (energy)",Anthracite,0
 B,"Own use in electricity, CHP and heat plants (energy)",Coking coal,0

@@ -37,7 +37,10 @@ AB_data <- A_B_path %>%
 test <- AB_data %>%
   specify_primary_production() %>%
   specify_production_to_resources() %>%
-  specify_tp_eiou_revisited()
+  gather_producer_autoproducer() %>%
+  route_pumped_storage() %>%
+  route_own_use_elect_chp_heat()
+  #specify_tp_eiou_revisited()
 
 
 AB_tidy_data <- AB_data %>%
