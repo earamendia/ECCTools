@@ -129,7 +129,6 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     #   )
     # )
 
-
   # Now, we move to the other case - one of the three main activities elect, heat, and/or CHP EXISTS in the TP - supply.
   # So each time we need to start by doing the inverse filter.
 
@@ -249,21 +248,22 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
 
 
-# add_nuclear_industry <- function(.tidy_iea_df,
-#                                  flow_aggregation_point = "Flow.aggregation.point",
-#                                  eiou = "Energy industry own use",
-#                                  transformation_processes = "Transformation processes",
-#                                  flow = "Flow",
-#                                  # Industries that receive EIOU but are not in Transformation processes
-#                                  own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-#                                  pumped_storage = "Pumped storage plants",
-#                                  nuclear_industry = "Nuclear industry",
-#                                  e_dot = "E.dot",
-#                                  negzeropos = ".negzeropos",
-#                                  # Places where the EIOU will e reassigned
-#                                  main_act_producer_elect = "Main activity producer electricity plants"){
-#
-# }
+add_nuclear_industry <- function(.tidy_iea_df,
+                                 flow_aggregation_point = "Flow.aggregation.point",
+                                 eiou = "Energy industry own use",
+                                 transformation_processes = "Transformation processes",
+                                 flow = "Flow",
+                                 # Industries that receive EIOU but are not in Transformation processes
+                                 own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
+                                 pumped_storage = "Pumped storage plants",
+                                 nuclear_industry = "Nuclear industry",
+                                 e_dot = "E.dot",
+                                 negzeropos = ".negzeropos",
+                                 # Places where the EIOU will e reassigned
+                                 main_act_producer_elect = "Main activity producer electricity plants"){
+
+  return(.tidy_iea_df)
+}
 
 
 
@@ -306,22 +306,11 @@ route_non_specified_eiou <- function(.tidy_iea_df,
   # Check whether there is at least one other EIOU flow besides the "Non-specified"
   # If yes, then keep the "Non-specified" EIOU flow
 
-  # There's an issue with this bit to be solved.
-  n <- .tidy_iea_df %>%
-    dplyr::filter(
-      .data[[flow_aggregation_point]] == eiou & .data[[flow]] != non_spec
-    ) %>%
-    dplyr::summarise(
-      n = n()
-    ) %>%
-    dplyr::pull()
 
-  # No change to the data frame if n = 0
-  if (n == 0){
-    return(.tidy_iea_df)
-  }
+  df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
+    tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
 
-  # Seems ok.
+
   total_eiou_excl_nonspec <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou & .data[[flow]] != non_spec
@@ -332,6 +321,12 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::summarise(
       Total_eiou_excl_nonspec_From_Func = sum(.data[[e_dot]])
     )
+
+
+  list_not_included_total_eiou <- df_observations_included_tidy_iea_df %>%
+    dplyr::anti_join(total_eiou_excl_nonspec, by = c({country}, {method}, {energy_type}, {last_stage}, {year})) %>%
+    tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    dplyr::pull()
 
 
   eiou_per_industry <- .tidy_iea_df %>%
@@ -362,10 +357,14 @@ route_non_specified_eiou <- function(.tidy_iea_df,
    dplyr::pull()
 
 
+
+  # First, when eiou flows are available.
   routed_nonspec_energy <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou & .data[[flow]] == non_spec
       ) %>%
+    dplyr::filter(!(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
+                    %in% list_not_included_total_eiou)) %>%
     group_by(
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]], .data[[ledger_side]]
     ) %>%
@@ -385,9 +384,25 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::select(-Share_eiou_per_industry_From_Func, -EIOU_per_industry_From_Func, -Total_eiou_excl_nonspec_From_Func)
 
 
+  # Second, when EIOU flows are not available
+  # First, when eiou flows are available.
+  # routed_nonspec_energy_without_eiou <- .tidy_iea_df %>%
+  #   dplyr::filter(
+  #     .data[[flow_aggregation_point]] == eiou & .data[[flow]] == non_spec
+  #   ) %>%
+  #   dplyr::filter((str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
+  #                   %in% list_not_included_total_eiou))
+  #
+  #
+  # routed_nonspec_energy <- bind_rows(routed_nonspec_energy_with_eiou, routed_nonspec_energy_without_eiou)
+
+# squeezing all conditions in first filter I think
   tidy_iea_df_routed_nonspec_energy <- .tidy_iea_df %>%
     dplyr::filter(
-      ! (.data[[flow_aggregation_point]] == eiou & .data[[flow]] == non_spec)
+      ! (.data[[flow_aggregation_point]] == eiou &
+           .data[[flow]] == non_spec &
+           (! stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
+            %in% list_not_included_total_eiou))
     ) %>%
     dplyr::bind_rows(routed_nonspec_energy) %>%
     #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
