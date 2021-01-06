@@ -2040,8 +2040,8 @@ A,Charcoal production plants (transf.),Electricity,0
 A,Charcoal production plants (transf.),Heat,0
 A,Charcoal production plants (transf.),Total,0
 A,Charcoal production plants (transf.),Memo: Renewables,0
-A,Non-specified (transformation),Hard coal (if no detail),0
-A,Non-specified (transformation),Brown coal (if no detail),0
+A,Non-specified (transformation),Hard coal (if no detail),100
+A,Non-specified (transformation),Brown coal (if no detail),-200
 A,Non-specified (transformation),Anthracite,0
 A,Non-specified (transformation),Coking coal,0
 A,Non-specified (transformation),Other bituminous coal,0
@@ -3264,7 +3264,7 @@ A,Charcoal production plants (energy),Electricity,0
 A,Charcoal production plants (energy),Heat,0
 A,Charcoal production plants (energy),Total,0
 A,Charcoal production plants (energy),Memo: Renewables,0
-A,Non-specified (energy),Hard coal (if no detail),0
+A,Non-specified (energy),Hard coal (if no detail),-184
 A,Non-specified (energy),Brown coal (if no detail),0
 A,Non-specified (energy),Anthracite,0
 A,Non-specified (energy),Coking coal,0
@@ -9384,8 +9384,8 @@ B,Charcoal production plants (transf.),Electricity,0
 B,Charcoal production plants (transf.),Heat,0
 B,Charcoal production plants (transf.),Total,0
 B,Charcoal production plants (transf.),Memo: Renewables,0
-B,Non-specified (transformation),Hard coal (if no detail),0
-B,Non-specified (transformation),Brown coal (if no detail),0
+B,Non-specified (transformation),Hard coal (if no detail),-30
+B,Non-specified (transformation),Brown coal (if no detail),23
 B,Non-specified (transformation),Anthracite,0
 B,Non-specified (transformation),Coking coal,0
 B,Non-specified (transformation),Other bituminous coal,0
@@ -10608,8 +10608,8 @@ B,Charcoal production plants (energy),Electricity,0
 B,Charcoal production plants (energy),Heat,0
 B,Charcoal production plants (energy),Total,0
 B,Charcoal production plants (energy),Memo: Renewables,0
-B,Non-specified (energy),Hard coal (if no detail),0
-B,Non-specified (energy),Brown coal (if no detail),0
+B,Non-specified (energy),Hard coal (if no detail),-235
+B,Non-specified (energy),Brown coal (if no detail),-236
 B,Non-specified (energy),Anthracite,0
 B,Non-specified (energy),Coking coal,0
 B,Non-specified (energy),Other bituminous coal,0

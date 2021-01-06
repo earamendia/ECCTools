@@ -39,8 +39,9 @@ test <- AB_data %>%
   specify_production_to_resources() %>%
   gather_producer_autoproducer() %>%
   route_pumped_storage() %>%
-  route_own_use_elect_chp_heat()
-  #specify_tp_eiou_revisited()
+  route_own_use_elect_chp_heat() %>%
+  route_non_specified_eiou()
+  # route_non_specified_tp()
 
 
 
