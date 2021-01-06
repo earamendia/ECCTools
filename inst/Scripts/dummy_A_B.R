@@ -39,9 +39,24 @@ test <- AB_data %>%
   specify_production_to_resources() %>%
   gather_producer_autoproducer() %>%
   route_pumped_storage() %>%
-  route_own_use_elect_chp_heat() %>%
-  route_non_specified_eiou() %>%
-  route_non_specified_tp()
+  route_own_use_elect_chp_heat() #%>%
+  #route_non_specified_eiou() %>%
+  #route_non_specified_tp()
+
+# Useful code for testing the new version of the route_own_use_elect_chp_heat() function.
+testing <- AB_data %>%
+  filter(
+    !(Flow %in% c("Main activity producer electricity plants", "Main activity producer heat plants", "Main activity producer CHP plants") & Country == "B" & E.dot > 0)
+  )
+
+testing %>%
+  route_own_use_elect_chp_heat()
+
+
+
+# testing %>% group_by(Country) %>%
+#   filter("Main activity producer electricity plants" %in% .data[["Flow"]] & .data[["E.dot"]] > 0) %>%
+#   View()
 
 
 
