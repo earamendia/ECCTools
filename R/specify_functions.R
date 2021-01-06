@@ -287,6 +287,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
   # Check whether there is at least one other EIOU flow besides the "Non-specified"
   # If yes, then keep the "Non-specified" EIOU flow
 
+  # There's an issue with this bit to be solved.
   n <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou & .data[[flow]] != non_spec
@@ -408,22 +409,18 @@ route_non_specified_tp <- function(.tidy_iea_df,
                                    product = IEATools::iea_cols$product,
                                    unit = IEATools::iea_cols$unit,
                                    e_dot = IEATools::iea_cols$e_dot,
-                                   supply = "Supply",
-                                   eiou = "Energy industry own use",
                                    transformation_processes = "Transformation processes",
-                                   own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                   negzeropos = ".negzeropos",
-                                   main_act_producer_elect = "Main activity producer electricity plants",
-                                   main_act_producer_chp = "Main activity producer CHP plants",
-                                   main_act_producer_heat = "Main activity producer heat plants"){
+                                   non_spec = "Non-specified",
+                                   negzeropos = ".negzeropos"){
 
 
   # Check whether there is at least one other TP flow besides the "Non-specified"
   # If yes, then keep the "Non-specified" EIOU flow
 
+  # Likewise this is erroneous.
   n <- .tidy_iea_df %>%
     dplyr::filter(
-      .data[[flow_aggregation_point]] & .data[[flow]] != non-spec # Change the default non-spec!!
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec # Change the default non-spec!!
     ) %>%
     dplyr::summarise(
       n = n()
@@ -434,4 +431,125 @@ route_non_specified_tp <- function(.tidy_iea_df,
   if (n == 0){
     return(.tidy_iea_df)
   }
+
+
+  total_input_output_by_prod_tps <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec
+    ) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    dplyr::group_by(
+      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]],
+      .data[[flow_aggregation_point]], .data[[product]], .data[[negzeropos]]
+    ) %>%
+    dplyr::summarise(
+      Total_input_output_by_prod_excl_nonspec_From_Func = sum(.data[[e_dot]])
+    )
+
+
+  input_output_by_prod_per_tp <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec
+    ) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    dplyr::group_by(
+      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[ledger_side]],
+      .data[[flow_aggregation_point]], .data[[flow]], .data[[product]], .data[[negzeropos]]
+    ) %>%
+    dplyr::summarise(
+      Input_output_by_prod_per_tp_From_Func = sum(.data[[e_dot]])
+    )
+
+
+  share_input_output_by_prod_per_tp <- input_output_by_prod_per_tp %>%
+    dplyr::left_join(
+      total_input_output_by_prod_tps,
+      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {ledger_side}, {flow_aggregation_point}, {product}, {negzeropos})
+    ) %>%
+    dplyr::mutate(
+      Share_input_output_by_prod_per_tp_From_Func = Input_output_by_prod_per_tp_From_Func / Total_input_output_by_prod_excl_nonspec_From_Func
+    ) %>%
+    dplyr::select(-.data[[flow_aggregation_point]])
+
+
+  list_tp_flows_excl_nonspec <- .tidy_iea_df %>%
+    dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec) %>%
+    tidyr::expand(.data[[flow]]) %>%
+    dplyr::pull()
+
+
+  routed_nonspec_tp <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] == non_spec
+    ) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    group_by(
+      .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]],
+      .data[[ledger_side]], .data[[product]], .data[[negzeropos]]
+    ) %>%
+    tidyr::crossing(
+      destination_flow := list_tp_flows_excl_nonspec
+    ) %>%
+    dplyr::mutate(
+      "{flow}" := .data[["destination_flow"]]
+    ) %>%
+    select(-destination_flow) %>%
+    dplyr::inner_join(
+      share_input_output_by_prod_per_tp,
+      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow_aggregation_point}, {flow}, {unit}, {ledger_side}, {product}, {negzeropos})
+    ) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * Share_input_output_by_prod_per_tp_From_Func
+    ) %>%
+    dplyr::select(-Share_input_output_by_prod_per_tp_From_Func,
+                  -Input_output_by_prod_per_tp_From_Func,
+                  -Total_input_output_by_prod_excl_nonspec_From_Func)
+
+
+  tidy_iea_df_routed_nonspec_tp <- .tidy_iea_df %>%
+    dplyr::filter(
+      ! (.data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] == non_spec)
+    ) %>%
+    dplyr::bind_rows(routed_nonspec_tp %>%
+                       dplyr::select(-.data[[negzeropos]])) %>%
+    #Aggregating. We need to add a pos/neg/null column to add up differently positive and negative values, otherwise we'd only get NET flows.
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+
+  return(tidy_iea_df_routed_nonspec_tp)
+
 }

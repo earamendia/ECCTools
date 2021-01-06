@@ -40,8 +40,8 @@ test <- AB_data %>%
   gather_producer_autoproducer() %>%
   route_pumped_storage() %>%
   route_own_use_elect_chp_heat() %>%
-  route_non_specified_eiou()
-  # route_non_specified_tp()
+  route_non_specified_eiou() %>%
+  route_non_specified_tp()
 
 
 
