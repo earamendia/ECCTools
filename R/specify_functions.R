@@ -132,8 +132,14 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
   # Now, we move to the other case - one of the three main activities elect, heat, and/or CHP EXISTS in the TP - supply.
   # So each time we need to start by doing the inverse filter.
 
+  # HEre's an alternative to expand(nesting())
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
-    tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    dplyr::summarise(
+      n_From_Func = dplyr::n()
+    ) %>%
+    dplyr::select(-n_From_Func)
+    #tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
 
 
   total_main_activity_output <- .tidy_iea_df %>%
@@ -304,9 +310,14 @@ route_non_specified_eiou <- function(.tidy_iea_df,
                                      negzeropos = ".negzeropos"){
 
 
-
+  # Here's an alternative to expand
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
-    tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    dplyr::summarise(
+      n_From_Func = dplyr::n()
+    ) %>%
+    dplyr::select(-n_From_Func)
+    #tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]])
 
 
   total_eiou_excl_nonspec <- .tidy_iea_df %>%
@@ -457,7 +468,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]]) %>%
     dplyr::summarise(
-      n_From_Func = n()
+      n_From_Func = dplyr::n()
     ) %>%
     dplyr::select(-n_From_Func)
     #tidyr::expand(tidyr::nesting(.env[[country]], .env[[method]], .env[[energy_type]], .env[[last_stage]], .env[[year]], .env[[product]], .env[[negzeropos]]))
