@@ -59,6 +59,19 @@ testing %>%
 #   View()
 
 
+# Here code for testing the route_non_specified_eiou function:
+# Also loading the tp csv file
+
+testing <- AB_data %>%
+  filter(! (Country == "A" & Flow.aggregation.point == "Energy industry own use" & Flow != "Non-specified"),
+         ! (Country == "B" & Flow.aggregation.point == "Energy industry own use" & ! (Flow %in% c("Non-specified", "Oil refineries", "Coke ovens"))))
+# Keeps only non-specified EIOU flow in country A
+# and non-specified, oil refineries, and coke ovens in country B
+
+testing %>%
+  route_non_specified_eiou()
+
+
 
 AB_tidy_data <- AB_data %>%
   specify_all() %>%

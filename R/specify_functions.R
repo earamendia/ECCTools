@@ -303,8 +303,6 @@ route_non_specified_eiou <- function(.tidy_iea_df,
                                      eiou = "Energy industry own use",
                                      negzeropos = ".negzeropos"){
 
-  # Check whether there is at least one other EIOU flow besides the "Non-specified"
-  # If yes, then keep the "Non-specified" EIOU flow
 
 
   df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
