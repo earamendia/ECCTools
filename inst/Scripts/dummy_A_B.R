@@ -72,6 +72,69 @@ testing %>%
   route_non_specified_eiou()
 
 
+# df_observations_included_tidy_iea_df <- AB_data %>%
+#   dplyr::filter(.data[["Flow.aggregation.point"]] == "Transformation processes") %>%
+#   dplyr::mutate(
+#     negzeropos = dplyr::case_when(
+#       .data[["E.dot"]] < 0 ~ "neg",
+#       .data[["E.dot"]] == 0 ~ "zero",
+#       .data[["E.dot"]] > 0 ~ "pos"
+#     )
+#   ) %>%
+#   tidyr::expand(-E.dot, -Flow)
+#
+#   tidyr::expand(.data[["Country"]], .data[["Method"]], .data[["Energy.type"]], .data[["Last.stage"]], .data[["Year"]], .data[["Product"]], .data[["negzeropos"]])
+#
+#
+total_input_output_by_prod_tps <- AB_data %>%
+  dplyr::filter(
+    .data[["Flow.aggregation.point"]] == "Transformation processes", .data[["Flow"]] != "Non-specified"
+  ) %>%
+  dplyr::mutate(
+    negzeropos = dplyr::case_when(
+      .data[["E.dot"]] < 0 ~ "neg",
+      .data[["E.dot"]] == 0 ~ "zero",
+      .data[["E.dot"]] > 0 ~ "pos"
+    )
+  ) %>%
+  expand(nesting(Country, Method, Energy.type))#, .data[["Last.stage"]], .data[["Year"]], .data[["Unit"]], .data[["Ledger.side"]], .data[["Flow.aggregation.point"]], .data[["Product"]], .data[["negzeropos"]]))# %>%
+  #distinct()
+#
+#
+# total_input_output_by_prod_tps <- AB_data %>%
+#   dplyr::filter(
+#     .data[["Flow.aggregation.point"]] == "Transformation processes" & .data[["Flow"]] != "Non-specified"
+#   ) %>%
+#   dplyr::mutate(
+#     negzeropos = dplyr::case_when(
+#       .data[["E.dot"]] < 0 ~ "neg",
+#       .data[["E.dot"]] == 0 ~ "zero",
+#       .data[["E.dot"]] > 0 ~ "pos"
+#     )
+#   ) %>%
+#   dplyr::group_by(
+#     .data[["Country"]], .data[["Method"]], .data[["Energy.type"]], .data[["Last.stage"]], .data[["Year"]], .data[["Unit"]], .data[["Ledger.side"]],
+#     .data[["Flow.aggregation.point"]], .data[["Product"]], .data[["negzeropos"]]
+#   ) %>%
+#   dplyr::summarise(
+#     Total_input_output_by_prod_excl_nonspec_From_Func = n()) #sum(.data[["E.dot"]])
+
+
+
+
+
+
+# And now, testing route_non_specified_tp function
+AB_data %>%
+  filter(! (Country == "B" &
+              Flow.aggregation.point == "Transformation processes" &
+              Product == "Hard coal (if no detail)" &
+              E.dot < 0 &
+              Flow != "Non-specified")) %>%
+  #filter(Product == "Hard coal (if no detail)") %>%
+  route_non_specified_tp()
+
+
 
 AB_tidy_data <- AB_data %>%
   specify_all() %>%
