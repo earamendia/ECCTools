@@ -446,23 +446,16 @@ route_non_specified_tp <- function(.tidy_iea_df,
                                    negzeropos = ".negzeropos"){
 
 
-  # Check whether there is at least one other TP flow besides the "Non-specified"
-  # If yes, then keep the "Non-specified" EIOU flow
-
-  # Likewise this is erroneous.
-  n <- .tidy_iea_df %>%
-    dplyr::filter(
-      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec # Change the default non-spec!!
+  df_observations_included_tidy_iea_df <- .tidy_iea_df %>%
+    dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
     ) %>%
-    dplyr::summarise(
-      n = n()
-    ) %>%
-    dplyr::pull()
-
-  # No change to the data frame if n = 0
-  if (n == 0){
-    return(.tidy_iea_df)
-  }
+    tidyr::expand(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]])
 
 
   total_input_output_by_prod_tps <- .tidy_iea_df %>%
@@ -483,6 +476,11 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::summarise(
       Total_input_output_by_prod_excl_nonspec_From_Func = sum(.data[[e_dot]])
     )
+
+  list_not_included_total_input_output_by_prod_tps <- df_observations_included_tidy_iea_df %>%
+    dplyr::anti_join(total_input_output_by_prod_tps, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {negzeropos})) %>%
+    tidyr::unite(col = "ID", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]]) %>%
+    dplyr::pull()
 
 
   input_output_by_prod_per_tp <- .tidy_iea_df %>%
@@ -516,16 +514,20 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::select(-.data[[flow_aggregation_point]])
 
 
+
   list_tp_flows_excl_nonspec <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] != non_spec) %>%
     tidyr::expand(.data[[flow]]) %>%
     dplyr::pull()
 
 
+  # When tps with the given product and sign are available in the data frame
   routed_nonspec_tp <- .tidy_iea_df %>%
     dplyr::filter(
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] == non_spec
     ) %>%
+    dplyr::filter(!(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]], sep = "_")
+                    %in% list_not_included_total_input_output_by_prod_tps)) %>%
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
         .data[[e_dot]] < 0 ~ "neg",
@@ -556,9 +558,15 @@ route_non_specified_tp <- function(.tidy_iea_df,
                   -Total_input_output_by_prod_excl_nonspec_From_Func)
 
 
+
+
+  # All other cases
   tidy_iea_df_routed_nonspec_tp <- .tidy_iea_df %>%
     dplyr::filter(
-      ! (.data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] == non_spec)
+      ! (.data[[flow_aggregation_point]] == transformation_processes &
+           .data[[flow]] == non_spec &
+           (! stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]], sep = "_") %in%
+              list_not_included_total_input_output_by_prod_tps))
     ) %>%
     dplyr::bind_rows(routed_nonspec_tp %>%
                        dplyr::select(-.data[[negzeropos]])) %>%
