@@ -395,7 +395,7 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
     gather_producer_autoproducer() %>%
     route_pumped_storage() %>%
     route_own_use_elect_chp_heat() %>%
-    #add_nuclear_industry() %>%
+    add_nuclear_industry() %>%
     route_non_specified_flows()
 
 

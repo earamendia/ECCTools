@@ -268,7 +268,15 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  # Places where the EIOU will e reassigned
                                  main_act_producer_elect = "Main activity producer electricity plants"){
 
-  return(.tidy_iea_df)
+
+  # This is the code for keeping the current version. Here nuclear in EIOU is routed to "Main activiy producer electricity plants".
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+          .data[[flow]] == nuclear_industry & flow_aggregation_point == eiou ~ main_act_producer_elect,
+          TRUE ~ .data[[flow]]
+        )
+      )
 }
 
 
