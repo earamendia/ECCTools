@@ -463,8 +463,44 @@ transform_to_bta <- function(.tidy_iea_df){
 
 # Find list of observations for which the DTA can be implemented
 
-find_list_dta_observations <- function(.tidy_iea_df){
+find_list_dta_observations <- function(.tidy_iea_df,
+                                       country = IEATools::iea_cols$country,
+                                       method = IEATools::iea_cols$method,
+                                       energy_type = IEATools::iea_cols$energy_type,
+                                       last_stage = IEATools::iea_cols$last_stage,
+                                       year = IEATools::iea_cols$year,
+                                       flow = IEATools::iea_cols$flow,
+                                       product = IEATools::iea_cols$product,
+                                       imports = IEATools::interface_industries$imports,
+                                       matnames = "matnames",
+                                       y_matrix = "Y",
+                                       u_eiou_matrix = "U_EIOU",
+                                       u_feed_matrix = "U_feed",
+                                       v_matrix = "V",
+                                       r_matrix = "R"){
 
+  list_supplied_products_per_observation <- .tidy_iea_df %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    dplyr::filter((.data[[matnames]] == v_matrix | .data[[matnames]] == r_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
+    tidyr::expand(.data[[product]]) %>%
+    tidyr::unite(col = "Observation_Product_From_Func", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
+    dplyr::pull()
+
+
+  list_dta_observations <- .tidy_iea_df %>%
+    dplyr::filter(.data[[matnames]] == y_matrix | .data[[matnames]] == u_eiou_matrix | .data[[matnames]] == u_feed_matrix) %>% #These are products used
+    dplyr::mutate(
+      is_produced_domestically = case_when(
+        tidyr::unite(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %in% list_supplied_products_per_observation ~ TRUE,
+        TRUE ~ FALSE
+      )
+    ) %>%
+    dplyr::filter(! FALSE %in% .data[["is_produced_domestically"]]) %>%
+    tidyr::unite(col = "Observation_For_DTA_From_Func", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    tidyr::expand(.data[["Observation_For_DTA_From_Func"]]) %>%
+    dplyr::pull()
+
+  return(list_dta_observations)
 }
 
 
@@ -486,7 +522,6 @@ transform_to_dta <- function(.tidy_iea_df,
   .tidy_iea_df %>%
     dplyr::filter(tidyr::unite(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %in% list_dta_observations) %>%
     dplyr::filter(.data[[flow]] != imports)
-
 
 }
 
