@@ -515,15 +515,21 @@ transform_to_dta <- function(.tidy_iea_df,
                              last_stage = IEATools::iea_cols$last_stage,
                              year = IEATools::iea_cols$year,
                              flow = IEATools::iea_cols$flow,
-                             imports = IEATools::interface_industries$imports) {
+                             ledger_side = IEATools::iea_cols$ledger_side,
+                             imports = IEATools::interface_industries$imports,
+                             balancing = "Balancing"){
 
   list_dta_observations <- .tidy_iea_df %>%
     find_list_dta_observations()
 
   .tidy_iea_df %>%
     dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
-    dplyr::filter(! stringr::str_detect(.data[[flow]], imports))
-
+    dplyr::mutate(
+      "{ledger_side}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], imports) ~ balancing,
+        TRUE ~ .data[[ledger_side]]
+      )
+    )
 }
 
 
