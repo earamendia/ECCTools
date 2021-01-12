@@ -182,6 +182,18 @@ test_third_test <- AB_data_third_test %>%
 
 
 
+# Code for testing the transformation to dta function:
+# Using the normal AB example
+
+# First with normal AB_tidy_data
+AB_tidy_data %>%
+  find_list_dta_observations()
+
+
+
+
+
+
 # This is basically the code that will get data for the V matrix ready.
 AB_supply_MR <- AB_tidy_data %>%
   filter(matnames == "V", ! str_detect(Flow, "Imports")) %>%
