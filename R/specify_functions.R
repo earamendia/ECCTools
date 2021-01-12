@@ -269,7 +269,7 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  main_act_producer_elect = "Main activity producer electricity plants"){
 
 
-  # This is the code for keeping the current version. Here nuclear in EIOU is routed to "Main activiy producer electricity plants".
+  # This is the code for keeping the current version. Here nuclear in EIOU is routed to "Main activiy producer electricity plants"
   .tidy_iea_df %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(

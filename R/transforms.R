@@ -461,12 +461,33 @@ transform_to_bta <- function(.tidy_iea_df){
 
 
 
+# Find list of observations for which the DTA can be implemented
+
+find_list_dta_observations <- function(.tidy_iea_df){
+
+}
+
 
 
 # Transform to dta function
 
-transform_to_dta <- function() {
-  return("hello world")
+transform_to_dta <- function(.tidy_iea_df,
+                             country = IEATools::iea_cols$country,
+                             method = IEATools::iea_cols$method,
+                             energy_type = IEATools::iea_cols$energy_type,
+                             last_stage = IEATools::iea_cols$last_stage,
+                             year = IEATools::iea_cols$year,
+                             flow = IEATools::iea_cols$flow,
+                             imports = IEATools::interface_industries$imports) {
+
+  list_dta_observations <- .tidy_iea_df %>%
+    find_list_dta_observations()
+
+  .tidy_iea_df %>%
+    dplyr::filter(tidyr::unite(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %in% list_dta_observations) %>%
+    dplyr::filter(.data[[flow]] != imports)
+
+
 }
 
 
