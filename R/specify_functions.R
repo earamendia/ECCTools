@@ -253,30 +253,94 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
 
 
-
+# This function adds a nuclear industry to the PSUT.
 add_nuclear_industry <- function(.tidy_iea_df,
-                                 flow_aggregation_point = "Flow.aggregation.point",
+                                 flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                 flow = IEATools::iea_cols$flow,
+                                 e_dot = IEATools::iea_cols$e_dot,
+                                 product = IEATools::iea_cols$product,
+                                 method = IEATools::iea_cols$method,
+                                 ledger_side = IEATools::iea_cols$ledger_side,
+                                 last_stage = IEATools::iea_cols$last_stage,
+                                 energy_type = IEATools::iea_cols$energy_type,
+                                 country = IEATools::iea_cols$country,
+                                 year = IEATools::iea_cols$year,
+                                 unit = IEATools::iea_cols$unit,
                                  eiou = "Energy industry own use",
                                  transformation_processes = "Transformation processes",
-                                 flow = "Flow",
-                                 # Industries that receive EIOU but are not in Transformation processes
                                  own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
-                                 pumped_storage = "Pumped storage plants",
                                  nuclear_industry = "Nuclear industry",
-                                 e_dot = "E.dot",
                                  negzeropos = ".negzeropos",
-                                 # Places where the EIOU will e reassigned
-                                 main_act_producer_elect = "Main activity producer electricity plants"){
+                                 main_act_producer_elect = "Main activity producer electricity plants",
+                                 main_act_producer_chp = "Main activity producer CHP plants",
+                                 autoproducer_elect = "Autoproducer electricity plants",
+                                 autoproducer_chp = "Autoproducer CHP plants",
+                                 nuclear = "Nuclear",#perhaps to change if it becomes Nuclear [from Resources]
+                                 electricity = "Electricity",
+                                 heat = "Heat"){
 
 
-  # This is the code for keeping the current version. Here nuclear in EIOU is routed to "Main activiy producer electricity plants"
-  .tidy_iea_df %>%
+  # Here we keep only the flows that we are going to modify:
+  modified_flows <- .tidy_iea_df %>%
+    dplyr::filter(
+      (.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+        (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat))
+    ) %>%
+    tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    dplyr::mutate(
+      "{nuclear}" := replace_na(.data[[nuclear]], 0),
+      "{electricity}" := replace_na(.data[[electricity]], 0),
+      "{heat}" := replace_na(.data[[heat]], 0)
+    ) %>%
+    dplyr::mutate(
+      share_elect_output_From_Func = .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+      "{electricity}" := .data[[electricity]] + (.data[[nuclear]] * 0.33) * .data[["share_elect_output_From_Func"]],
+      "{heat}" := .data[[heat]] + (.data[[nuclear]] * 0.33) * (1 - .data[["share_elect_output_From_Func"]]),
+      Electricity_Nuclear = - .data[[nuclear]] * 0.33 * share_elect_output_From_Func,
+      Heat_Nuclear = - .data[[nuclear]] * 0.33 * (1 - share_elect_output_From_Func)
+    ) %>%
+    dplyr::select(-.data[["share_elect_output_From_Func"]]) %>%
+    tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, "Electricity_Nuclear", "Heat_Nuclear"), values_to = {e_dot}, names_to = {product}) %>%
+    dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-          .data[[flow]] == nuclear_industry & flow_aggregation_point == eiou ~ main_act_producer_elect,
-          TRUE ~ .data[[flow]]
-        )
+        stringr::str_detect(.data[[product]], nuclear) ~ nuclear_industry,
+        TRUE ~ .data[[flow]]
+        ),
+      "{product}" := str_remove(.data[[product]], "_Nuclear")
       )
+
+
+
+  to_return <- .tidy_iea_df %>%
+    dplyr::filter(
+      ! ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+                    (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
+    ) %>%
+    dplyr::bind_rows(
+      modified_flows
+    ) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+
+
+  return(to_return)
 }
 
 

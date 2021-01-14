@@ -804,7 +804,7 @@ A,Autoproducer electricity plants (transf.),Non-specified primary biofuels and w
 A,Autoproducer electricity plants (transf.),Charcoal,0
 A,Autoproducer electricity plants (transf.),Elec/heat output from non-specified manufactured gases,0
 A,Autoproducer electricity plants (transf.),Heat output from non-specified combustible fuels,0
-A,Autoproducer electricity plants (transf.),Nuclear,0
+A,Autoproducer electricity plants (transf.),Nuclear,-150
 A,Autoproducer electricity plants (transf.),Hydro,0
 A,Autoproducer electricity plants (transf.),Geothermal,0
 A,Autoproducer electricity plants (transf.),Solar photovoltaics,0
@@ -812,8 +812,8 @@ A,Autoproducer electricity plants (transf.),Solar thermal,0
 A,Autoproducer electricity plants (transf.),"Tide, wave and ocean",0
 A,Autoproducer electricity plants (transf.),Wind,0
 A,Autoproducer electricity plants (transf.),Other sources,0
-A,Autoproducer electricity plants (transf.),Electricity,0
-A,Autoproducer electricity plants (transf.),Heat,0
+A,Autoproducer electricity plants (transf.),Electricity,350
+A,Autoproducer electricity plants (transf.),Heat,150
 A,Autoproducer electricity plants (transf.),Total,0
 A,Autoproducer electricity plants (transf.),Memo: Renewables,0
 A,Main activity producer CHP plants (transf.),Hard coal (if no detail),0
@@ -872,7 +872,7 @@ A,Main activity producer CHP plants (transf.),Non-specified primary biofuels and
 A,Main activity producer CHP plants (transf.),Charcoal,0
 A,Main activity producer CHP plants (transf.),Elec/heat output from non-specified manufactured gases,0
 A,Main activity producer CHP plants (transf.),Heat output from non-specified combustible fuels,0
-A,Main activity producer CHP plants (transf.),Nuclear,0
+A,Main activity producer CHP plants (transf.),Nuclear,-60
 A,Main activity producer CHP plants (transf.),Hydro,0
 A,Main activity producer CHP plants (transf.),Geothermal,0
 A,Main activity producer CHP plants (transf.),Solar photovoltaics,0
@@ -880,8 +880,8 @@ A,Main activity producer CHP plants (transf.),Solar thermal,0
 A,Main activity producer CHP plants (transf.),"Tide, wave and ocean",0
 A,Main activity producer CHP plants (transf.),Wind,0
 A,Main activity producer CHP plants (transf.),Other sources,0
-A,Main activity producer CHP plants (transf.),Electricity,0
-A,Main activity producer CHP plants (transf.),Heat,0
+A,Main activity producer CHP plants (transf.),Electricity,200
+A,Main activity producer CHP plants (transf.),Heat,30
 A,Main activity producer CHP plants (transf.),Total,0
 A,Main activity producer CHP plants (transf.),Memo: Renewables,0
 A,Autoproducer CHP plants (transf.),Hard coal (if no detail),0
@@ -940,7 +940,7 @@ A,Autoproducer CHP plants (transf.),Non-specified primary biofuels and waste,0
 A,Autoproducer CHP plants (transf.),Charcoal,0
 A,Autoproducer CHP plants (transf.),Elec/heat output from non-specified manufactured gases,0
 A,Autoproducer CHP plants (transf.),Heat output from non-specified combustible fuels,0
-A,Autoproducer CHP plants (transf.),Nuclear,0
+A,Autoproducer CHP plants (transf.),Nuclear,-999
 A,Autoproducer CHP plants (transf.),Hydro,0
 A,Autoproducer CHP plants (transf.),Geothermal,0
 A,Autoproducer CHP plants (transf.),Solar photovoltaics,0
@@ -948,8 +948,8 @@ A,Autoproducer CHP plants (transf.),Solar thermal,0
 A,Autoproducer CHP plants (transf.),"Tide, wave and ocean",0
 A,Autoproducer CHP plants (transf.),Wind,0
 A,Autoproducer CHP plants (transf.),Other sources,0
-A,Autoproducer CHP plants (transf.),Electricity,0
-A,Autoproducer CHP plants (transf.),Heat,0
+A,Autoproducer CHP plants (transf.),Electricity,400
+A,Autoproducer CHP plants (transf.),Heat,500
 A,Autoproducer CHP plants (transf.),Total,0
 A,Autoproducer CHP plants (transf.),Memo: Renewables,0
 A,Main activity producer heat plants (transf.),Hard coal (if no detail),0
@@ -3184,7 +3184,7 @@ A,Nuclear industry  (energy),Non-specified primary biofuels and waste,0
 A,Nuclear industry  (energy),Charcoal,0
 A,Nuclear industry  (energy),Elec/heat output from non-specified manufactured gases,0
 A,Nuclear industry  (energy),Heat output from non-specified combustible fuels,0
-A,Nuclear industry  (energy),Nuclear,100
+A,Nuclear industry  (energy),Nuclear,-100
 A,Nuclear industry  (energy),Hydro,0
 A,Nuclear industry  (energy),Geothermal,0
 A,Nuclear industry  (energy),Solar photovoltaics,0

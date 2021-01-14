@@ -19,7 +19,7 @@ library(glue)
 #### Loading and preparing A_B dummy data  ####
 
 # Loading data
-A_B_path <- file.path("inst/A_B_data_full_2018_format.csv")
+A_B_path <- file.path("inst/A_B_data_full_2018_format_nuclear.csv")
 # A_B_path <- file.path("Scripts/A_B_Test_TP_industries.csv")
 # A_B_path <- file.path("Scripts/A_B_Test_p_e_supply.csv")
 
@@ -216,6 +216,65 @@ testing %>%
 testing %>%
   transform_to_dta() %>%
   View()
+
+
+
+
+# Testing for setting up the add_nuclear_industry function
+flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point
+flow = IEATools::iea_cols$flow
+e_dot = IEATools::iea_cols$e_dot
+product = IEATools::iea_cols$product
+eiou = "Energy industry own use"
+transformation_processes = "Transformation processes"
+own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants"
+nuclear_industry = "Nuclear industry"
+main_act_producer_elect = "Main activity producer electricity plants"
+main_act_producer_chp = "Main activity producer CHP plants"
+autoproducer_elect = "Autoproducer electricity plants"
+autoproducer_chp = "Autoproducer CHP plants"
+nuclear = "Nuclear"#perhaps to change if it becomes Nuclear [from Resources]
+electricity = "Electricity"
+heat = "Heat"
+
+
+# First, amending flows of elect/chp plants
+AB_data %>%
+  dplyr::filter(
+    (.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+      (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat))
+  ) %>%
+  tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+  dplyr::mutate(
+    "{nuclear}" := replace_na(.data[[nuclear]], 0),
+    "{electricity}" := replace_na(.data[[electricity]], 0),
+    "{heat}" := replace_na(.data[[heat]], 0)
+  ) %>%
+  dplyr::mutate(
+    share_elect_output_From_Func = .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+    "{electricity}" := .data[[electricity]] + (.data[[nuclear]] * 0.33) * .data[["share_elect_output_From_Func"]],
+    "{heat}" := .data[[heat]] + (.data[[nuclear]] * 0.33) * (1 - .data[["share_elect_output_From_Func"]]),
+    Electricity_Nuclear = - .data[[nuclear]] * 0.33 * share_elect_output_From_Func,
+    Heat_Nuclear = - .data[[nuclear]] * 0.33 * (1 - share_elect_output_From_Func)
+  ) %>%
+  dplyr::select(-.data[["share_elect_output_From_Func"]]) %>%
+  tidyr::pivot_longer(cols = c({electricity}, {heat}, {nuclear}, "Electricity_Nuclear", "Heat_Nuclear"), values_to = {e_dot}, names_to = {product}) %>%
+  dplyr::filter(.data[[e_dot]] != 0) %>%
+  dplyr::mutate(
+    "{flow}" := dplyr::case_when(
+      stringr::str_detect(.data[[product]], nuclear) ~ nuclear_industry,
+      TRUE ~ .data[[flow]]),
+    "{product}" := str_remove(.data[[product]], "_Nuclear")) %>%
+    print()
+
+
+# Second, creating nuclear plants flows
+# Now, testing the add_nuclear_industry function
+test <- AB_data %>%
+  add_nuclear_industry()
+
+
+
 
 
 # This is basically the code that will get data for the V matrix ready.
