@@ -311,7 +311,6 @@ add_nuclear_industry <- function(.tidy_iea_df,
       )
 
 
-
   to_return <- .tidy_iea_df %>%
     dplyr::filter(
       ! ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
