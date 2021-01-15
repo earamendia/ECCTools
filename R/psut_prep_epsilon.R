@@ -41,7 +41,7 @@ extract_S_units_from_tidy <- function(.tidy_iea_df,
 
 
 
-add_psut_matnames_balancing <- function(.tidy_iea_df,
+add_psut_matnames_epsilon <- function(.tidy_iea_df,
                               # Input columns
                               ledger_side = IEATools::iea_cols$ledger_side,
                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -73,13 +73,13 @@ add_psut_matnames_balancing <- function(.tidy_iea_df,
                               U_EIOU = IEATools::psut_cols$U_eiou,
                               V = IEATools::psut_cols$V,
                               Y = IEATools::psut_cols$Y,
-                              balancing = "Balancing",
                               epsilon = "Epsilon"){
   matsindf::verify_cols_missing(.tidy_iea_df, matnames)
 
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
+        stringr::str_detect(.data[[ledger_side]], epsilon) ~ epsilon,
         # All Consumption items belong in the final demand (Y) matrix.
         .data[[ledger_side]] == consumption ~ Y,
         # All production items belong in the resources (R) matrix.
@@ -94,8 +94,6 @@ add_psut_matnames_balancing <- function(.tidy_iea_df,
         # All other negative values on the Supply side of the ledger belong in the use matrix
         # that excludes EIOU (U_feed).
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 ~ U_feed,
-        # All places where the matrix name is "Balancing" should be part of the Epsilon matrix
-        .data[[ledger_side]] == balancing ~ epsilon,
         # Identify any places where our logic is faulty.
         TRUE ~ NA_character_
       )
@@ -106,7 +104,7 @@ add_psut_matnames_balancing <- function(.tidy_iea_df,
 
 
 
-add_row_col_meta_balancing <- function(.tidy_iea_df,
+add_row_col_meta_epsilon <- function(.tidy_iea_df,
                              # Column names for Product and Flow
                              product = IEATools::iea_cols$product,
                              flow = IEATools::iea_cols$flow,
@@ -170,7 +168,7 @@ add_row_col_meta_balancing <- function(.tidy_iea_df,
 
 
 
-collapse_to_tidy_psut_balancing <- function(.tidy_iea_df,
+collapse_to_tidy_psut_epsilon <- function(.tidy_iea_df,
                                   # Names of input columns
                                   ledger_side = IEATools::iea_cols$ledger_side,
                                   flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -223,7 +221,7 @@ collapse_to_tidy_psut_balancing <- function(.tidy_iea_df,
 
 
 
-prep_psut_balancing <- function(.tidy_iea_df,
+prep_psut_epsilon <- function(.tidy_iea_df,
                       year = IEATools::iea_cols$year,
                       ledger_side = IEATools::iea_cols$ledger_side,
                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -274,12 +272,12 @@ prep_psut_balancing <- function(.tidy_iea_df,
   # Bundle functions together
   Temp <- .tidy_iea_df %>%
     # Add matrix names
-    add_psut_matnames_balancing(ledger_side = ledger_side, supply = supply, consumption = consumption) %>%
+    add_psut_matnames_epsilon(ledger_side = ledger_side, supply = supply, consumption = consumption) %>%
     # Add additional metadata
-    add_row_col_meta_balancing(flow = flow, product = product, matnames = matnames)
+    add_row_col_meta_epsilon(flow = flow, product = product, matnames = matnames)
   Collapsed <- Temp %>%
     # Now collapse to matrices
-    collapse_to_tidy_psut_balancing(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
+    collapse_to_tidy_psut_epsilon(e_dot = e_dot, matnames = matnames, matvals = matvals, rownames = rownames, colnames = colnames,
                           rowtypes = rowtypes, coltypes = coltypes)
   # Get a list of matrix names for future use
   matrix_names <- Collapsed[[matnames]] %>%

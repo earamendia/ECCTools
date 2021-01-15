@@ -24,7 +24,6 @@ specify_MR_R <- function(.tidy_iea_df,
 }
 
 
-
 # This function specifies the multiregional V matrix.
 specify_MR_V <- function(.tidy_iea_df,
                          V_matrix = "V",
@@ -44,6 +43,13 @@ specify_MR_V <- function(.tidy_iea_df,
     )
 
   return(MR_V)
+}
+
+
+# This function specifies the MR-Epsilon matrix
+
+specify_MR_Epsilon <- function(.tidy_iea_df){
+
 }
 
 
@@ -517,7 +523,7 @@ transform_to_dta <- function(.tidy_iea_df,
                              flow = IEATools::iea_cols$flow,
                              ledger_side = IEATools::iea_cols$ledger_side,
                              imports = IEATools::interface_industries$imports,
-                             balancing = "Balancing"){
+                             epsilon = "Epsilon"){
 
   list_dta_observations <- .tidy_iea_df %>%
     find_list_dta_observations()
@@ -526,7 +532,7 @@ transform_to_dta <- function(.tidy_iea_df,
     dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
     dplyr::mutate(
       "{ledger_side}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], imports) ~ balancing,
+        stringr::str_detect(.data[[flow]], imports) ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
         TRUE ~ .data[[ledger_side]]
       )
     )

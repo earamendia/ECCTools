@@ -84,6 +84,11 @@ test_that("stat_diffs_to_epsilon works",{
   AB_data_stat_diffs_to_epsilon <- AB_data_specified %>%
     stat_diffs_to_epsilon()
 
+  expect_equal(AB_data_stat_diffs_to_epsilon[1,] %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               500)
+
   stat_diffs_flows <- AB_data_stat_diffs_to_epsilon %>%
     dplyr::filter(Flow == "Statistical differences")
 
@@ -92,10 +97,20 @@ test_that("stat_diffs_to_epsilon works",{
                  dplyr::pull(),
                "{Epsilon}_Supply")
 
+  expect_equal(stat_diffs_flows[1,] %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               10)
+
   expect_equal(stat_diffs_flows[2,] %>%
                  dplyr::select(Ledger.side) %>%
                  dplyr::pull(),
                "{Epsilon}_Supply")
+
+  expect_equal(stat_diffs_flows[2,] %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -10)
 
 })
 
@@ -114,6 +129,12 @@ test_that("stock_changes_to_epsilon works",{
   AB_data_stock_changes_to_epsilon <- AB_data_specified %>%
     stock_changes_to_epsilon()
 
+
+  expect_equal(AB_data_stock_changes_to_epsilon[1,] %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               500)
+
   stock_changes_flows <- AB_data_stock_changes_to_epsilon %>%
     dplyr::filter(
       stringr::str_detect(.data[["Flow"]], "Stock changes")
@@ -124,10 +145,20 @@ test_that("stock_changes_to_epsilon works",{
                  dplyr::pull(),
                "{Epsilon}_Supply")
 
+  expect_equal(stock_changes_flows[1,] %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -20)
+
   expect_equal(stock_changes_flows[2,] %>%
                  dplyr::select(Ledger.side) %>%
                  dplyr::pull(),
                "{Epsilon}_Supply")
+
+  expect_equal(stock_changes_flows[2,] %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               10)
 
   expect_equal(stock_changes_flows[3,] %>%
                  dplyr::select(Ledger.side) %>%
@@ -139,9 +170,4 @@ test_that("stock_changes_to_epsilon works",{
                  dplyr::pull(),
                "{Epsilon}_Supply")
 })
-
-
-
-
-
 
