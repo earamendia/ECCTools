@@ -1,3 +1,5 @@
+# Ideally all this should go to the IEATools package.
+
 extract_S_units_from_tidy <- function(.tidy_iea_df,
                                       # Column names in .tidy_iea_df
                                       ledger_side = IEATools::iea_cols$ledger_side,

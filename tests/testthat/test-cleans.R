@@ -2,6 +2,7 @@
 context("Cleaning up PSUT")
 ###########################################################
 
+# Testing convert_to_net_trade function:
 test_that("convert_to_net_trade works", {
 
   # Path to dummy AB data
@@ -67,4 +68,80 @@ test_that("convert_to_net_trade works", {
   expect_equal(check_trade[[8, "E.dot"]], 200)
   expect_equal(check_trade[[8, "Flow"]], "Imports")
 })
+
+
+# Testing stat_diffs_to_epsilon:
+test_that("stat_diffs_to_epsilon works",{
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_stat_diffs_stock_changes.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  AB_data_specified <- AB_data %>%
+    IEATools::specify_all()
+
+  AB_data_stat_diffs_to_epsilon <- AB_data_specified %>%
+    stat_diffs_to_epsilon()
+
+  stat_diffs_flows <- AB_data_stat_diffs_to_epsilon %>%
+    dplyr::filter(Flow == "Statistical differences")
+
+  expect_equal(stat_diffs_flows[1,] %>%
+                 dplyr::select(Ledger.side) %>%
+                 dplyr::pull(),
+               "{Epsilon}_Supply")
+
+  expect_equal(stat_diffs_flows[2,] %>%
+                 dplyr::select(Ledger.side) %>%
+                 dplyr::pull(),
+               "{Epsilon}_Supply")
+
+})
+
+
+# Testing stock_changes_to_epsilon:
+test_that("stock_changes_to_epsilon works",{
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_stat_diffs_stock_changes.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  AB_data_specified <- AB_data %>%
+    IEATools::specify_all()
+
+  AB_data_stock_changes_to_epsilon <- AB_data_specified %>%
+    stock_changes_to_epsilon()
+
+  stock_changes_flows <- AB_data_stock_changes_to_epsilon %>%
+    dplyr::filter(
+      stringr::str_detect(.data[["Flow"]], "Stock changes")
+      )
+
+  expect_equal(stock_changes_flows[1,] %>%
+                 dplyr::select(Ledger.side) %>%
+                 dplyr::pull(),
+               "{Epsilon}_Supply")
+
+  expect_equal(stock_changes_flows[2,] %>%
+                 dplyr::select(Ledger.side) %>%
+                 dplyr::pull(),
+               "{Epsilon}_Supply")
+
+  expect_equal(stock_changes_flows[3,] %>%
+                 dplyr::select(Ledger.side) %>%
+                 dplyr::pull(),
+               "{Epsilon}_Supply")
+
+  expect_equal(stock_changes_flows[4,] %>%
+                 dplyr::select(Ledger.side) %>%
+                 dplyr::pull(),
+               "{Epsilon}_Supply")
+})
+
+
+
+
+
 

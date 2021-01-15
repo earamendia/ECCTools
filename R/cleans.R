@@ -1,3 +1,5 @@
+# This is meant to remain in the ECCTools package
+
 
 # This function converts a tidy data frame into the same tidy data frame but with net trade
 
@@ -46,15 +48,15 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 # This function removes Statistical differences from the tidy IEA data frame
 
-remove_stat_diffs <- function(.tidy_iea_df,
+stat_diffs_to_epsilon <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
                               ledger_side = IEATools::iea_cols$ledger_side,
                               stat_diffs = "Statistical differences",
-                              balancing = "Balancing"){
+                              epsilon = "Epsilon"){
   .tidy_iea_df %>%
     dplyr::mutate(
       "{ledger_side}" := dplyr::case_when(
-        .data[[flow]] == stat_diffs ~ balancing,
+        .data[[flow]] == stat_diffs ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
         TRUE ~ .data[[ledger_side]]
       )
     )
@@ -64,15 +66,15 @@ remove_stat_diffs <- function(.tidy_iea_df,
 
 # This function removes Stock changes from the tidy IEA data frame
 
-remove_stock_changes <- function(.tidy_iea_df,
+stock_changes_to_epsilon <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
                                  ledger_side = IEATools::iea_cols$ledger_side,
                                  stock_changes = "Stock changes",
-                                 balancing = "Balancing"){
+                                 epsilon = "Epsilon"){
   .tidy_iea_df %>%
     dplyr::mutate(
       "{ledger_side}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], stock_changes) ~ balancing,
+        stringr::str_detect(.data[[flow]], stock_changes) ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
         TRUE ~ .data[[ledger_side]]
       )
     )

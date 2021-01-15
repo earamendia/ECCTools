@@ -1,4 +1,4 @@
-
+# Meant to go to the IEATools package
 # This function gathers producers and autoproducers
 
 gather_producer_autoproducer <- function(.tidy_iea_df,

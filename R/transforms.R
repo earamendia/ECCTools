@@ -1,4 +1,4 @@
-
+# Meant to remain in the ECCTools package
 # This script defines transformation functions
 
 
