@@ -27,15 +27,18 @@ specify_MR_R <- function(.tidy_iea_df,
 # This function specifies the multiregional V matrix.
 specify_MR_V <- function(.tidy_iea_df,
                          V_matrix = "V",
+                         Epsilon_matrix = "Epsilon",
                          matnames = "matnames",
                          imports = IEATools::interface_industries$imports,
                          country = IEATools::iea_cols$country,
                          flow = IEATools::iea_cols$flow,
                          product = IEATools::iea_cols$product,
+                         e_dot = IEATools::iea_cols$e_dot,
                          aggregate_country_name = "World"){
 
   MR_V <- .tidy_iea_df %>%
-    dplyr::filter(.data[[matnames]] == V_matrix, ! stringr::str_detect(.data[[flow]], imports)) %>%
+    dplyr::filter((.data[[matnames]] == V_matrix & (! stringr::str_detect(.data[[flow]], imports))) |
+                    (.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] < 0 & (! stringr::str_detect(.data[[flow]], imports)))) %>%
     dplyr::mutate(
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
