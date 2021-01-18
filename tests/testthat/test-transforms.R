@@ -100,8 +100,7 @@ test_that("transform_to_dta works", {
   list_observations_included <- testing_dta %>%
     tidyr::expand(tidyr::nesting(Country, Method, Energy.type, Last.stage, Year)) %>%
     tidyr::unite(Observations_included, Country, Method, Energy.type, Last.stage, Year, sep = "_") %>%
-    dplyr::pull() %>%
-    print()
+    dplyr::pull()
 
   expect_equal(length(list_observations_included), 4)
 

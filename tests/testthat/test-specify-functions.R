@@ -32,7 +32,6 @@ test_that("gather_producer_autoproducer works", {
 
 test_that("route_pumped_storage works", {
 
-
   A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
 
   AB_data <- A_B_path %>%
@@ -62,12 +61,31 @@ test_that("route_pumped_storage works", {
 
 
 
-# test_that("route_own_use_elect_chp_heat works", {
-#
-#
-#
-#
-# })
+test_that("route_own_use_elect_chp_heat works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat()
+
+  main_activity_eiou <- test %>%
+    dplyr::filter(stringr::str_detect(Flow, "Main activity"), Country == "A", Flow.aggregation.point == "Energy industry own use")
+
+  expect_equal(length(main_activity_eiou$Country), 9)
+
+  expect_equal(main_activity_eiou[["E.dot"]][[1]], -4.3010753)
+  expect_lt(main_activity_eiou[["E.dot"]][[2]] - (-2.5806452), 0.00001)
+  expect_lt(main_activity_eiou[["E.dot"]][[5]] - (-56.4516129), 0.00001)
+  expect_lt(main_activity_eiou[["E.dot"]][[6]] - (957.6022), 0.001)
+  expect_lt(main_activity_eiou[["E.dot"]][[9]] - (-11.2903226), 0.00001)
+})
 
 
 
@@ -109,7 +127,7 @@ test_that("route_pumped_storage works", {
 
 # test_that("route_non_specified_flows works", {
 #
-#
+# Do the same tests but combine the two above functions.
 #
 #
 #

@@ -187,9 +187,9 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
   routed_own_use_with_main_activity <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] == own_use_elect_chp_heat) %>%
-    dplyr::filter(!(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
+    dplyr::filter(!(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
                     %in% list_not_included_total_main_activity_output)) %>%
-    group_by(
+    dplyr::group_by(
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]], .data[[ledger_side]]
     ) %>%
     tidyr::crossing(
@@ -198,7 +198,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := .data[["destination_flow"]]
     ) %>%
-    select(-destination_flow) %>%
+    dplyr::select(-destination_flow) %>%
     dplyr::inner_join(
       share_output_per_main_activity, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
@@ -211,7 +211,7 @@ route_own_use_elect_chp_heat <- function(.tidy_iea_df,
 
   routed_own_use_without_main_activity <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] == own_use_elect_chp_heat) %>%
-    dplyr::filter(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
+    dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
                   %in% list_not_included_total_main_activity_output) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
@@ -443,9 +443,9 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou & .data[[flow]] == non_spec
       ) %>%
-    dplyr::filter(!(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
+    dplyr::filter(!(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_")
                     %in% list_not_included_total_eiou)) %>%
-    group_by(
+    dplyr::group_by(
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]], .data[[ledger_side]]
     ) %>%
     tidyr::crossing(
@@ -454,7 +454,7 @@ route_non_specified_eiou <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := .data[["destination_flow"]]
     ) %>%
-    select(-destination_flow) %>%
+    dplyr::select(-destination_flow) %>%
     dplyr::inner_join(
       share_eiou_per_industry, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow}, {unit}, {ledger_side})
     ) %>%
@@ -620,9 +620,9 @@ route_non_specified_tp <- function(.tidy_iea_df,
         .data[[e_dot]] > 0 ~ "pos"
       )
     ) %>%
-    dplyr::filter(!(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]], sep = "_")
+    dplyr::filter(!(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]], sep = "_")
                     %in% list_not_included_total_input_output_by_prod_tps)) %>%
-    group_by(
+    dplyr::group_by(
       .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[unit]], .data[[flow_aggregation_point]],
       .data[[ledger_side]], .data[[product]], .data[[negzeropos]]
     ) %>%
@@ -632,7 +632,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
     dplyr::mutate(
       "{flow}" := .data[["destination_flow"]]
     ) %>%
-    select(-destination_flow) %>%
+    dplyr::select(-destination_flow) %>%
     dplyr::inner_join(
       share_input_output_by_prod_per_tp,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {flow_aggregation_point}, {flow}, {unit}, {ledger_side}, {product}, {negzeropos})
@@ -657,7 +657,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
         .data[[e_dot]] > 0 ~ "pos"
       )
     ) %>%
-    dplyr::filter(str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]], sep = "_")
+    dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[negzeropos]], sep = "_")
                     %in% list_not_included_total_input_output_by_prod_tps)
 
 
