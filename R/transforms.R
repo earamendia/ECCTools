@@ -49,13 +49,6 @@ specify_MR_V <- function(.tidy_iea_df,
 }
 
 
-# This function specifies the MR-Epsilon matrix
-
-specify_MR_Epsilon <- function(.tidy_iea_df){
-
-}
-
-
 
 # Function that calculates the total consumption by product for each country in each year.
 
@@ -73,13 +66,14 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
                                          matnames = "matnames",
                                          Y_matrix = "Y",
                                          U_feed_matrix = "U_feed",
-                                         U_EIOU_matrix = "U_EIOU"){
+                                         U_EIOU_matrix = "U_EIOU",
+                                         Epsilon_matrix = "Epsilon"){
 
   tidy_total_consumption_by_product <- .tidy_iea_df %>%
-    dplyr::filter((.data[[matnames]] == Y_matrix |
-              .data[[matnames]] == U_feed_matrix |
-              .data[[matnames]] == U_EIOU_matrix),
-           ! stringr::str_detect(.data[[flow]], exports)) %>% # There shouldn't be anymore exports where there are imports, now.
+    dplyr::filter(
+      ((.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix) & (! stringr::str_detect(.data[[flow]], exports))) |
+        (.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0 & (! stringr::str_detect(.data[[flow]], exports)))
+      ) %>% # There shouldn't be anymore exports where there are imports, now.
     dplyr::mutate(
       "{e_dot}" := dplyr::case_when(
         .data[[matnames]] == U_feed_matrix ~ -.data[[e_dot]],
@@ -151,6 +145,7 @@ specify_imported_products <- function(.tidy_iea_df,
                                       Y_matrix = "Y",
                                       U_feed_matrix = "U_feed",
                                       U_EIOU_matrix = "U_EIOU",
+                                      Epsilon_matrix = "Epsilon",
                                       matnames = "matnames",
                                       domestic = "Domestic",
                                       imported = "Imported",
@@ -169,10 +164,8 @@ specify_imported_products <- function(.tidy_iea_df,
 
   defined_imported_flows <- .tidy_iea_df %>%
     filter(
-        (.data[[matnames]] == Y_matrix |
-        .data[[matnames]] == U_feed_matrix |
-        .data[[matnames]] == U_EIOU_matrix) &
-      ! str_detect(.data[[flow]], exports)
+        ((.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix) & (! str_detect(.data[[flow]], exports))) |
+          ((.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0) & (! str_detect(.data[[flow]], exports)))
     ) %>%
     left_join(
       calc_share_imports_by_products(.tidy_iea_df), by = c({country}, {year}, {product}, {method}, {energy_type}, {last_stage})
