@@ -280,17 +280,23 @@ add_nuclear_industry <- function(.tidy_iea_df,
                                  heat = "Heat"){
 
 
+  products_tibble = tibble::tibble(!!nuclear := NA,
+                       !!electricity := NA,
+                       !!heat := NA)
+
   # Here we keep only the flows that we are going to modify:
   modified_flows <- .tidy_iea_df %>%
     dplyr::filter(
-      (.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
-        (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat))
+      .data[[flow_aggregation_point]] == transformation_processes &
+      ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+        (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
     ) %>%
     tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    tibble::add_column(!!products_tibble[! names(products_tibble) %in% names(.)]) %>%
     dplyr::mutate(
-      "{nuclear}" := replace_na(.data[[nuclear]], 0),
-      "{electricity}" := replace_na(.data[[electricity]], 0),
-      "{heat}" := replace_na(.data[[heat]], 0)
+      "{nuclear}" := tidyr::replace_na(.data[[nuclear]], 0),
+      "{electricity}" := tidyr::replace_na(.data[[electricity]], 0),
+      "{heat}" := tidyr::replace_na(.data[[heat]], 0)
     ) %>%
     dplyr::mutate(
       share_elect_output_From_Func = .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
@@ -307,14 +313,15 @@ add_nuclear_industry <- function(.tidy_iea_df,
         stringr::str_detect(.data[[product]], nuclear) ~ nuclear_industry,
         TRUE ~ .data[[flow]]
         ),
-      "{product}" := str_remove(.data[[product]], "_Nuclear")
+      "{product}" := stringr::str_remove(.data[[product]], "_Nuclear")
       )
 
 
   to_return <- .tidy_iea_df %>%
     dplyr::filter(
-      ! ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
-                    (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat)))
+      ! (.data[[flow_aggregation_point]] == transformation_processes &
+        ((.data[[flow]] %in% c(main_act_producer_elect, autoproducer_elect) & .data[[product]] %in% c(nuclear, electricity)) |
+           (.data[[flow]] %in% c(main_act_producer_chp, autoproducer_chp) & .data[[product]] %in% c(nuclear, electricity, heat))))
     ) %>%
     dplyr::bind_rows(
       modified_flows
