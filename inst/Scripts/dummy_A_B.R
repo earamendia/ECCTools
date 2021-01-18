@@ -182,42 +182,6 @@ test_third_test <- AB_data_third_test %>%
 
 
 
-# Code for testing the transformation to dta function:
-# Using the normal AB example
-
-# First with normal AB_tidy_data
-AB_tidy_data %>%
-  find_list_dta_observations()#only A should be returned
-
-AB_tidy_data %>%
-  transform_to_dta() %>% View() #only A flows, excluding import flows, should be returned
-
-# Now, add more observations.
-to_add_1 <- AB_tidy_data %>%
-  mutate(
-    Year = 1989
-  ) %>%
-  filter(! Product %in% c("Coking coal", "Crude oil", "Natural gas", "Coking coal [of Coal mines]", "Crude oil [of Oil and gas extraction]", "Natural gas [of Oil and gas extraction]")) %>%
-  add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 1989, Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "a weird industry", Product = "A_very_weird_product", Unit = "ktoe", E.dot = 200, matnames = "Y") %>%
-  add_row(Country = "A", Method = "A_weird_method", Energy.type = "E", Last.stage = "Final", Year = 1989, Ledger.side = "Supply", Flow.aggregation.point = "Industry", Flow = "a weird industry", Product = "A_very_weird_product", Unit = "ktoe", E.dot = 200, matnames = "V")
-
-to_add_2 <- AB_tidy_data %>%
-  mutate(
-    Method = "crash-test-metod"
-  ) %>%
-  filter(! Product %in% c("Coking coal", "Crude oil", "Natural gas", "Coking coal [of Coal mines]", "Crude oil [of Oil and gas extraction]", "Natural gas [of Oil and gas extraction]"))
-
-testing <- AB_tidy_data %>% bind_rows(to_add_1,
-                                      to_add_2)
-
-testing %>%
-  find_list_dta_observations()
-
-testing %>%
-  transform_to_dta() %>%
-  View()
-
-
 
 
 # Testing for setting up the add_nuclear_industry function

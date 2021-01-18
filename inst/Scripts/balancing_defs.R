@@ -81,14 +81,14 @@ add_psut_matnames_balancing <- function(.tidy_iea_df,
         # All Consumption items belong in the final demand (Y) matrix.
         .data[[ledger_side]] == consumption ~ Y,
         # All production items belong in the resources (R) matrix.
-        .data[[flow]] %>% starts_with_any_of(c(production, resources)) ~ R,
+        .data[[flow]] %>% IEATools::starts_with_any_of(c(production, resources)) ~ R,
         # All other positive values on the Supply side of the ledger belong in the make (V) matrix.
         .data[[ledger_side]] == supply & .data[[e_dot]] > 0 ~ V,
         # Negative values on the supply side of the ledger with Flow == "Energy industry own use"
         # are put into the U_EIOU matrix
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & !!as.name(flow_aggregation_point) == eiou ~ U_EIOU,
         # Negative values on the supply side that have Flow %in% neg_supply_in_fd go in the final demand matrix
-        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & starts_with_any_of(!!as.name(flow), neg_supply_in_fd) ~ Y,
+        .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 & IEATools::starts_with_any_of(!!as.name(flow), neg_supply_in_fd) ~ Y,
         # All other negative values on the Supply side of the ledger belong in the use matrix
         # that excludes EIOU (U_feed).
         .data[[ledger_side]] == supply & .data[[e_dot]] <= 0 ~ U_feed,

@@ -522,6 +522,7 @@ transform_to_dta <- function(.tidy_iea_df,
                              year = IEATools::iea_cols$year,
                              flow = IEATools::iea_cols$flow,
                              ledger_side = IEATools::iea_cols$ledger_side,
+                             e_dot = IEATools::iea_cols$e_dot,
                              imports = IEATools::interface_industries$imports,
                              epsilon = "Epsilon"){
 
@@ -534,6 +535,10 @@ transform_to_dta <- function(.tidy_iea_df,
       "{ledger_side}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], imports) ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
         TRUE ~ .data[[ledger_side]]
+      ),
+      "{e_dot}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
+        TRUE ~ .data[[e_dot]]
       )
     )
 }
