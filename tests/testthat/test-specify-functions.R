@@ -110,14 +110,150 @@ test_that("add_nuclear_industry works", {
     add_nuclear_industry()
 
   # One test on total length
-  #expect_equal(length(test[["E.dot"]]), 140)
+  expect_equal(length(test[["E.dot"]]), 140)
 
   # One test on length of nuclear industry flows
+  expect_equal(test %>%
+                 dplyr::filter(Flow == "Nuclear industry") %>%
+                 dplyr::pull() %>%
+                 length(),
+               2)
 
-
-  # Some tests on actual values of nuclear industry flows
+  expect_equal(test %>%
+                 dplyr::filter(Product == "Nuclear") %>%
+                 dplyr::pull() %>%
+                 length(),
+               1)
 
   # Some tests on actual values of elec & CHP plants
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer electricity plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               3163.7)
+
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               56.7)
+
+  # Some tests on actual values of nuclear industry flows
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               39.6)
+
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Nuclear") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -120)
+
+  # Now, new example adding heat output for CHP, country A
+  second_test <- AB_data %>%
+    tibble::add_row(Country = "A",
+                    Method = "PCM",
+                    Energy.type = "E",
+                    Last.stage = "Final",
+                    Year = 2018,
+                    Ledger.side = "Supply",
+                    Flow.aggregation.point = "Transformation processes",
+                    Flow = "Main activity producer CHP plants",
+                    Product = "Heat",
+                    Unit = "ktoe",
+                    E.dot = 30) %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry()
+
+  # One test on total length
+  expect_equal(length(second_test[["E.dot"]]), 142)
+
+  # One test on length of nuclear industry flows
+  expect_equal(second_test %>%
+                 dplyr::filter(Flow == "Nuclear industry") %>%
+                 dplyr::pull() %>%
+                 length(),
+               3)
+
+  expect_equal(second_test %>%
+                 dplyr::filter(Product == "Nuclear") %>%
+                 dplyr::pull() %>%
+                 length(),
+               1)
+
+  # Some tests on actual values of elec & CHP plants
+  expect_equal(second_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer electricity plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               3163.7)
+
+  expect_equal(second_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               57.8)
+
+  expect_equal(second_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Main activity producer CHP plants",
+                               Product == "Heat") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               28.9)
+
+  # Some tests on actual values of nuclear industry flows
+  expect_equal(second_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               38.5)
+
+  expect_equal(test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Nuclear") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -120)
+
+  expect_equal(second_test %>%
+                 dplyr::filter(Country == "A",
+                               Flow.aggregation.point == "Transformation processes",
+                               Flow == "Nuclear industry",
+                               Product == "Heat") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               1.1)
 })
 
 
