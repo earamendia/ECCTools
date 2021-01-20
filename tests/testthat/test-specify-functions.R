@@ -124,7 +124,7 @@ test_that("route_own_use_elect_chp_heat works", {
 
   expect_equal(length(main_activity_eiou$Country), 9)
 
-  expect_lt(main_activity_eiou %>%
+  expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
@@ -132,7 +132,8 @@ test_that("route_own_use_elect_chp_heat works", {
                    Product == "Anthracite [of Coal mines]") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
-               -5.82, 0.0001)
+               -5.82,
+               tolerance = 0.0001)
 
   expect_equal(main_activity_eiou %>%
                  dplyr::filter(
@@ -142,9 +143,10 @@ test_that("route_own_use_elect_chp_heat works", {
                    Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
-               -3.492, 0.0001)
+               -3.492,
+               tolerance = 0.0001)
 
-  expect_lt(main_activity_eiou %>%
+  expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
@@ -152,9 +154,10 @@ test_that("route_own_use_elect_chp_heat works", {
                    Product == "Electricity") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
-               -55.5555, 0.0001)
+               -55.5555,
+            tolerance = 0.0001)
 
-  expect_lt(main_activity_eiou %>%
+  expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
@@ -162,9 +165,10 @@ test_that("route_own_use_elect_chp_heat works", {
                    Product == "Hard coal (if no detail) [of Coal mines]") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
-               -947.1481, 0.0001)
+               -947.1481,
+            tolerance = 0.0001)
 
-  expect_lt(main_activity_eiou %>%
+  expect_equal(main_activity_eiou %>%
                  dplyr::filter(
                    Country == "A",
                    Flow.aggregation.point == "Energy industry own use",
@@ -172,7 +176,8 @@ test_that("route_own_use_elect_chp_heat works", {
                    Product == "Hard coal (if no detail) [of Coal mines]") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
-               -11.11, 0.0001)
+               -11.1111,
+               tolerance = 0.0001)
 
 })
 
@@ -346,14 +351,130 @@ test_that("add_nuclear_industry works", {
 
 
 
-# test_that("route_non_specified_eiou works", {
-#
-#
-#
-#
-#
-#
-# })
+test_that("route_non_specified_eiou works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    route_non_specified_eiou()
+
+
+  # Now testing a few of the new A flows. Non-specified only had a "hard coal" product
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "A",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Blast furnaces",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+            -3.3299,
+            tolerance = 0.001)
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "A",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Coal mines",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+            -4.7571,
+            tolerance = 0.001)
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "A",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Main activity producer electricity plants",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+              (-947.148148 - 104.2088),
+            tolerance = 0.001)
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "A",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Main activity producer CHP plants",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+              (-40.740741 - 4.7621),
+            tolerance = 0.001)
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "A",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Oil refineries",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+            -28.54263,
+            tolerance = 0.001)
+
+
+  # Now, a few tests for country B.
+  # There are non-specified flows both of hard and brown coal.
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "B",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Blast furnaces",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+            -23.9795,
+            tolerance = 0.001)
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "B",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Blast furnaces",
+                            Product == "Brown coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+            -24.0816,
+            tolerance = 0.001)
+
+  expect_equal(test %>%
+              dplyr::filter(Country == "B",
+                            Flow.aggregation.point == "Energy industry own use",
+                            Flow == "Coke ovens",
+                            Product == "Hard coal (if no detail) [of Coal mines]") %>%
+              dplyr::select(E.dot) %>%
+              dplyr::pull(),
+              -53.95407,
+              tolerance = 0.001)
+
+  expect_equal(test %>%
+                 dplyr::filter(Country == "B",
+                               Flow.aggregation.point == "Energy industry own use",
+                               Flow == "Main activity producer electricity plants",
+                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               (-50.4712 - 259.846827),
+               tolerance = 0.001)
+
+  expect_equal(test %>%
+                 dplyr::filter(Country == "B",
+                               Flow.aggregation.point == "Energy industry own use",
+                               Flow == "Main activity producer heat plants",
+                               Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               (-18.75406 - 96.553611),
+               tolerance = 0.001)
+
+})
 
 
 
