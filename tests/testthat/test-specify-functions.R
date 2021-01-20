@@ -95,7 +95,10 @@ test_that("route_pumped_storage works", {
                   Flow.aggregation.point == "Energy industry own use",
                   Country == "A")
 
-  expect_equal(former_pumped_storage[["E.dot"]][[1]], -299)
+  expect_equal(former_pumped_storage %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -299)
 
 })
 
