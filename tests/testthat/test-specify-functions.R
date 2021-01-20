@@ -22,10 +22,49 @@ test_that("gather_producer_autoproducer works", {
 
   expect_equal(length(main_activity_flows[["E.dot"]]), 26)
 
-  expect_equal(main_activity_flows[["E.dot"]][[1]], -90)
-  expect_equal(main_activity_flows[["E.dot"]][[3]], 160)
-  expect_equal(main_activity_flows[["E.dot"]][[9]], 100)
-  expect_equal(main_activity_flows[["E.dot"]][[24]], -847)
+  expect_equal(main_activity_flows %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Transformation processes",
+                   Flow == "Main activity producer CHP plants",
+                   Product == "Brown coal (if no detail) [of Coal mines]"
+                   ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -90)
+
+  expect_equal(main_activity_flows %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Transformation processes",
+                   Flow == "Main activity producer CHP plants",
+                   Product == "Hard coal (if no detail) [of Coal mines]"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               160)
+
+  expect_equal(main_activity_flows %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Transformation processes",
+                   Flow == "Main activity producer electricity plants",
+                   Product == "Hard coal (if no detail) [of Coal mines]"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               100)
+
+  expect_equal(main_activity_flows %>%
+                 dplyr::filter(
+                   Country == "B",
+                   Flow.aggregation.point == "Transformation processes",
+                   Flow == "Main activity producer heat plants",
+                   Product == "Brown coal (if no detail) [of Coal mines]"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -847)
 })
 
 
