@@ -124,11 +124,55 @@ test_that("route_own_use_elect_chp_heat works", {
 
   expect_equal(length(main_activity_eiou$Country), 9)
 
-  expect_equal(main_activity_eiou[["E.dot"]][[1]], -5.82, 0.0001)
-  expect_lt(main_activity_eiou[["E.dot"]][[2]] - (-3.492), 0.0001)
-  expect_lt(main_activity_eiou[["E.dot"]][[5]] - (-55.555), 0.0001)
-  expect_lt(main_activity_eiou[["E.dot"]][[6]] - (947.1481), 0.0001)
-  expect_lt(main_activity_eiou[["E.dot"]][[9]] - (-11.111), 0.0001)
+  expect_lt(main_activity_eiou %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Energy industry own use",
+                   Flow == "Main activity producer CHP plants",
+                   Product == "Anthracite [of Coal mines]") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -5.82, 0.0001)
+
+  expect_equal(main_activity_eiou %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Energy industry own use",
+                   Flow == "Main activity producer CHP plants",
+                   Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -3.492, 0.0001)
+
+  expect_lt(main_activity_eiou %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Energy industry own use",
+                   Flow == "Main activity producer electricity plants",
+                   Product == "Electricity") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -55.5555, 0.0001)
+
+  expect_lt(main_activity_eiou %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Energy industry own use",
+                   Flow == "Main activity producer electricity plants",
+                   Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -947.1481, 0.0001)
+
+  expect_lt(main_activity_eiou %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow.aggregation.point == "Energy industry own use",
+                   Flow == "Main activity producer heat plants",
+                   Product == "Hard coal (if no detail) [of Coal mines]") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -11.11, 0.0001)
 
 })
 
