@@ -179,6 +179,16 @@ test_that("route_own_use_elect_chp_heat works", {
                -11.1111,
                tolerance = 0.0001)
 
+  second_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    dplyr::filter(! Flow %in% c("Main activity producer electricity plants", "Main activity producer CHP plants", "Main activity producer heat plants")) %>%
+    route_own_use_elect_chp_heat()
+
+  expect_true("Main activity producer electricity plants" %in% second_test$Flow)
+  expect_false("Own use in electricity, CHP and heat plants" %in% second_test$Flow)
 })
 
 
@@ -474,6 +484,23 @@ test_that("route_non_specified_eiou works", {
                (-18.75406 - 96.553611),
                tolerance = 0.001)
 
+  # Checking what happens when no EIOU other that non-specified
+  second_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    dplyr::filter(! (Flow.aggregation.point == "Energy industry own use" & Flow != "Non-specified")) %>%
+    route_non_specified_eiou()
+
+  expect_equal(second_test %>%
+                 dplyr::filter(Flow.aggregation.point == "Energy industry own use") %>%
+                 dplyr::select(Flow) %>%
+                 dplyr::pull(),
+               c("Non-specified", "Non-specified", "Non-specified"))
+
 })
 
 
@@ -658,6 +685,24 @@ test_that("route_non_specified_tp works", {
                  dplyr::pull(),
                (623-620.6897+67),
                tolerance = 0.001)
+
+  # Checking what happens when no TP besides non-specified exist
+  second_test <- AB_data %>%
+    IEATools::specify_primary_production() %>%
+    IEATools::specify_production_to_resources() %>%
+    gather_producer_autoproducer() %>%
+    route_pumped_storage() %>%
+    route_own_use_elect_chp_heat() %>%
+    add_nuclear_industry() %>%
+    route_non_specified_eiou() %>%
+    dplyr::filter(! (Flow.aggregation.point == "Transformation processes" & Flow != "Non-specified")) %>%
+    route_non_specified_tp()
+
+  expect_equal(second_test %>%
+                dplyr::filter(Flow.aggregation.point == "Transformation processes") %>%
+                dplyr::select(Flow) %>%
+                dplyr::pull(),
+              c("Non-specified", "Non-specified", "Non-specified", "Non-specified"))
 })
 
 
