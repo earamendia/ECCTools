@@ -669,7 +669,7 @@ route_non_specified_tp <- function(.tidy_iea_df,
 
 
 
-  routed_nonspec_tp <- bind_rows(routed_nonspec_tp_with_io_by_prod, routed_nonspec_tp_without_io_by_prod)
+  routed_nonspec_tp <- dplyr::bind_rows(routed_nonspec_tp_with_io_by_prod, routed_nonspec_tp_without_io_by_prod)
 
   # All other cases
   tidy_iea_df_routed_nonspec_tp <- .tidy_iea_df %>%
