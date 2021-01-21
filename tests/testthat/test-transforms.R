@@ -591,102 +591,159 @@ test_that("calc_share_exports_by_product works", {
 })
 
 
+test_that("specify_MR_Y_U_gma works", {
 
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
 
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
 
+  AB_MR_Y_U_gma <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    specify_MR_Y_U_gma()
 
+  # Check that there is only Y and U flows in resulting data frame.
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(! matnames %in% c("Y", "U_feed", "U_EIOU")) %>%
+                 dplyr::select(Country) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
 
-# Specifying imported products in Y, U_EIOU, U_feed
+  # Checking length of data frame
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dim(),
+               c(73, 12))
 
-# defining_imported_products <- AB_tidy_data %>%
-#   filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>%
-#   left_join(
-#     share_imports_by_product, by = c("Country", "Year", "Product", "Method", "Energy.type", "Last.stage")
-#   ) %>%
-#   mutate(
-#     Domestic = E.dot * (1 - Share_Imports),
-#     Imported = E.dot * Share_Imports
-#   ) %>%
-#   select(-E.dot, -total_consumption, -Imports, -Share_Imports) %>%
-#   pivot_longer(cols = c("Domestic", "Imported"), names_to = "Origin", values_to = "E.dot") %>%
-#   relocate(Origin, .after = Product) %>%
-#   filter(E.dot != 0) %>%
-#   print()
+  # Check specific values
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{A}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               48)
 
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{B}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               72)
 
-# Creating trade matrices data frame
-# total_exports <- AB_tidy_data %>%
-#   filter(str_detect(Flow, "Exports")) %>%
-#   mutate(
-#     E.dot = abs(E.dot)
-#   ) %>%
-#   group_by(Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Product) %>%
-#   summarise(
-#     Total_Exports = sum(E.dot)
-#   ) %>%
-#   print()
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Coal mines",
+                   Product == "{A}_Electricity"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -20)
 
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Coal mines",
+                   Product == "{B}_Electricity"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
 
-# This is not yet a matrix....
-# share_exports <- AB_tidy_data %>%
-#   filter(str_detect(Flow, "Exports")) %>%
-#   mutate(
-#     E.dot = abs(E.dot)
-#   ) %>%
-#   left_join(total_exports, by = c("Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Product")) %>%
-#   mutate(
-#     Share_Exports = E.dot / Total_Exports
-#   ) %>%
-#   rename(Provenience = Country) %>%
-#   print()
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{B}_Blast furnaces",
+                   Product == "{A}_Natural gas [of Oil and gas extraction]"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -150)
 
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{B}_Road",
+                   Product == "{A}_Natural gas [of Oil and gas extraction]"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               180)
 
-# So here we create a data frame equivalent to a matrix with n*n countries. Also A to A etc. Missing values are implicitly 0 shares.
-# share_exports_by_origin_destination <- share_exports %>%
-#   expand_grid(Country = AB_tidy_data %>%
-#                 expand(Country) %>%
-#                 pull()) %>%
-#   mutate(
-#     Share_Exports = case_when(
-#       Provenience == Country ~ 0,
-#       TRUE ~ Share_Exports
-#     )
-#   ) %>%
-#   relocate(Country, .after = Provenience) %>%
-#   select(- Ledger.side, -Flow.aggregation.point, -Flow, -Unit, -E.dot, -matnames, -Total_Exports) %>%
-#   print()
-#
-#
-# testing <- share_exports_by_origin_destination %>%
-#   add_row(Provenience = "C",
-#           Country = "B",
-#           Method = "PCM",
-#           Energy.type = "E",
-#           Last.stage = "Final",
-#           Year = 2018,
-#           Product = "Natural gas [of Oil and gas extraction]",
-#           Share_Exports = 0.5) %>%
-#   print()
+  # We add a stock changes flow that will go to the Epsilon matrix for a more comprehensive test.
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited() %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of Coke oven coke]",
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of a very odd product]",
+      Product = "a very odd product",
+      Unit = "ktoe",
+      E.dot = +100
+    )
 
-# Testing the trade matrix
+  AB_MR_Y_U_gma <- AB_data %>%
+    stock_changes_to_epsilon() %>%
+    add_psut_matnames_epsilon() %>%
+    specify_MR_Y_U_gma()
 
-# share_exports_by_origin_destination %>%
-#   group_by(Country, Method, Energy.type, Last.stage, Year, Product) %>%
-#   summarise(sum_shares = sum(Share_Exports)) %>%
-#   print()
-#
-#
-#
-# test_that("calc_imports_by_product works"{
-#
-#
-# })
-#
-#
-# test_that("calc_share_imports_by_products works"{
-#
-#
-# })
+  # Checks.
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(matnames == "Epsilon") %>%
+                 dplyr::select(Country) %>%
+                 dplyr::pull() %>%
+                 length(),
+               2)
+
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(matnames == "Epsilon",
+                               Flow == "{A}_Stock changes [of Coke oven coke]",
+                               Product == "{A}_Coke oven coke") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               45.45455,
+               tolerance = 0.0001)
+
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(matnames == "Epsilon",
+                               Flow == "{A}_Stock changes [of Coke oven coke]",
+                               Product == "{B}_Coke oven coke") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               (100-45.45455),
+               tolerance = 0.0001)
+
+  expect_equal(AB_MR_Y_U_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{A}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               54.54546,
+               tolerance = 0.0001)
+})
 
 
 

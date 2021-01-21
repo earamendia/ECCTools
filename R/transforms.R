@@ -303,7 +303,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 # Careful. Here, if we have an imported product for which THERE ARE NO EXPORTS in the .tidy_iea_df (say A imports nat. gas but no one exports it),
 # we'll be getting some NAs somewhere. Probably a good check to do.
 
-  tidy_consumption_MR_gma <- bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma)
+  tidy_consumption_MR_gma <- dplyr::bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma)
 
   return(tidy_consumption_MR_gma)
 
@@ -324,7 +324,7 @@ transform_to_gma <- function(.tidy_iea_df){
   MR_Y_U_gma <- specify_MR_Y_U_gma(.tidy_iea_df)
 
   # Binding all rows and returning full data frame
-  tidy_iea_MR_gma_df <- bind_rows(MR_R_gma, MR_V_gma, MR_Y_U_gma)
+  tidy_iea_MR_gma_df <- dplyr::bind_rows(MR_R_gma, MR_V_gma, MR_Y_U_gma)
 
   return(tidy_iea_MR_gma_df)
 }
