@@ -1023,6 +1023,62 @@ test_that("transform_to_gma works", {
 
 # Testing Bilateral Trade Assumption functions
 
+test_that("calc_bilateral_trade_matrix_df_gma works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  bilateral_trade_matrix_df_gma <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_bilateral_trade_matrix_df_gma()
+
+  # Check length
+  expect_equal(dim(bilateral_trade_matrix_df_gma), c(8, 8))
+
+  expect_equal(bilateral_trade_matrix_df_gma %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Product == "Coke oven coke") %>%
+                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::pull(),
+               1)
+
+  expect_equal(bilateral_trade_matrix_df_gma %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Product == "Natural gas [of Oil and gas extraction]") %>%
+                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::pull(),
+               0)
+
+  expect_equal(bilateral_trade_matrix_df_gma %>%
+                 dplyr::filter(
+                   Country == "B",
+                   Product == "Natural gas [of Oil and gas extraction]") %>%
+                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::pull(),
+               1)
+
+  expect_equal(bilateral_trade_matrix_df_gma %>%
+                 dplyr::filter(
+                   Country == "B",
+                   Product == "Coke oven coke") %>%
+                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::pull(),
+               0)
+})
 
 
 
+# test_that("specify_MR_Y_U_bta works", {
+#
+# })
+#
+#
+#
+# test_that("transform_to_bta works", {
+#
+# })
