@@ -1168,6 +1168,47 @@ test_that("specify_MR_Y_U_bta works", {
 
 
 
-# test_that("transform_to_bta works", {
-#
-# })
+test_that("transform_to_bta works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  # First checking whether gma and bta, without trade matrix, give the same result:
+  MR_PSUT_gma <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    transform_to_gma()
+
+  MR_PSUT_bta <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    transform_to_bta()
+
+  # Nice one!
+  expect_equal(MR_PSUT_gma, MR_PSUT_bta)
+
+
+  # Then, try with one missing flow.
+  dummy_AB_trade_matrix <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_bilateral_trade_matrix_df_gma() %>%
+    dplyr::filter(Provenience != "B")
+
+  MR_PSUT_bta <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    transform_to_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
+
+  # Nice one!
+  expect_equal(MR_PSUT_bta %>%
+                 dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames),
+               MR_PSUT_gma %>%
+                 dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames))
+
+  # Then, try with a "fake" flow
+
+})
+
+
+
+

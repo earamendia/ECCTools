@@ -447,7 +447,8 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
 
 # Transform to bta function
-transform_to_bta <- function(.tidy_iea_df){
+transform_to_bta <- function(.tidy_iea_df,
+                             bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df)){
 
   # (1) Create MR-R matrix data frame
   MR_R_bta <- specify_MR_R(.tidy_iea_df)
@@ -456,7 +457,7 @@ transform_to_bta <- function(.tidy_iea_df){
   MR_V_bta <- specify_MR_V(.tidy_iea_df)
 
   # (3) Creating MR-Y and MR-U matrix data frames, with GMA assumption
-  MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df)
+  MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df, bilateral_trade_matrix_df = bilateral_trade_matrix_df)
 
   # Binding all rows and returning full data frame
   tidy_iea_MR_bta_df <- dplyr::bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta)
