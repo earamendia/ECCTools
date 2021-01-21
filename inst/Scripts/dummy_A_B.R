@@ -39,9 +39,9 @@ test <- AB_data %>%
   specify_production_to_resources() %>%
   gather_producer_autoproducer() %>%
   route_pumped_storage() %>%
-  route_own_use_elect_chp_heat() #%>%
-  #route_non_specified_eiou() %>%
-  #route_non_specified_tp()
+  route_own_use_elect_chp_heat() %>%
+  route_non_specified_eiou() %>%
+  route_non_specified_tp()
 
 # Useful code for testing the new version of the route_own_use_elect_chp_heat() function.
 testing <- AB_data %>%

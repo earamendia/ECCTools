@@ -286,40 +286,314 @@ test_that("calc_total_consumption_by_product works", {
 })
 
 
-# Total consumption by product, year, country
-# total_consumption_by_product <- AB_data %>%
-#   add_psut_matnames_epsilon() %>%
-#   filter((matnames == "Y" | matnames == "U_feed" | matnames == "U_EIOU"), ! str_detect(Flow, "Exports")) %>% # There shouldn't be anymore exports where there are imports, now.
-#   mutate(
-#     E.dot = case_when(
-#       matnames == "U_feed" ~ - E.dot,
-#       matnames == "U_EIOU" ~ - E.dot,
-#       TRUE ~ E.dot
-#     )
-#   ) %>%
-#   group_by(Country, Method, Energy.type, Last.stage, Year, Product, Unit) %>%
-#   summarise(
-#     total_consumption = sum(E.dot)
-#   ) %>%
-#   View()
 
-# Imports by product, year, country
-# imports <- AB_data %>%
-#   filter(str_detect(Flow, "Imports")) %>%
-#   rename(Imports = E.dot) %>%
-#   print()
+test_that("calc_imports_by_product works", {
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
 
-# Share of imported products by product, year, country
-# share_imports_by_product <- total_consumption_by_product %>%
-#   left_join(imports, by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Product")) %>%
-#   select(-Ledger.side, -matnames, -Flow.aggregation.point, -Flow) %>%
-#   mutate(
-#     Share_Imports = case_when(
-#       is.na(Imports) ~ 0,
-#       !is.na(Imports) ~ Imports / total_consumption
-#     )
-#   ) %>%
-#   print()
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  imports_by_product <- AB_data %>%
+    calc_imports_by_product()
+
+  expect_equal(imports_by_product %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow == "Imports [of Coke oven coke]",
+                   Product == "Coke oven coke"
+                 ) %>%
+                 dplyr::select(Imports) %>%
+                 dplyr::pull(),
+               600)
+
+  expect_equal(imports_by_product %>%
+                 dplyr::filter(
+                   Country == "B" &
+                   stringr::str_detect(Product, "Crude oil")
+                 ) %>%
+                 dplyr::select(Imports) %>%
+                 dplyr::pull(),
+               3000)
+})
+
+
+
+test_that("calc_share_imports_by_product works", {
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  share_imports_by_product <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_share_imports_by_products()
+
+  # Check all shares <= 1
+  expect_equal(share_imports_by_product %>%
+                 dplyr::filter(Share_Imports_From_Func > 1) %>%
+                 dplyr::select(Country) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
+
+  # Check specific values
+  expect_equal(share_imports_by_product %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Product == "Coke oven coke"
+                 ) %>%
+                 dplyr::select(Share_Imports_From_Func) %>%
+                 dplyr::pull(),
+               0.6)
+
+
+  expect_equal(share_imports_by_product %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Product == "Heat"
+                 ) %>%
+                 dplyr::select(Share_Imports_From_Func) %>%
+                 dplyr::pull(),
+               0)
+
+  expect_equal(share_imports_by_product %>%
+                 dplyr::filter(
+                   Country == "B",
+                   Product == "Natural gas [of Oil and gas extraction]"
+                 ) %>%
+                 dplyr::select(Share_Imports_From_Func) %>%
+                 dplyr::pull(),
+               1)
+})
+
+
+
+test_that("specify_imported_products works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  defined_imported_products <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    specify_imported_products()
+
+
+  # Check that there is only Y and U flows in resulting data frame.
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(! matnames %in% c("Y", "U_feed", "U_EIOU")) %>%
+                 dplyr::select(Country) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
+
+  # Checking length of data frame
+  expect_equal(defined_imported_products %>%
+                 dim(),
+               c(73, 13))
+
+  # Check specific values
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow == "Residential",
+                   Product == "Coke oven coke",
+                   Origin == "Domestic"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               48)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow == "Residential",
+                   Product == "Coke oven coke",
+                   Origin == "Imported"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               72)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow == "Coal mines",
+                   Product == "Electricity",
+                   Origin == "Domestic"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -20)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow == "Coal mines",
+                   Product == "Electricity",
+                   Origin == "Imported"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(
+                   Country == "B",
+                   Flow == "Blast furnaces",
+                   Product == "Natural gas [of Oil and gas extraction]",
+                   Origin == "Imported"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -150)
+
+
+  # We add a stock changes flow that will go to the Epsilon matrix for a more comprehensive test.
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited() %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of Coke oven coke]",
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of a very odd product]",
+      Product = "a very odd product",
+      Unit = "ktoe",
+      E.dot = +100
+    )
+
+  defined_imported_products <- AB_data %>%
+    stock_changes_to_epsilon() %>%
+    add_psut_matnames_epsilon() %>%
+    specify_imported_products()
+
+  # Checks.
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(matnames == "Epsilon") %>%
+                 dplyr::select(Country) %>%
+                 dplyr::pull() %>%
+                 length(),
+               2)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(matnames == "Epsilon",
+                               Product == "Coke oven coke",
+                               Origin == "Domestic") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               45.45455,
+               tolerance = 0.0001)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(matnames == "Epsilon",
+                               Product == "Coke oven coke",
+                               Origin == "Imported") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               (100-45.45455),
+               tolerance = 0.0001)
+
+  expect_equal(defined_imported_products %>%
+                 dplyr::filter(
+                   Country == "A",
+                   Flow == "Residential",
+                   Product == "Coke oven coke",
+                   Origin == "Domestic"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               54.54546,
+               tolerance = 0.0001)
+})
+
+
+
+test_that("calc_global_exports works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  global_exports_per_product <- AB_data %>%
+    calc_global_exports()
+
+  expect_equal(global_exports_per_product %>%
+                 dplyr::filter(Product == "Coke oven coke") %>%
+                 dplyr::select(Total_Exports_From_Func) %>%
+                 dplyr::pull(),
+               400)
+
+  expect_equal(global_exports_per_product %>%
+                 dplyr::filter(Product == "Crude oil [of Oil and gas extraction]") %>%
+                 dplyr::select(Total_Exports_From_Func) %>%
+                 dplyr::pull(),
+               3500)
+})
+
+
+
+test_that("calc_share_exports_by_product works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  share_global_exports_per_product <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_share_exports_by_product()
+
+  expect_equal(dim(share_global_exports_per_product),
+               c(4, 7))
+
+  expect_equal(share_global_exports_per_product %>%
+                 dplyr::filter(
+                   Provenience == "A"
+                 ) %>%
+                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::pull(),
+               c(1, 1, 1))
+
+  expect_equal(share_global_exports_per_product %>%
+                 dplyr::filter(
+                   Provenience == "B",
+                   Product == "Coke oven coke"
+                 ) %>%
+                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::pull(),
+               1)
+})
+
+
+
+
+
 
 
 # Specifying imported products in Y, U_EIOU, U_feed

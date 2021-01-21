@@ -99,7 +99,12 @@ calc_imports_by_product <- function(.tidy_iea_df,
 
   tidy_total_imports_by_product <- .tidy_iea_df %>%
     dplyr::filter(stringr::str_detect(.data[[flow]], imports)) %>%
-    dplyr::rename("{imports}" := .data[[e_dot]])
+    dplyr::rename("{imports}" := .data[[e_dot]]) %>%
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{imports}" := sum(.data[[imports]])
+    ) %>%
+    dplyr::ungroup()
 
   return(tidy_total_imports_by_product)
 }
@@ -123,16 +128,14 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
                                            imports = IEATools::interface_industries$imports,
                                            matnames = "matnames"){
 
-  share_imports_by_product <- left_join(
+  share_imports_by_product <- dplyr::left_join(
                                   calc_total_consumption_by_product(.tidy_iea_df),
                                   calc_imports_by_product(.tidy_iea_df),
                                   by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
-    select(-.data[[ledger_side]], -.data[[matnames]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]]) %>%
-    mutate(
-      Share_Imports_From_Func = case_when(
-          is.na(.data[[imports]]) ~ 0,
-          !is.na(.data[[imports]]) ~ .data[[imports]] / .data[["Total_Consumption_From_Func"]]
-      )
+    dplyr::select(-.data[[ledger_side]], -.data[[matnames]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]]) %>%
+    dplyr::mutate(
+      "{imports}" := tidyr::replace_na(.data[[imports]], 0),
+      Share_Imports_From_Func = .data[[imports]] / .data[["Total_Consumption_From_Func"]]
     )
 }
 
@@ -163,21 +166,21 @@ specify_imported_products <- function(.tidy_iea_df,
                                       imports = IEATools::interface_industries$imports){
 
   defined_imported_flows <- .tidy_iea_df %>%
-    filter(
-        ((.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix) & (! str_detect(.data[[flow]], exports))) |
-          ((.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0) & (! str_detect(.data[[flow]], exports)))
+    dplyr::filter(
+        ((.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix) & (! stringr::str_detect(.data[[flow]], exports))) |
+          ((.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0) & (! stringr::str_detect(.data[[flow]], exports)))
     ) %>%
-    left_join(
+    dplyr::left_join(
       calc_share_imports_by_products(.tidy_iea_df), by = c({country}, {year}, {product}, {method}, {energy_type}, {last_stage})
     ) %>%
-    mutate(
+    dplyr::mutate(
       "{domestic}" := .data[[e_dot]] * (1 - Share_Imports_From_Func),
       "{imported}" := .data[[e_dot]] * Share_Imports_From_Func
     ) %>%
-    select(-.data[[e_dot]], -.data[[imports]], -Total_Consumption_From_Func, -Share_Imports_From_Func) %>%
-    pivot_longer(cols = c(.data[[domestic]], .data[[imported]]), names_to = origin, values_to = e_dot) %>%
-    relocate(.data[[origin]], .after = .data[[product]]) %>%
-    filter(.data[[e_dot]] != 0)
+    dplyr::select(-.data[[e_dot]], -.data[[imports]], -Total_Consumption_From_Func, -Share_Imports_From_Func) %>%
+    tidyr::pivot_longer(cols = c(.data[[domestic]], .data[[imported]]), names_to = origin, values_to = e_dot) %>%
+    dplyr::relocate(.data[[origin]], .after = .data[[product]]) %>%
+    dplyr::filter(.data[[e_dot]] != 0)
 
   return(defined_imported_flows)
 }
