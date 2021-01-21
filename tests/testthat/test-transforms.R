@@ -166,17 +166,45 @@ test_that("specify_MR_V works", {
 
   A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
 
+  # We wheck what happens when we add an epsilon flow to the supply side.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    specify_all_revisited() %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of Coke oven coke]",
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of a very odd product]",
+      Product = "a very odd product",
+      Unit = "ktoe",
+      E.dot = +100
+    )
 
   AB_supply_MR <- AB_data %>%
+    stock_changes_to_epsilon() %>%
     add_psut_matnames_epsilon() %>%
     specify_MR_V()
 
 
   expect_equal(dim(AB_supply_MR),
-               c(18, 12))
+               c(19, 12))
 
 
   expect_equal(AB_supply_MR %>%
@@ -210,25 +238,27 @@ test_that("specify_MR_V works", {
                  dplyr::filter(stringr::str_detect(Flow, "Imports")) %>%
                  dim(),
                c(0, 12))
+
+  expect_equal(AB_supply_MR %>%
+                 dplyr::filter(
+                   Flow == "{A}_Stock changes [of a very odd product]",
+                   Product == "{A}_a very odd product"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -100)
+
+  expect_equal(AB_supply_MR %>%
+                 dplyr::filter(
+                   Flow == "{A}_Stock changes [of Coke oven coke]",
+                   Product == "{A}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
 })
 
-
-# Specifying U and Y matrices
-# test_that("specify_MR_Y_U_gma works", {
-#
-#
-#
-#
-#
-# })
-
-
-
-
-# Whole transform_to_gma function works
-# test_that("transform_to_gma works"{
-#
-# })
 
 
 
@@ -747,7 +777,247 @@ test_that("specify_MR_Y_U_gma works", {
 
 
 
+test_that("transform_to_gma works", {
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
 
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+
+  AB_MR_PSUT_gma <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    transform_to_gma()
+
+
+  expect_equal(dim(AB_MR_PSUT_gma),
+                   c(94, 12))
+
+
+  # Checking R matrix flows
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(Product == "{A}_Coking coal",
+                               matnames == "R") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               5000)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(Product == "{A}_Crude oil",
+                               matnames == "R") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               8500)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(Flow.aggregation.point != "Total primary energy supply",
+                               matnames == "R") %>%
+                 dim(),
+               c(0, 12))
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(! stringr::str_detect(Flow, "Resources"),
+                               matnames == "R") %>%
+                 dim(),
+               c(0, 12))
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(matnames == "R" & (stringr::str_detect(Flow, "\\{B\\}") | stringr::str_detect(Product, "\\{B\\}"))) %>%
+                 dim(),
+               c(0, 12))
+
+
+  # Checking V matrix flows
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Oil refineries",
+                   Product == "{A}_Heat",
+                   matnames == "V"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               50)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Blast furnaces",
+                   Product == "{A}_Blast furnace gas",
+                   matnames == "V"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               850)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{B}_Oil refineries",
+                   Product == "{B}_Heat",
+                   matnames == "V"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               200)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(stringr::str_detect(Flow, "Imports")) %>%
+                 dim(),
+               c(0, 12))
+
+
+  # Checking U and Y matrix flows
+
+  # Check specific values
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{A}_Coke oven coke",
+                   matnames == "Y"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               48)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{B}_Coke oven coke",
+                   matnames == "Y"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               72)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Coal mines",
+                   Product == "{A}_Electricity",
+                   matnames == "U_EIOU"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -20)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Coal mines",
+                   Product == "{B}_Electricity",
+                   matnames == "U_EIOU"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull() %>%
+                 length(),
+               0)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{B}_Blast furnaces",
+                   Product == "{A}_Natural gas [of Oil and gas extraction]",
+                   matnames == "U_EIOU"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -150)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{B}_Road",
+                   Product == "{A}_Natural gas [of Oil and gas extraction]",
+                   matnames == "Y"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               180)
+
+
+  # Then just check with stock changes and Epsilon matrix too.
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited() %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of Coke oven coke]",
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Total primary energy supply",
+      Flow = "Stock changes [of a very odd product]",
+      Product = "a very odd product",
+      Unit = "ktoe",
+      E.dot = +100
+    )
+
+  AB_MR_PSUT_gma <- AB_data %>%
+    stock_changes_to_epsilon() %>%
+    add_psut_matnames_epsilon() %>%
+    transform_to_gma()
+
+  # Length should be now 97.
+  expect_equal(dim(AB_MR_PSUT_gma),
+               c(97, 12))
+
+
+  # Testing a couple of values
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(matnames == "Epsilon") %>%
+                 dplyr::select(Country) %>%
+                 dplyr::pull() %>%
+                 length(),
+               3)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Stock changes [of a very odd product]",
+                   Product == "{A}_a very odd product",
+                   matnames == "Epsilon"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               -100)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(matnames == "Epsilon",
+                               Flow == "{A}_Stock changes [of Coke oven coke]",
+                               Product == "{A}_Coke oven coke") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               45.45455,
+               tolerance = 0.0001)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(matnames == "Epsilon",
+                               Flow == "{A}_Stock changes [of Coke oven coke]",
+                               Product == "{B}_Coke oven coke") %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               (100-45.45455),
+               tolerance = 0.0001)
+
+  expect_equal(AB_MR_PSUT_gma %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{A}_Coke oven coke",
+                   matnames == "Y"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               54.54546,
+               tolerance = 0.0001)
+
+})
 
 
 
