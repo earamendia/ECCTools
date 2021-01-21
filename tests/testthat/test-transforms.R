@@ -1206,9 +1206,58 @@ test_that("transform_to_bta works", {
                  dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames))
 
   # Then, try with a "fake" flow
+  second_dummy_AB_trade_matrix <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_bilateral_trade_matrix_df_gma() %>%
+    dplyr::filter(Provenience != "B") %>%
+    tibble::add_row(
+      Provenience = "A",
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Product = "Coke oven coke",
+      Share_Exports_From_Func = 1
+    )
 
+  MR_PSUT_bta <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    transform_to_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
+
+
+  # Checking data frames are NOT the same
+  expect_true(FALSE %in% (MR_PSUT_bta == MR_PSUT_gma))
+
+  # Further, checking particular values
+  expect_equal(MR_PSUT_bta %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{A}_Coke oven coke",
+                   matnames == "Y"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               c(48, 72))
+
+  expect_equal(MR_PSUT_bta %>%
+                 dplyr::filter(
+                   Flow == "{A}_Road",
+                   Product == "{A}_Coke oven coke",
+                   matnames == "Y"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               c(32, 48))
+
+  expect_equal(MR_PSUT_bta %>%
+                 dplyr::filter(
+                   Flow == "{A}_Blast furnaces",
+                   Product == "{A}_Coke oven coke",
+                   matnames == "U_feed"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               c(-320, -480))
 })
-
-
-
 
