@@ -1073,12 +1073,101 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
 
 
 
-# test_that("specify_MR_Y_U_bta works", {
-#
-# })
-#
-#
-#
+test_that("specify_MR_Y_U_bta works", {
+
+  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  MR_Y_U_bta <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    specify_MR_Y_U_bta()
+
+  # In theory, we should get exactly the same outcome as when running the gma assumption here.
+  MR_Y_U_gma <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    specify_MR_Y_U_gma()
+
+  # Nice. Same data frames.
+  expect_equal(MR_Y_U_bta, MR_Y_U_gma)
+
+
+  # Now, let's see if we feed a particular trade matrix!
+  # Now, say that we have a gap - country B provenience isn't in there!
+
+  dummy_AB_trade_matrix <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_bilateral_trade_matrix_df_gma() %>%
+    dplyr::filter(Provenience != "B")
+
+  MR_Y_U_bta <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    specify_MR_Y_U_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
+
+  # Nice, again same data frames.
+  expect_equal(MR_Y_U_bta %>%
+                 dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames),
+               MR_Y_U_gma %>%
+                 dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames))
+
+
+  # Now, say we modify the bilateral trade matrix, so that everything comes from country A!
+
+  second_dummy_AB_trade_matrix <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    calc_bilateral_trade_matrix_df_gma() %>%
+    dplyr::filter(Provenience != "B") %>%
+    tibble::add_row(
+      Provenience = "A",
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Product = "Coke oven coke",
+      Share_Exports_From_Func = 1
+    )
+
+  MR_Y_U_bta <- AB_data %>%
+    add_psut_matnames_epsilon() %>%
+    specify_MR_Y_U_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
+
+  # Checking data frames are NOT the same
+  expect_true(FALSE %in% (MR_Y_U_bta == MR_Y_U_gma))
+
+  # Further, checking particular values
+  expect_equal(MR_Y_U_bta %>%
+                 dplyr::filter(
+                   Flow == "{A}_Residential",
+                   Product == "{A}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               c(48, 72))
+
+  expect_equal(MR_Y_U_bta %>%
+                 dplyr::filter(
+                   Flow == "{A}_Road",
+                   Product == "{A}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               c(32, 48))
+
+  expect_equal(MR_Y_U_bta %>%
+                 dplyr::filter(
+                   Flow == "{A}_Blast furnaces",
+                   Product == "{A}_Coke oven coke"
+                 ) %>%
+                 dplyr::select(E.dot) %>%
+                 dplyr::pull(),
+               c(-320, -480))
+})
+
+
+
 # test_that("transform_to_bta works", {
 #
 # })
