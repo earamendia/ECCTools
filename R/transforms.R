@@ -297,7 +297,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
   # (4) Testing if we have any NAs in the join...
 
   if (NA %in% tidy_imported_consumption_MR_gma[[e_dot]]){
-    print("There an NA in the join here, do worry about it.")
+    stop("There an NA in the join here, do worry about it.")# How do I get code coverage here?
   }
 
 # Careful. Here, if we have an imported product for which THERE ARE NO EXPORTS in the .tidy_iea_df (say A imports nat. gas but no one exports it),
