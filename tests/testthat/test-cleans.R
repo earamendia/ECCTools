@@ -6,7 +6,7 @@ context("Cleaning up PSUT")
 test_that("convert_to_net_trade works", {
 
   # Path to dummy AB data
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   # Loading AB_data
   AB_data <- A_B_path %>%
@@ -73,7 +73,7 @@ test_that("convert_to_net_trade works", {
 # Testing stat_diffs_to_epsilon:
 test_that("stat_diffs_to_epsilon works",{
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_stat_diffs_stock_changes.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -119,7 +119,7 @@ test_that("stat_diffs_to_epsilon works",{
 # Testing stock_changes_to_epsilon:
 test_that("stock_changes_to_epsilon works",{
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_stat_diffs_stock_changes.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()

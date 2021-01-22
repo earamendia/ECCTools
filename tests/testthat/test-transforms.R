@@ -7,7 +7,7 @@ context("Transforming PSUT")
 
 test_that("find_list_dta_observations works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -54,7 +54,7 @@ test_that("find_list_dta_observations works", {
 
 test_that("transform_to_dta works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -119,7 +119,7 @@ test_that("transform_to_dta works", {
 # Specifying R matrix
 test_that("specify_MR_R works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -164,7 +164,7 @@ test_that("specify_MR_R works", {
 # Specifying V matrix
 test_that("specify_MR_V works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   # We wheck what happens when we add an epsilon flow to the supply side.
   AB_data <- A_B_path %>%
@@ -266,7 +266,7 @@ test_that("specify_MR_V works", {
 
 test_that("calc_total_consumption_by_product works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -318,7 +318,7 @@ test_that("calc_total_consumption_by_product works", {
 
 
 test_that("calc_imports_by_product works", {
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -350,7 +350,7 @@ test_that("calc_imports_by_product works", {
 
 
 test_that("calc_share_imports_by_product works", {
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -402,7 +402,7 @@ test_that("calc_share_imports_by_product works", {
 
 test_that("specify_imported_products works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -563,7 +563,7 @@ test_that("specify_imported_products works", {
 
 test_that("calc_global_exports works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -589,7 +589,7 @@ test_that("calc_global_exports works", {
 
 test_that("calc_share_exports_by_product works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -623,7 +623,7 @@ test_that("calc_share_exports_by_product works", {
 
 test_that("specify_MR_Y_U_gma works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -778,7 +778,7 @@ test_that("specify_MR_Y_U_gma works", {
 
 
 test_that("transform_to_gma works", {
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -1025,7 +1025,7 @@ test_that("transform_to_gma works", {
 
 test_that("calc_bilateral_trade_matrix_df_gma works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -1075,7 +1075,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
 
 test_that("specify_MR_Y_U_bta works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
@@ -1170,7 +1170,7 @@ test_that("specify_MR_Y_U_bta works", {
 
 test_that("transform_to_bta works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%

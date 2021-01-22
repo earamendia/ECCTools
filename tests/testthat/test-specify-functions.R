@@ -6,7 +6,7 @@ context("Specifying PSUT flows")
 # Testing the function that gathers "Main activity producer" and "Autoproducer" flows/industries.
 test_that("gather_producer_autoproducer works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -72,7 +72,7 @@ test_that("gather_producer_autoproducer works", {
 # Testing the function that routes the "Pumped storage" EIOU flow to "Main activity producer electricity plants."
 test_that("route_pumped_storage works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -107,7 +107,7 @@ test_that("route_pumped_storage works", {
 # Testing the function that splits the "Own use in electricity, CHP and heat plants" EIOU flow into the three main producer activities (electricity, CHP and heat)
 test_that("route_own_use_elect_chp_heat works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -197,7 +197,7 @@ test_that("route_own_use_elect_chp_heat works", {
 # and modifying the Main activity producer electricity and CHP plants
 test_that("add_nuclear_industry works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -363,7 +363,7 @@ test_that("add_nuclear_industry works", {
 
 test_that("route_non_specified_eiou works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -507,7 +507,7 @@ test_that("route_non_specified_eiou works", {
 
 test_that("route_non_specified_tp works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
@@ -709,7 +709,7 @@ test_that("route_non_specified_tp works", {
 
 test_that("route_non_specified_flows works", {
 
-  A_B_path <- file.path("../../inst/A_B_data_full_2018_format_testing.csv")
+  A_B_path <- system.file("A_B_data_full_2018_format_testing.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df()
