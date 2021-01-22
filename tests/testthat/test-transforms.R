@@ -198,8 +198,8 @@ test_that("specify_MR_V works", {
     )
 
   AB_supply_MR <- AB_data %>%
-    stock_changes_to_epsilon() %>%
     add_psut_matnames_epsilon() %>%
+    stock_changes_to_epsilon() %>%
     specify_MR_V()
 
 
@@ -516,8 +516,8 @@ test_that("specify_imported_products works", {
     )
 
   defined_imported_products <- AB_data %>%
-    stock_changes_to_epsilon() %>%
     add_psut_matnames_epsilon() %>%
+    stock_changes_to_epsilon() %>%
     specify_imported_products()
 
   # Checks.
@@ -734,8 +734,8 @@ test_that("specify_MR_Y_U_gma works", {
     )
 
   AB_MR_Y_U_gma <- AB_data %>%
-    stock_changes_to_epsilon() %>%
     add_psut_matnames_epsilon() %>%
+    stock_changes_to_epsilon() %>%
     specify_MR_Y_U_gma()
 
   # Checks.
@@ -961,8 +961,8 @@ test_that("transform_to_gma works", {
     )
 
   AB_MR_PSUT_gma <- AB_data %>%
-    stock_changes_to_epsilon() %>%
     add_psut_matnames_epsilon() %>%
+    stock_changes_to_epsilon() %>%
     transform_to_gma()
 
   # Length should be now 97.

@@ -50,15 +50,15 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 stat_diffs_to_epsilon <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
-                              ledger_side = IEATools::iea_cols$ledger_side,
+                              matnames = "matnames",
                               e_dot = IEATools::iea_cols$e_dot,
                               stat_diffs = "Statistical differences",
                               epsilon = "Epsilon"){
   .tidy_iea_df %>%
     dplyr::mutate(
-      "{ledger_side}" := dplyr::case_when(
-        .data[[flow]] == stat_diffs ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
-        TRUE ~ .data[[ledger_side]]
+      "{matnames}" := dplyr::case_when(
+        .data[[flow]] == stat_diffs ~ epsilon,
+        TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(
         .data[[flow]] == stat_diffs ~ -.data[[e_dot]],
@@ -73,15 +73,15 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 
 stock_changes_to_epsilon <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
-                                 ledger_side = IEATools::iea_cols$ledger_side,
+                                 matnames = "matnames",
                                  e_dot = IEATools::iea_cols$e_dot,
                                  stock_changes = "Stock changes",
                                  epsilon = "Epsilon"){
   .tidy_iea_df %>%
     dplyr::mutate(
-      "{ledger_side}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], stock_changes) ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
-        TRUE ~ .data[[ledger_side]]
+      "{matnames}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], stock_changes) ~ epsilon,
+        TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], stock_changes) ~ -.data[[e_dot]],
