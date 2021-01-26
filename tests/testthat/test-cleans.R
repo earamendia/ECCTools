@@ -47,7 +47,9 @@ test_that("convert_to_net_trade works", {
   # Second test, that should change the data frame where there are both imports and exports
   test_changed_df <- convert_to_net_trade(AB_net_trade_testing)
 
-  checking_row_equality <- dplyr::left_join(AB_data, test_changed_df,
+  checking_row_equality <- dplyr::left_join(AB_data %>%
+                                              specify_all_revisited(),
+                                            test_changed_df,
                                      by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
       diff = E.dot.x - E.dot.y
@@ -65,12 +67,15 @@ test_that("convert_to_net_trade works", {
   expect_equal(check_trade[[1, "E.dot"]], -800)
   expect_equal(check_trade[[1, "Flow"]], "Exports [of Coke oven coke]")
   expect_equal(check_trade[[2, "E.dot"]], -1160)
-  expect_equal(check_trade[[2, "Flow"]], "Exports")
-  expect_equal(check_trade[[3, "E.dot"]], -1400)
-  expect_equal(check_trade[[4, "E.dot"]], 500)
-  expect_equal(check_trade[[4, "Flow"]], "Imports")
-  expect_equal(check_trade[[8, "E.dot"]], 200)
-  expect_equal(check_trade[[8, "Flow"]], "Imports")
+  expect_equal(check_trade[[2, "Flow"]], "Exports [of Coking coal [of Coal mines]]")
+  expect_equal(check_trade[[3, "E.dot"]], 500)
+  expect_equal(check_trade[[3, "Flow"]], "Imports [of Crude oil [of Oil and gas extraction]]")
+  expect_equal(check_trade[[4, "E.dot"]], -1400)
+  expect_equal(check_trade[[4, "Flow"]], "Exports [of Natural gas [of Oil and gas extraction]]")
+  expect_equal(check_trade[[5, "E.dot"]], 200)
+  expect_equal(check_trade[[5, "Flow"]], "Imports [of Coke oven coke]")
+  expect_equal(check_trade[[8, "E.dot"]], 2500)
+  expect_equal(check_trade[[8, "Flow"]], "Imports [of Natural gas [of Oil and gas extraction]]")
 })
 
 
