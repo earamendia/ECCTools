@@ -76,7 +76,7 @@ add_balancing_vector <- function(.tidy_iea_df,
                                  supply_minus_consumption = "supply_minus_consumption",
                                  balance_OK = "balance_OK",
                                  err = "err",
-                                 epsilon = IEATools::psut_cols$Epsilon,
+                                 epsilon = "Epsilon",
                                  tol = 1e-6){
 
   # Check for which products the flows are unbalanced
