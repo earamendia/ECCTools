@@ -23,7 +23,8 @@ test_that("convert_to_net_trade works", {
   )
 
   AB_net_trade_testing <- AB_data %>%
-    dplyr::bind_rows(dummy_net_trade)
+    dplyr::bind_rows(dummy_net_trade) %>%
+    specify_all_revisited()
 
 
   # First test, that shouldn't change the data frame at all
@@ -48,7 +49,7 @@ test_that("convert_to_net_trade works", {
     dplyr::mutate(
       diff = E.dot.x - E.dot.y
     ) %>%
-    dplyr::filter(! Flow %in% c("Imports", "Exports")) %>%
+    dplyr::filter(! (stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))) %>%
     dplyr::summarise(max_diff = max(abs(diff))) %>%
     dplyr::pull()
 
@@ -56,7 +57,7 @@ test_that("convert_to_net_trade works", {
 
 
   check_trade <- test_changed_df %>%
-    dplyr::filter(Flow %in% c("Imports", "Exports"))
+    dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))
 
   expect_equal(check_trade[[1, "E.dot"]], -800)
   expect_equal(check_trade[[1, "Flow"]], "Exports")

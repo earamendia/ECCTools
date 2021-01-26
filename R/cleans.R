@@ -12,10 +12,18 @@ convert_to_net_trade <- function(.tidy_iea_df,
                                  year = IEATools::iea_cols$year,
                                  ledger_side = IEATools::iea_cols$ledger_side,
                                  flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                 product = IEATools::iea_cols$product,
                                  .net_imports = "Net_Imports"){
 
   net_trade_flows <- .tidy_iea_df %>%
-    dplyr::filter(.data[[flow]] == imports | .data[[flow]] == exports) %>%
+    dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>%
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], imports) ~ imports,
+        stringr::str_detect(.data[[flow]], exports) ~ exports,
+        TRUE ~ .data[[flow]]
+      )
+    ) %>%
     tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>%
     dplyr::mutate(
       "{imports}" := tidyr::replace_na(.data[[imports]], 0),
@@ -31,11 +39,14 @@ convert_to_net_trade <- function(.tidy_iea_df,
       )
     ) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
+    dplyr::mutate(
+      "{flow}" := stringr::str_c(.data[[flow]], " of [", .data[[product]], "]", sep = "")
+    ) %>%
     dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
 
 
   tidy_net_trade_df <- .tidy_iea_df %>%
-    dplyr::filter(! .data[[flow]] %in% c({imports}, {exports})) %>%
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
     dplyr::bind_rows(net_trade_flows) %>%
     dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
 
