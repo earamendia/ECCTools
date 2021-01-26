@@ -40,7 +40,7 @@ convert_to_net_trade <- function(.tidy_iea_df,
     ) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
-      "{flow}" := stringr::str_c(.data[[flow]], " of [", .data[[product]], "]", sep = "")
+      "{flow}" := stringr::str_c(.data[[flow]], " [of ", .data[[product]], "]", sep = "")
     ) %>%
     dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
 

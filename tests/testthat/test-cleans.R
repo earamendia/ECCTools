@@ -28,9 +28,12 @@ test_that("convert_to_net_trade works", {
 
 
   # First test, that shouldn't change the data frame at all
-  test_unchanged_df <- convert_to_net_trade(AB_data)
+  test_unchanged_df <- convert_to_net_trade(AB_data %>%
+                                              specify_all_revisited())
 
-  checking_row_equality <- dplyr::left_join(AB_data, test_unchanged_df,
+  checking_row_equality <- dplyr::left_join(AB_data %>%
+                                              specify_all_revisited(),
+                                            test_unchanged_df,
                                      by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
       diff = E.dot.x - E.dot.y
@@ -60,7 +63,7 @@ test_that("convert_to_net_trade works", {
     dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports"))
 
   expect_equal(check_trade[[1, "E.dot"]], -800)
-  expect_equal(check_trade[[1, "Flow"]], "Exports")
+  expect_equal(check_trade[[1, "Flow"]], "Exports [of Coke oven coke]")
   expect_equal(check_trade[[2, "E.dot"]], -1160)
   expect_equal(check_trade[[2, "Flow"]], "Exports")
   expect_equal(check_trade[[3, "E.dot"]], -1400)
