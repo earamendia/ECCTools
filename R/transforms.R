@@ -295,16 +295,29 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     ) %>%
     dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
-  # (4) Testing if we have any NAs in the join...
+  # (4) When a given product is imported by a given country, but no country exports such product, then calculate the global production mix.
+  tidy_imported_consumption_MR_gma %>%
+    dplyr::filter(is.na(.data[[e_dot]])) %>%
+    dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
+                     by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
+      "{product}" := stringr::str_replace(.data[[product]], "NA", .data[["Origin"]]),
+      "{country}" := aggregate_country_name
+    )
 
+
+  # (5) Testing if we have any NAs in the join...
   if (NA %in% tidy_imported_consumption_MR_gma[[e_dot]]){
     stop("There an NA in the join here, do worry about it.")# How do I get code coverage here?
   }
 
-# Careful. Here, if we have an imported product for which THERE ARE NO EXPORTS in the .tidy_iea_df (say A imports nat. gas but no one exports it),
-# we'll be getting some NAs somewhere. Probably a good check to do.
-
-  tidy_consumption_MR_gma <- dplyr::bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma)
+  # Right. And here we need to "gather" flows of the same things, are these may appear in (4) if the country also produces locally the product.
+  tidy_consumption_MR_gma <- dplyr::bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma) %>%
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    )
 
   return(tidy_consumption_MR_gma)
 
