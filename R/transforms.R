@@ -246,6 +246,7 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
       Share_Exports_From_Func = .data[[e_dot]] / Total_Exports_From_Func
     ) %>%
     dplyr::rename("{provenience}" := .data[[country]]) %>%
+    dplyr::ungroup() %>%
     dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]], -.data[[e_dot]], -.data[[matnames]], -.data[["Total_Exports_From_Func"]])
 
   return(tidy_share_exports_by_product)
