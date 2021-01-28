@@ -471,6 +471,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
                                last_stage = IEATools::iea_cols$last_stage,
                                e_dot = IEATools::iea_cols$e_dot,
                                country = IEATools::iea_cols$country,
+                               unit = IEATools::iea_cols$unit,
                                aggregate_country_name = "World",
                                provenience = "Provenience"){
 
@@ -504,7 +505,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
   # (3.ii) Specifying the rest with the global market assumption GMA
-  tidy_imported_consumption_with_gma_bt_matrix <- tidy_iea_df_specified_imports %>%
+  tidy_imported_consumption_with_gma_bt_matrix_with_nas <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
     dplyr::left_join(bilateral_trade_matrix_df,
                      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
@@ -523,19 +524,43 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
 
-  # (3.iii) Binding both
+  # (3.iii) Where there are NAs - i.e. where an imported product is not exported by any country, use the global production mix!
+  tidy_imported_consumption_with_gma_bt_matrix_whout_nas <- tidy_imported_consumption_with_gma_bt_matrix_with_nas %>%
+    dplyr::filter(is.na(.data[[e_dot]])) %>%
+    dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
+                     by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
+      "{product}" := stringr::str_replace(.data[[product]], "NA", .data[["Producing_Country_From_Func"]])
+    ) %>%
+    dplyr::select(-.data[["Producing_Country_From_Func"]], -.data[["Share_Global_Production_From_Func"]])
+
+
+  # (3.iv) Bind rows of the tidy_imported_consumption_with_gma_bt_matrix data frame
+  tidy_imported_consumption_with_gma_bt_matrix <- tidy_imported_consumption_with_gma_bt_matrix_with_nas %>%
+    dplyr::filter(! is.na(.data[[e_dot]])) %>%
+    dplyr::bind_rows(tidy_imported_consumption_with_gma_bt_matrix_whout_nas)
+
+  if (NA %in% tidy_imported_consumption_with_bt_matrix[[e_dot]]){
+    stop("There an NA in the join here, do worry about it.")# How do I get code coverage here?
+  }
+
+  # (3.vi) Binding data frames computed with bt matrix and with gma trade matrix
   tidy_imported_consumption_MR_bta <- dplyr::bind_rows(tidy_imported_consumption_with_bt_matrix,
                                                        tidy_imported_consumption_with_gma_bt_matrix)
 
 
-  # Binding data frames together and returning result
+  # Binding domestic and foreign consumption data frames together and returning result
   tidy_consumption_MR_bta <- dplyr::bind_rows(tidy_domestic_consumption_MR_bta,
-                                              tidy_imported_consumption_MR_bta)
+                                              tidy_imported_consumption_MR_bta) %>%
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::ungroup()
 
   return(tidy_consumption_MR_bta)
-
 }
-
 
 
 
