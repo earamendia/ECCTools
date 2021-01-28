@@ -158,7 +158,7 @@ calc_global_production_by_product <- function(.tidy_iea_df,
     dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
-      "{e_dot}" := sum(.data[[e_dot]])
+      Global_Production_From_Func = sum(.data[[e_dot]])
     )
 }
 
@@ -178,24 +178,37 @@ calc_national_production_by_product <- function(.tidy_iea_df,
     dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
-      "{e_dot}" := sum(.data[[e_dot]])
+      National_Production_From_Func = sum(.data[[e_dot]])
     )
 }
 
 
 # Function that calculates the share of global production by product
 
-calc_share_global_production_by_product <- function(.tidy_iea_df){
+calc_share_global_production_by_product <- function(.tidy_iea_df,
+                                                    country = IEATools::iea_cols$country,
+                                                    year = IEATools::iea_cols$year,
+                                                    method = IEATools::iea_cols$method,
+                                                    energy_type = IEATools::iea_cols$energy_type,
+                                                    last_stage = IEATools::iea_cols$last_stage,
+                                                    ledger_side = IEATools::iea_cols$ledger_side,
+                                                    flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                                    flow = IEATools::iea_cols$flow,
+                                                    product = IEATools::iea_cols$product,
+                                                    e_dot = IEATools::iea_cols$e_dot,
+                                                    unit = IEATools::iea_cols$unit,
+                                                    matnames = IEATools::mat_meta_cols$matnames
+                                                    ){
 
   share_global_production_by_product <- dplyr::left_join(
       calc_global_production_by_product(.tidy_iea_df),
-      calc_production_by_product(.tidy_iea_df),
-      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {unit})
+      calc_national_production_by_product(.tidy_iea_df),
+      by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})
     ) %>%
-    dplyr::select(-.data[[ledger_side]], -.data[[matnames]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]]) %>%
     dplyr::mutate(
-      Share_Global_Production_From_Func = .data[["Production"]] / .data[["Global_Production"]]
-    )
+      Share_Global_Production_From_Func = .data[["National_Production_From_Func"]] / .data[["Global_Production_From_Func"]]
+    ) %>%
+    dplyr::select(-.data[["National_Production_From_Func"]], -.data[["Global_Production_From_Func"]])
 
 }
 

@@ -727,6 +727,51 @@ test_that("calc_share_global_production_by_product works", {
   share_production_by_product <- AB_data %>%
     IEATools::add_psut_matnames() %>%
     calc_share_global_production_by_product()
+
+  share_production_by_product %>%
+    dplyr::filter(Country == "A", Product == "Crude oil") %>%
+    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    expect_equal(1)
+
+  share_production_by_product %>%
+    dplyr::filter(Country == "A", Product == "Blast furnace gas") %>%
+    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    expect_equal(0.5)
+
+  share_production_by_product %>%
+    dplyr::filter(Country == "A", Product == "Electricity") %>%
+    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    expect_equal(0.7619048,
+                 tolerance = 0.0001)
+
+  share_production_by_product %>%
+    dplyr::filter(Country == "A", Product == "Crude oil") %>%
+    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    expect_equal(1)
+
+  share_production_by_product %>%
+    dplyr::filter(Country == "B", Product == "Kerosene type jet fuel excl. biofuels") %>%
+    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    expect_equal(0.3636364,
+                 tolerance = 0.0001)
+
+  share_production_by_product %>%
+    dplyr::filter(Country == "B", Product == "Coke oven coke") %>%
+    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    expect_equal(0.7777778,
+                 tolerance = 0.0001)
+
+  share_production_by_product %>%
+    dplyr::group_by(Method, Energy.type, Last.stage, Year, Product, Unit) %>%
+    dplyr::summarise(
+      total_share_by_product = sum(Share_Global_Production_From_Func)
+    ) %>%
+    dplyr::mutate(
+      is_equal_unity = total_share_by_product == 1
+    ) %>%
+    magrittr::extract2("is_equal_unity") %>%
+    all() %>%
+    expect_true()
 })
 
 
