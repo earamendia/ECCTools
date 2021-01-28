@@ -142,11 +142,20 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
 
 # Function that calculates global production by product
 
-calc_global_production_by_product <- function(.tidy_iea_df){
+calc_global_production_by_product <- function(.tidy_iea_df,
+                                              country = IEATools::iea_cols$country,
+                                              ledger_side = IEATools::iea_cols$ledger_side,
+                                              flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                              flow = IEATools::iea_cols$flow,
+                                              e_dot = IEATools::iea_cols$e_dot,
+                                              matnames = IEATools::mat_meta_cols$matnames,
+                                              V_matrix = IEATools::psut_cols$V,
+                                              R_matrix = IEATools::psut_cols$R,
+                                              imports = IEATools::interface_industries$imports){
 
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
-    dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]]) %>%
+    dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
@@ -155,10 +164,18 @@ calc_global_production_by_product <- function(.tidy_iea_df){
 
 # Function that calculates the national production by product
 
-calc_national_production_by_product <- function(.tidy_iea_df){
+calc_national_production_by_product <- function(.tidy_iea_df,
+                                                ledger_side = IEATools::iea_cols$ledger_side,
+                                                flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                                flow = IEATools::iea_cols$flow,
+                                                e_dot = IEATools::iea_cols$e_dot,
+                                                matnames = IEATools::mat_meta_cols$matnames,
+                                                V_matrix = IEATools::psut_cols$V,
+                                                R_matrix = IEATools::psut_cols$R,
+                                                imports = IEATools::interface_industries$imports){
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
-    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]]) %>%
+    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])

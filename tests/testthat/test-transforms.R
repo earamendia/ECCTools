@@ -621,6 +621,116 @@ test_that("calc_share_exports_by_product works", {
 })
 
 
+test_that("calc_national_production_by_product works"{
+
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  national_production_by_product <- AB_data %>%
+    IEATools::add_psut_matnames() %>%
+    calc_national_production_by_product()
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "A" & Product == "Crude oil") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(8500)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "A" & Product == "Coke oven coke") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(400)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "A" & Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(250)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "A" & Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(4000)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "A" & Product == "Natural gas [of Oil and gas extraction]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(4100)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "B" & Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(1000)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "B" & Product == "Blast furnace gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(850)
+
+  national_production_by_product %>%
+    dplyr::filter(Country == "B" & Product == "Crude oil") %>%
+    magrittr::extract2("E.dot") %>%
+    length() %>%
+    expect_equal(0)
+})
+
+
+
+test_that("calc_global_production_by_product works", {
+
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  global_production_by_product <- AB_data %>%
+    IEATools::add_psut_matnames() %>%
+    calc_global_production_by_product()
+
+  global_production_by_product %>%
+    dplyr::filter(Product == "Crude oil") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(8500)
+
+  global_production_by_product %>%
+    dplyr::filter(Product == "Blast furnace gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(1700)
+
+  global_production_by_product %>%
+    dplyr::filter(Product == "Coke oven coke") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(1800)
+
+  global_production_by_product %>%
+    dplyr::filter(Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(750)
+
+  global_production_by_product %>%
+    dplyr::filter(Product == "Natural gas [of Oil and gas extraction]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(4100)
+})
+
+
+test_that("calc_share_global_production_by_product works", {
+
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    specify_all_revisited()
+
+  share_production_by_product <- AB_data %>%
+    IEATools::add_psut_matnames() %>%
+    calc_share_global_production_by_product()
+})
+
+
+
 test_that("specify_MR_Y_U_gma works", {
 
   A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
