@@ -1251,6 +1251,7 @@ test_that("specify_MR_Y_U_bta works", {
 
   # Now, let's see if we feed a particular trade matrix!
   # Now, say that we have a gap - country B provenience isn't in there!
+  # Then all the coke oven coke that A imports from B should now come instead from A!
 
   dummy_AB_trade_matrix <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -1261,7 +1262,7 @@ test_that("specify_MR_Y_U_bta works", {
     add_psut_matnames_epsilon() %>%
     specify_MR_Y_U_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
 
-  # Nice, again same data frames.
+  # These should still be equal
   expect_equal(MR_Y_U_bta %>%
                  dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames),
                MR_Y_U_gma %>%
@@ -1269,7 +1270,6 @@ test_that("specify_MR_Y_U_bta works", {
 
 
   # Now, say we modify the bilateral trade matrix, so that everything comes from country A!
-
   second_dummy_AB_trade_matrix <- AB_data %>%
     add_psut_matnames_epsilon() %>%
     calc_bilateral_trade_matrix_df_gma() %>%
@@ -1290,7 +1290,22 @@ test_that("specify_MR_Y_U_bta works", {
     specify_MR_Y_U_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
 
   # Checking data frames are NOT the same
-  expect_true(FALSE %in% (MR_Y_U_bta == MR_Y_U_gma))
+  expect_true(! nrow(MR_Y_U_bta) == nrow(MR_Y_U_gma))
+
+  # So actually the length of the BTA data frame should be equal to the GMA data frame minus the number of times that coke oven coke is consummed by A.
+  # i.e. three times.
+  expect_equal(nrow(MR_Y_U_bta)+3,
+               nrow(MR_Y_U_gma))
+
+  # If we take Coke oven coke out, then we should have the same data frames.
+  # Works, awesome.
+  expect_equal(MR_Y_U_bta %>%
+                 dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames) %>%
+                 dplyr::filter(! stringr::str_detect(Product, "Coke oven coke")),
+               MR_Y_U_gma %>%
+                 dplyr::arrange(Country, Method, Energy.type, Last.stage, Year, Ledger.side, Flow.aggregation.point, Flow, Product, Unit, matnames) %>%
+                 dplyr::filter(! stringr::str_detect(Product, "Coke oven coke")))
+
 
   # Further, checking particular values
   expect_equal(MR_Y_U_bta %>%
@@ -1298,27 +1313,24 @@ test_that("specify_MR_Y_U_bta works", {
                    Flow == "{A}_Residential",
                    Product == "{A}_Coke oven coke"
                  ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               c(48, 72))
+                 magrittr::extract2("E.dot"),
+               120)
 
   expect_equal(MR_Y_U_bta %>%
                  dplyr::filter(
                    Flow == "{A}_Road",
                    Product == "{A}_Coke oven coke"
                  ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               c(32, 48))
+                 magrittr::extract2("E.dot"),
+               80)
 
   expect_equal(MR_Y_U_bta %>%
                  dplyr::filter(
                    Flow == "{A}_Blast furnaces",
                    Product == "{A}_Coke oven coke"
                  ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               c(-320, -480))
+                 magrittr::extract2("E.dot"),
+               -800)
 })
 
 
@@ -1382,7 +1394,9 @@ test_that("transform_to_bta works", {
 
 
   # Checking data frames are NOT the same
-  expect_true(FALSE %in% (MR_PSUT_bta == MR_PSUT_gma))
+  expect_false(nrow(MR_PSUT_gma) == nrow(MR_PSUT_bta))
+  expect_equal(nrow(MR_PSUT_bta) + 3,
+               nrow(MR_PSUT_gma))
 
   # Further, checking particular values
   expect_equal(MR_PSUT_bta %>%
@@ -1391,9 +1405,8 @@ test_that("transform_to_bta works", {
                    Product == "{A}_Coke oven coke",
                    matnames == "Y"
                  ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               c(48, 72))
+                 magrittr::extract2("E.dot"),
+               120)
 
   expect_equal(MR_PSUT_bta %>%
                  dplyr::filter(
@@ -1401,9 +1414,8 @@ test_that("transform_to_bta works", {
                    Product == "{A}_Coke oven coke",
                    matnames == "Y"
                  ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               c(32, 48))
+                 magrittr::extract2("E.dot"),
+               80)
 
   expect_equal(MR_PSUT_bta %>%
                  dplyr::filter(
@@ -1411,8 +1423,7 @@ test_that("transform_to_bta works", {
                    Product == "{A}_Coke oven coke",
                    matnames == "U_feed"
                  ) %>%
-                 dplyr::select(E.dot) %>%
-                 dplyr::pull(),
-               c(-320, -480))
+                 magrittr::extract2("E.dot"),
+               -800)
 })
 
