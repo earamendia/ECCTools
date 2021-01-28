@@ -621,7 +621,7 @@ test_that("calc_share_exports_by_product works", {
 })
 
 
-test_that("calc_national_production_by_product works"{
+test_that("calc_national_production_by_product works", {
 
   A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
@@ -635,42 +635,42 @@ test_that("calc_national_production_by_product works"{
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Crude oil") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(8500)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Coke oven coke") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(400)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Heat") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(250)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Natural gas") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(4000)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Natural gas [of Oil and gas extraction]") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(4100)
 
   national_production_by_product %>%
     dplyr::filter(Country == "B" & Product == "Electricity") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(1000)
 
   national_production_by_product %>%
     dplyr::filter(Country == "B" & Product == "Blast furnace gas") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(850)
 
   national_production_by_product %>%
     dplyr::filter(Country == "B" & Product == "Crude oil") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("National_Production_From_Func") %>%
     length() %>%
     expect_equal(0)
 })
@@ -691,27 +691,27 @@ test_that("calc_global_production_by_product works", {
 
   global_production_by_product %>%
     dplyr::filter(Product == "Crude oil") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("Global_Production_From_Func") %>%
     expect_equal(8500)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Blast furnace gas") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("Global_Production_From_Func") %>%
     expect_equal(1700)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Coke oven coke") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("Global_Production_From_Func") %>%
     expect_equal(1800)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Heat") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("Global_Production_From_Func") %>%
     expect_equal(750)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Natural gas [of Oil and gas extraction]") %>%
-    magrittr::extract2("E.dot") %>%
+    magrittr::extract2("Global_Production_From_Func") %>%
     expect_equal(4100)
 })
 
@@ -729,34 +729,34 @@ test_that("calc_share_global_production_by_product works", {
     calc_share_global_production_by_product()
 
   share_production_by_product %>%
-    dplyr::filter(Country == "A", Product == "Crude oil") %>%
+    dplyr::filter(Producing_Country_From_Func == "A", Product == "Crude oil") %>%
     magrittr::extract2("Share_Global_Production_From_Func") %>%
     expect_equal(1)
 
   share_production_by_product %>%
-    dplyr::filter(Country == "A", Product == "Blast furnace gas") %>%
+    dplyr::filter(Producing_Country_From_Func == "A", Product == "Blast furnace gas") %>%
     magrittr::extract2("Share_Global_Production_From_Func") %>%
     expect_equal(0.5)
 
   share_production_by_product %>%
-    dplyr::filter(Country == "A", Product == "Electricity") %>%
+    dplyr::filter(Producing_Country_From_Func == "A", Product == "Electricity") %>%
     magrittr::extract2("Share_Global_Production_From_Func") %>%
     expect_equal(0.7619048,
                  tolerance = 0.0001)
 
   share_production_by_product %>%
-    dplyr::filter(Country == "A", Product == "Crude oil") %>%
+    dplyr::filter(Producing_Country_From_Func == "A", Product == "Crude oil") %>%
     magrittr::extract2("Share_Global_Production_From_Func") %>%
     expect_equal(1)
 
   share_production_by_product %>%
-    dplyr::filter(Country == "B", Product == "Kerosene type jet fuel excl. biofuels") %>%
+    dplyr::filter(Producing_Country_From_Func == "B", Product == "Kerosene type jet fuel excl. biofuels") %>%
     magrittr::extract2("Share_Global_Production_From_Func") %>%
     expect_equal(0.3636364,
                  tolerance = 0.0001)
 
   share_production_by_product %>%
-    dplyr::filter(Country == "B", Product == "Coke oven coke") %>%
+    dplyr::filter(Producing_Country_From_Func == "B", Product == "Coke oven coke") %>%
     magrittr::extract2("Share_Global_Production_From_Func") %>%
     expect_equal(0.7777778,
                  tolerance = 0.0001)

@@ -208,7 +208,8 @@ calc_share_global_production_by_product <- function(.tidy_iea_df,
     dplyr::mutate(
       Share_Global_Production_From_Func = .data[["National_Production_From_Func"]] / .data[["Global_Production_From_Func"]]
     ) %>%
-    dplyr::select(-.data[["National_Production_From_Func"]], -.data[["Global_Production_From_Func"]])
+    dplyr::select(-.data[["National_Production_From_Func"]], -.data[["Global_Production_From_Func"]]) %>%
+    dplyr::rename(Producing_Country_From_Func = .data[[country]])
 
 }
 
@@ -335,6 +336,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                energy_type = IEATools::iea_cols$energy_type,
                                last_stage = IEATools::iea_cols$last_stage,
                                e_dot = IEATools::iea_cols$e_dot,
+                               unit = IEATools::iea_cols$unit,
                                country = IEATools::iea_cols$country,
                                aggregate_country_name = "World",
                                provenience = "Provenience"){
@@ -355,7 +357,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
 
   # (3) Specifying foreign consumption
-  tidy_imported_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
+  tidy_imported_consumption_MR_gma_with_nas <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
     dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
@@ -368,18 +370,22 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
 
   # (4) When a given product is imported by a given country, but no country exports such product, then calculate the global production mix.
-  tidy_imported_consumption_MR_gma %>%
+  tidy_imported_consumption_MR_gma_whout_nas <- tidy_imported_consumption_MR_gma_with_nas %>%
     dplyr::filter(is.na(.data[[e_dot]])) %>%
     dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
-                     by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+                     by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
-      "{product}" := stringr::str_replace(.data[[product]], "NA", .data[["Origin"]]),
-      "{country}" := aggregate_country_name
-    )
+      "{product}" := stringr::str_replace(.data[[product]], "NA", .data[["Producing_Country_From_Func"]])
+    ) %>%
+    dplyr::select(-.data[["Producing_Country_From_Func"]], -.data[["Share_Global_Production_From_Func"]])
 
+  # (5) Bind rows.
+  tidy_imported_consumption_MR_gma <- tidy_imported_consumption_MR_gma_with_nas %>%
+    dplyr::filter(! is.na(.data[[e_dot]])) %>%
+    dplyr::bind_rows(tidy_imported_consumption_MR_gma_whout_nas)
 
-  # (5) Testing if we have any NAs in the join...
+  # (6) Testing if we have any NAs in the join...
   if (NA %in% tidy_imported_consumption_MR_gma[[e_dot]]){
     stop("There an NA in the join here, do worry about it.")# How do I get code coverage here?
   }
@@ -389,7 +395,8 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
-    )
+    ) %>%
+    dplyr::ungroup()
 
   return(tidy_consumption_MR_gma)
 
