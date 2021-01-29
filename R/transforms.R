@@ -524,7 +524,10 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})
     ) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
+      "{e_dot}" := dplyr::case_when(
+        is.na(Share_Exports_From_Func) ~ .data[[e_dot]],
+        TRUE ~ .data[[e_dot]] * Share_Exports_From_Func
+      ),
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
@@ -534,19 +537,22 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
   # (3.iii) Where there are NAs - i.e. where an imported product is not exported by any country, use the global production mix!
   tidy_imported_consumption_with_gma_bt_matrix_whout_nas <- tidy_imported_consumption_with_gma_bt_matrix_with_nas %>%
-    dplyr::filter(is.na(.data[[e_dot]])) %>%
+    dplyr::filter(stringr::str_detect(.data[[product]], "\\{NA\\}_")) %>%
+    dplyr::mutate(
+      "{product}" := stringr::str_remove(.data[[product]], "\\{NA\\}_")
+    ) %>%
     dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
-      "{product}" := stringr::str_replace(.data[[product]], "NA", .data[["Producing_Country_From_Func"]])
+      "{product}" := stringr::str_c("{", .data[["Producing_Country_From_Func"]], "}_", .data[[product]])
     ) %>%
     dplyr::select(-.data[["Producing_Country_From_Func"]], -.data[["Share_Global_Production_From_Func"]])
 
 
   # (3.iv) Bind rows of the tidy_imported_consumption_with_gma_bt_matrix data frame
   tidy_imported_consumption_with_gma_bt_matrix <- tidy_imported_consumption_with_gma_bt_matrix_with_nas %>%
-    dplyr::filter(! is.na(.data[[e_dot]])) %>%
+    dplyr::filter(! stringr::str_detect(.data[[product]], "\\{NA\\}_")) %>%
     dplyr::bind_rows(tidy_imported_consumption_with_gma_bt_matrix_whout_nas)
 
   if (NA %in% tidy_imported_consumption_with_bt_matrix[[e_dot]]){
