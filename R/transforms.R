@@ -155,6 +155,7 @@ calc_global_production_by_product <- function(.tidy_iea_df,
 
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
+    dplyr::ungroup() %>%
     dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
@@ -175,6 +176,7 @@ calc_national_production_by_product <- function(.tidy_iea_df,
                                                 imports = IEATools::interface_industries$imports){
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
+    dplyr::ungroup() %>%
     dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
