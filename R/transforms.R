@@ -364,7 +364,10 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
+      "{e_dot}" := dplyr::case_when(
+        is.na(Share_Exports_From_Func) ~ .data[[e_dot]],
+        TRUE ~ .data[[e_dot]] * Share_Exports_From_Func
+      ),
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
@@ -373,18 +376,21 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (4) When a given product is imported by a given country, but no country exports such product, then calculate the global production mix.
   tidy_imported_consumption_MR_gma_whout_nas <- tidy_imported_consumption_MR_gma_with_nas %>%
-    dplyr::filter(is.na(.data[[e_dot]])) %>%
+    dplyr::filter(stringr::str_detect(.data[[product]], "\\{NA\\}_")) %>%
+    dplyr::mutate(
+      "{product}" := stringr::str_remove(.data[[product]], "\\{NA\\}_")
+    ) %>%
     dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
-      "{product}" := stringr::str_replace(.data[[product]], "NA", .data[["Producing_Country_From_Func"]])
+      "{product}" := stringr::str_c("{", .data[["Producing_Country_From_Func"]], "}_", .data[[product]])
     ) %>%
     dplyr::select(-.data[["Producing_Country_From_Func"]], -.data[["Share_Global_Production_From_Func"]])
 
   # (5) Bind rows.
   tidy_imported_consumption_MR_gma <- tidy_imported_consumption_MR_gma_with_nas %>%
-    dplyr::filter(! is.na(.data[[e_dot]])) %>%
+    dplyr::filter(! stringr::str_detect(.data[[product]], "\\{NA\\}_")) %>%
     dplyr::bind_rows(tidy_imported_consumption_MR_gma_whout_nas)
 
   # (6) Testing if we have any NAs in the join...
