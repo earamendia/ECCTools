@@ -11,7 +11,8 @@ convert_fuel_gasoline_into_motor_gasoline <- function(.tidy_iea_df,
         TRUE ~ .data[[product]]
       ),
       "{flow}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], "Gasoline type jet fuel") ~ stringr::str_replace(.data[[flow]], "Gasoline type jet fuel", "Motor gasoline excl. biofuels")
+        stringr::str_detect(.data[[flow]], "Gasoline type jet fuel") ~ stringr::str_replace(.data[[flow]], "Gasoline type jet fuel", "Motor gasoline excl. biofuels"),
+        TRUE ~ .data[[flow]]
       )
     ) %>%
     matsindf::group_by_everything_except(e_dot) %>%
