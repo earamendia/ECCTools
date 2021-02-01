@@ -461,6 +461,85 @@ specify_tp_eiou_revisited <- function(.tidy_iea_df,
 }
 
 
+specify_tp_eiou <- function(.tidy_iea_df,
+                            flow_aggregation_point = "Flow.aggregation.point",
+                            eiou = "Energy industry own use",
+                            transformation_processes = "Transformation processes",
+                            flow = "Flow",
+                            # Industries that receive EIOU but are not in Transformation processes
+                            own_use_elect_chp_heat = "Own use in electricity, CHP and heat plants",
+                            pumped_storage = "Pumped storage plants",
+                            nuclear_industry = "Nuclear industry",
+                            e_dot = "E.dot",
+                            negzeropos = ".negzeropos",
+                            # Places where the EIOU will e reassigned
+                            main_act_producer_elect = "Main activity producer electricity plants"){
+  .tidy_iea_df %>%
+    matsindf::verify_cols_missing(negzeropos)
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      !!as.name(flow) := dplyr::case_when(
+        # Apply "Own use in electricity, CHP and heat plants" to "Main activity producer electricity plants"
+        # This solves a problem in Ghana where "Own use in electricity, CHP and heat plants"
+        # would lead to a zero row in the make matrix.
+        # There is no Industry that makes "Own use in electricity, CHP and heat plants".
+        # In the absence of further information, and assuming that there is more
+        # electricity production than CHP or heat production in each country,
+        # we apply "Own use in electricity, CHP and heat plants" to
+        # "Main activity producer electricity plants".
+        !!as.name(flow) == own_use_elect_chp_heat & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+
+        # When pumped storage is in the mix,
+        # the IEA data helpfully indicates EIOU assigned to "Pumped storage plants".
+        # However, Pumped storage plants do not make any electricity,
+        # so there is no appropriate Industry for its EIOU.
+        # To fix this problem,
+        # apply EIOU by Pumped storage plants to
+        # the Industry in which production from Pumped storage plants is accounted:
+        # Main activity producer electricity plants.
+        !!as.name(flow) == pumped_storage & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+
+        # If Nuclear is used, we need to reclassify EIOU by Nuclear plants
+        # to Main activity producer electricity plants.
+        !!as.name(flow) == nuclear_industry & !!as.name(flow_aggregation_point) == eiou ~ main_act_producer_elect,
+
+        # Non-specified (energy) is an Industry that receives EIOU.
+        # However, Non-specified (energy) is not an Industry that makes anything.
+        # So, we need to reassign these EIOU flows somwehere.
+        # For the UK, the numbers for "Non-specified (energy)" are rather small.
+        # In the absence of any better information, we apply
+        # "Non-specified (energy)" to nonspecenergy_reclassify.
+        # !!as.name(flow) == non_spec_energy & !!as.name(flow_aggregation_point) == eiou ~ nonspecenergy_reclassify,
+
+        # Otherwise, just keep the same value for the flow column.
+        TRUE ~ !!as.name(flow)
+      )
+    ) %>%
+    dplyr::mutate(
+      # Add a column that tells whether E.dot is negative, zero, or positive.
+      # The goa is to sum like input or like outputs of a Transformation process.
+      # Unless we differentiate by the sign of E.dot,
+      # we'll be getting net energy flows, which we don't want.
+      !!as.name(negzeropos) := dplyr::case_when(
+        !!as.name(e_dot) < 0 ~ "neg",
+        !!as.name(e_dot) == 0 ~ "zero",
+        !!as.name(e_dot) > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      !!as.name(e_dot) := sum(!!as.name(e_dot))
+    ) %>%
+    dplyr::mutate(
+      # Eliminate the column we added.
+      !!as.name(negzeropos) := NULL
+    ) %>%
+    dplyr::ungroup()
+}
+
+
 #' Find transformation sinks and sources
 #'
 #' In the IEA extended energy balance data,
