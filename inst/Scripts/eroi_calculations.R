@@ -10,7 +10,7 @@ library(Recca)
 # Loading data
 
 # Path to data
-IEA_path <- file.path("WRITE MKH FILE PATH HERE")
+IEA_path <- file.path("/home/manolo/Documents/Extended-Energy-Balances-2018/", "IEA Extended Energy Balances 2019.csv")
 
 
 # List regions to remove
