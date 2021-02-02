@@ -425,7 +425,8 @@ transform_to_gma <- function(.tidy_iea_df){
   MR_Y_U_gma <- specify_MR_Y_U_gma(.tidy_iea_df)
 
   # Binding all rows and returning full data frame
-  tidy_iea_MR_gma_df <- dplyr::bind_rows(MR_R_gma, MR_V_gma, MR_Y_U_gma)
+  tidy_iea_MR_gma_df <- dplyr::bind_rows(MR_R_gma, MR_V_gma, MR_Y_U_gma) %>%
+    dplyr::ungroup()
 
   return(tidy_iea_MR_gma_df)
 }
@@ -592,7 +593,8 @@ transform_to_bta <- function(.tidy_iea_df,
   MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df, bilateral_trade_matrix_df = bilateral_trade_matrix_df)
 
   # Binding all rows and returning full data frame
-  tidy_iea_MR_bta_df <- dplyr::bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta)
+  tidy_iea_MR_bta_df <- dplyr::bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta) %>%
+    dplyr::ungroup()
 
   return(tidy_iea_MR_bta_df)
 }
@@ -672,7 +674,8 @@ transform_to_dta <- function(.tidy_iea_df,
         stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
         TRUE ~ .data[[e_dot]]
       )
-    )
+    ) %>%
+    dplyr::ungroup()
 }
 
 
