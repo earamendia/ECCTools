@@ -658,6 +658,7 @@ transform_to_dta <- function(.tidy_iea_df,
                              ledger_side = IEATools::iea_cols$ledger_side,
                              e_dot = IEATools::iea_cols$e_dot,
                              imports = IEATools::interface_industries$imports,
+                             matnames = IEATools::mat_meta_cols$matnames,
                              epsilon = "Epsilon"){
 
   list_dta_observations <- .tidy_iea_df %>%
@@ -666,9 +667,9 @@ transform_to_dta <- function(.tidy_iea_df,
   .tidy_iea_df %>%
     dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
     dplyr::mutate(
-      "{ledger_side}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], imports) ~ stringr::str_c("{", epsilon, "}_", .data[[ledger_side]]),
-        TRUE ~ .data[[ledger_side]]
+      "{matnames}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], imports) ~ epsilon,
+        TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
