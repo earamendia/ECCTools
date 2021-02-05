@@ -86,7 +86,7 @@ test_that("transform_to_dta works", {
   # Checking that there are no imports when Epsilon is not in ledger_side
   n <- testing_dta %>%
     dplyr::filter(stringr::str_detect(.data[["Flow"]], "Imports")) %>%
-    dplyr::filter(stringr::str_detect(.data[["Ledger.side"]], "Epsilon")) %>%
+    dplyr::filter(matnames == "Epsilon") %>%
     dplyr::summarise(
       n = dplyr::n()
     ) %>%
