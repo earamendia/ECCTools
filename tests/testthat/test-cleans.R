@@ -186,6 +186,19 @@ test_that("stock_changes_to_epsilon works",{
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
                "Epsilon")
+})
+
+
+test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
+
+  A_B_path <- system.file("A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "ECCTools")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  AB_data_specified <- AB_data %>%
+    IEATools::specify_all() %>%
+    tibble::add_row()
 
   # Here we add a test: the calc_io_mats() function from Recca must work fine when using the sum_R_V method
 
@@ -209,6 +222,6 @@ test_that("stock_changes_to_epsilon works",{
   View(AB_data_specified_io$D[[1]])
   View(AB_data_stock_changes_to_epsilon_io$D[[1]])
   View(AB_data_stock_changes_to_epsilon_io_R_V_method$D[[1]])
-
 })
+
 
