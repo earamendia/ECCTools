@@ -136,9 +136,15 @@ test_that("stock_changes_to_epsilon works",{
   AB_data_specified <- AB_data %>%
     IEATools::specify_all()
 
+  expect_true(AB_data_specified %>%
+                IEATools::tidy_iea_df_balanced())
+
   AB_data_stock_changes_to_epsilon <- AB_data_specified %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     stock_changes_to_epsilon()
+
+  expect_true(AB_data_stock_changes_to_epsilon %>%
+                IEATools::tidy_iea_df_balanced())
 
 
   expect_equal(AB_data_stock_changes_to_epsilon[1,] %>%
@@ -180,5 +186,29 @@ test_that("stock_changes_to_epsilon works",{
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
                "Epsilon")
+
+  # Here we add a test: the calc_io_mats() function from Recca must work fine when using the sum_R_V method
+
+  AB_data_specified_io <- AB_data_specified %>%
+    IEATools::prep_psut() %>%
+    Recca::calc_io_mats()
+
+  AB_data_stock_changes_to_epsilon_io <- AB_data_stock_changes_to_epsilon %>%
+    IEATools::prep_psut() %>%
+    Recca::calc_io_mats()
+
+  AB_data_stock_changes_to_epsilon_io_R_V_method <- AB_data_stock_changes_to_epsilon %>%
+    IEATools::prep_psut() %>%
+    Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+
+  View(AB_data_specified_io$q[[1]])
+  View(AB_data_stock_changes_to_epsilon_io$q[[1]])
+  View(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]])
+
+
+  View(AB_data_specified_io$D[[1]])
+  View(AB_data_stock_changes_to_epsilon_io$D[[1]])
+  View(AB_data_stock_changes_to_epsilon_io_R_V_method$D[[1]])
+
 })
 
