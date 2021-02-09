@@ -50,89 +50,89 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 
 
 
-summarise_erois <- function(.tidy_erois_df,
-                            .tidy_iea_df,
-                            oil_products = IEATools::oil_and_oil_products,
-                            coal_products = c(IEATools::coal_and_coal_products, peat_and_peat_products),
-                            gas_products = "Natural gas",
-                            primary_oil_products = IEATools::primary_oil_products,
-                            primary_coal_products = c(IEATools::primary_coal_products, IEATools::primary_peat_products),
-                            primary_gas_products = "Natural gas",
-                            country = IEATools::iea_cols$country,
-                            method = IEATools::iea_cols$method,
-                            energy_type = IEATools::iea_cols$energy_type,
-                            last_stage = IEATools::iea_cols$last_stage,
-                            year = IEATools::iea_cols$year,
-                            product = IEATools::iea_cols$product
-                            ){
-
-  list_all_ff_carriers <- c(
-    oil_products,
-    coal_products,
-    gas_products
-  )
-
-  shares_per_group_excl_non_energy_uses <- calc_shares_per_groups(.tidy_iea_df,
-                                                                  excl_non_energy_uses = TRUE,
-                                                                  oil_products,
-                                                                  coal_products,
-                                                                  gas_products,
-                                                                  primary_oil_products,
-                                                                  primary_coal_products,
-                                                                  primary_gas_products,
-                                                                  list_all_ff_carriers)
-
-  shares_per_group_with_non_energy_uses <- calc_shares_per_groups(.tidy_iea_df,
-                                                                  excl_non_energy_uses = TRUE,
-                                                                  oil_products,
-                                                                  coal_products,
-                                                                  gas_products,
-                                                                  primary_oil_products,
-                                                                  primary_coal_products,
-                                                                  primary_gas_products,
-                                                                  list_all_ff_carriers)
-
-  shares_use_per_group <- shares_per_group_excl_non_energy_uses %>%
-    dplyr::bind_rows(shares_per_group_with_non_energy_uses)
-
-
-  .tidy_erois_df %>%
-    dplyr::left_join(shares_use_per_group, by = by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                    .data[[type]], .data[[boundary]], .data[[non_energy]], .data[[carrier_group]]) %>%
-    dplyr::summarise(
-      eroi = sum(.data[[share_by_product]] * (1/eroi))
-    )
-}
-
-
-
-calc_shares_per_groups(.tidy_iea_df,
-                       excl_non_energy_uses = TRUE){
+# summarise_erois <- function(.tidy_erois_df,
+#                             .tidy_iea_df,
+#                             oil_products = IEATools::oil_and_oil_products,
+#                             coal_products = c(IEATools::coal_and_coal_products, peat_and_peat_products),
+#                             gas_products = "Natural gas",
+#                             primary_oil_products = IEATools::primary_oil_products,
+#                             primary_coal_products = c(IEATools::primary_coal_products, IEATools::primary_peat_products),
+#                             primary_gas_products = "Natural gas",
+#                             country = IEATools::iea_cols$country,
+#                             method = IEATools::iea_cols$method,
+#                             energy_type = IEATools::iea_cols$energy_type,
+#                             last_stage = IEATools::iea_cols$last_stage,
+#                             year = IEATools::iea_cols$year,
+#                             product = IEATools::iea_cols$product
+#                             ){
+#
+#   list_all_ff_carriers <- c(
+#     oil_products,
+#     coal_products,
+#     gas_products
+#   )
+#
+#   shares_per_group_excl_non_energy_uses <- calc_shares_per_groups(.tidy_iea_df,
+#                                                                   excl_non_energy_uses = TRUE,
+#                                                                   oil_products,
+#                                                                   coal_products,
+#                                                                   gas_products,
+#                                                                   primary_oil_products,
+#                                                                   primary_coal_products,
+#                                                                   primary_gas_products,
+#                                                                   list_all_ff_carriers)
+#
+#   shares_per_group_with_non_energy_uses <- calc_shares_per_groups(.tidy_iea_df,
+#                                                                   excl_non_energy_uses = TRUE,
+#                                                                   oil_products,
+#                                                                   coal_products,
+#                                                                   gas_products,
+#                                                                   primary_oil_products,
+#                                                                   primary_coal_products,
+#                                                                   primary_gas_products,
+#                                                                   list_all_ff_carriers)
+#
+#   shares_use_per_group <- shares_per_group_excl_non_energy_uses %>%
+#     dplyr::bind_rows(shares_per_group_with_non_energy_uses)
+#
+#
+#   .tidy_erois_df %>%
+#     dplyr::left_join(shares_use_per_group, by = by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+#     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+#                     .data[[type]], .data[[boundary]], .data[[non_energy]], .data[[carrier_group]]) %>%
+#     dplyr::summarise(
+#       eroi = sum(.data[[share_by_product]] * (1/eroi))
+#     )
+# }
 
 
 
-
-
-
-
-
-}
-
-
+# calc_shares_per_groups(.tidy_iea_df,
+#                        excl_non_energy_uses = TRUE){
+#
+#
+#
+#
+#
+#
+#
+#
+# }
 
 
 
 
 
-add_indirect_energy_to_erois <- funtion(.tidy_erois_df,
-                                        .tidy_indirect_energy){
 
-
-
-
-
-}
+#
+# add_indirect_energy_to_erois <- funtion(.tidy_erois_df,
+#                                         .tidy_indirect_energy){
+#
+#
+#
+#
+#
+# }
 
 
 

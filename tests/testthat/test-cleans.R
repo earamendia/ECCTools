@@ -198,15 +198,35 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
 
   AB_data_specified <- AB_data %>%
     IEATools::specify_all() %>%
-    tibble::add_row()
+    tibble::add_row(
+      Country = c("A", "A", "A"),
+      Method = c("PCM", "PCM", "PCM"),
+      Energy.type = c("E", "E", "E"),
+      Last.stage = c("Final", "Final", "Final"),
+      Year = c(2018, 2018, 2018),
+      Ledger.side = c("Consumption", "Consumption", "Consumption"),
+      Flow.aggregation.point = c("Transport", "Transport", "Transport"),
+      Flow = c("Road", "Road", "Road"),
+      Product = c("Anthracite [of Coal mines]", "Hard coal (if no detail) [of Coal mines]", "Brown coal (if no detail) [of Coal mines]"),
+      Unit = c("ktoe", "ktoe", "ktoe"),
+      E.dot = c(-50, -40, -10)
+    )
+
+  AB_data_stock_changes_to_epsilon <- AB_data_specified %>%
+    IEATools::add_psut_matnames() %>%
+    stock_changes_to_epsilon()
 
   # Here we add a test: the calc_io_mats() function from Recca must work fine when using the sum_R_V method
 
-  AB_data_specified_io <- AB_data_specified %>%
+  AB_data_specified_io_Y_U_method <- AB_data_specified %>%
     IEATools::prep_psut() %>%
     Recca::calc_io_mats()
 
-  AB_data_stock_changes_to_epsilon_io <- AB_data_stock_changes_to_epsilon %>%
+  AB_data_specified_io_R_V_method <- AB_data_specified %>%
+    IEATools::prep_psut() %>%
+    Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
+
+  AB_data_stock_changes_to_epsilon_io_Y_U_method <- AB_data_stock_changes_to_epsilon %>%
     IEATools::prep_psut() %>%
     Recca::calc_io_mats()
 
@@ -214,14 +234,29 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
     IEATools::prep_psut() %>%
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 
-  View(AB_data_specified_io$q[[1]])
-  View(AB_data_stock_changes_to_epsilon_io$q[[1]])
-  View(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]])
+  # Without Epsilon, sum_Y_U method
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Anthracite [of Coal mines]", 1]], 50)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 40)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]], 30)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5020)
 
+  # Without Epsilon, sum_R_V method
+  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Anthracite [of Coal mines]", 1]], 20)
+  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 20)
+  expect_error(AB_data_specified_io_R_V_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]])
+  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5000)
 
-  View(AB_data_specified_io$D[[1]])
-  View(AB_data_stock_changes_to_epsilon_io$D[[1]])
-  View(AB_data_stock_changes_to_epsilon_io_R_V_method$D[[1]])
+  # With Epsilon, sum_Y_U method
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Anthracite [of Coal mines]", 1]], 50)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 40)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]], 20)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5000)
+
+  # With Epsilon, sum_R_V method
+  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Anthracite [of Coal mines]", 1]])
+  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 10)
+  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]])
+  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5000)
 })
 
 
