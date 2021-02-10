@@ -313,7 +313,7 @@ calc_primary_ff_use <- function(.tidy_iea_df,
 }
 
 # Calculates total fossil fuel use
-calc_ff_use() <- function(.tidy_iea_df,
+calc_ff_use <- function(.tidy_iea_df,
                           include_non_energy_uses = FALSE,
                           list_oil_products = IEATools::oil_and_oil_products,
                           list_coal_products = IEATools::coal_and_coal_products,
