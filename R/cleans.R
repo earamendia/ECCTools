@@ -3,6 +3,24 @@
 
 # This function converts a tidy data frame into the same tidy data frame but with net trade
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param imports
+#' @param exports
+#' @param country
+#' @param e_dot
+#' @param flow
+#' @param year
+#' @param ledger_side
+#' @param flow_aggregation_point
+#' @param product
+#' @param .net_imports
+#'
+#' @return
+#' @export
+#'
+#' @examples
 convert_to_net_trade <- function(.tidy_iea_df,
                                  imports = IEATools::interface_industries$imports,
                                  exports = IEATools::interface_industries$exports,
@@ -59,6 +77,19 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 # This function removes Statistical differences from the tidy IEA data frame
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param flow
+#' @param matnames
+#' @param e_dot
+#' @param stat_diffs
+#' @param epsilon
+#'
+#' @return
+#' @export
+#'
+#' @examples
 stat_diffs_to_epsilon <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
                               matnames = "matnames",
@@ -82,6 +113,19 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 
 # This function removes Stock changes from the tidy IEA data frame
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param flow
+#' @param matnames
+#' @param e_dot
+#' @param stock_changes
+#' @param epsilon
+#'
+#' @return
+#' @export
+#'
+#' @examples
 stock_changes_to_epsilon <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
                                  matnames = "matnames",

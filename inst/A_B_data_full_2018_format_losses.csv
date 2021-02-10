@@ -340,10 +340,10 @@ A,International aviation bunkers,Electricity,0
 A,International aviation bunkers,Heat,0
 A,International aviation bunkers,Total,0
 A,International aviation bunkers,Memo: Renewables,0
-A,Stock changes,Hard coal (if no detail),10
-A,Stock changes,Brown coal (if no detail),-10
-A,Stock changes,Anthracite,20
-A,Stock changes,Coking coal,-20
+A,Stock changes,Hard coal (if no detail),0
+A,Stock changes,Brown coal (if no detail),0
+A,Stock changes,Anthracite,0
+A,Stock changes,Coking coal,0
 A,Stock changes,Other bituminous coal,0
 A,Stock changes,Sub-bituminous coal,0
 A,Stock changes,Lignite,0
@@ -544,8 +544,8 @@ A,Transfers,Electricity,0
 A,Transfers,Heat,0
 A,Transfers,Total,0
 A,Transfers,Memo: Renewables,0
-A,Statistical differences,Hard coal (if no detail),10
-A,Statistical differences,Brown coal (if no detail),-10
+A,Statistical differences,Hard coal (if no detail),0
+A,Statistical differences,Brown coal (if no detail),0
 A,Statistical differences,Anthracite,0
 A,Statistical differences,Coking coal,0
 A,Statistical differences,Other bituminous coal,0
@@ -3351,10 +3351,10 @@ A,Losses,Other recovered gases,0
 A,Losses,Peat,0
 A,Losses,Peat products,0
 A,Losses,Oil shale and oil sands,0
-A,Losses,Natural gas,-200
+A,Losses,Natural gas,0
 A,Losses,Crude/NGL/feedstocks (if no detail),0
 A,Losses,Crude oil,0
-A,Losses,Natural gas liquids,0
+A,Losses,Natural gas liquids,-200
 A,Losses,Refinery feedstocks,0
 A,Losses,Additives/blending components,0
 A,Losses,Other hydrocarbons,0

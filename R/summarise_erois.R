@@ -1,6 +1,32 @@
 # This script writes functions that enable to deal with EROIs as calculated by the Recca package.
 
 # This function extracts product level erois in a tidy format.
+#' Title
+#'
+#' @param .tidy_io_mats
+#' @param country
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param year
+#' @param matnames
+#' @param matvals
+#' @param eroi_g_p
+#' @param eroi_n_p
+#' @param eroi_g_p_feed
+#' @param eroi_n_p_feed
+#' @param type
+#' @param boundary
+#' @param eroi
+#' @param product
+#' @param colnames
+#' @param rowtypes
+#' @param coltypes
+#'
+#' @return
+#' @export
+#'
+#' @examples
 extract_tidy_product_erois <- function(.tidy_io_mats,
                                country = IEATools::iea_cols$country,
                                method = IEATools::iea_cols$method,
@@ -49,14 +75,14 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 
 
 
-
+# # This function summarises EROIs per main groups
 # summarise_erois <- function(.tidy_erois_df,
 #                             .tidy_iea_df,
 #                             oil_products = IEATools::oil_and_oil_products,
-#                             coal_products = c(IEATools::coal_and_coal_products, peat_and_peat_products),
+#                             coal_products = IEATools::coal_and_coal_products,
 #                             gas_products = "Natural gas",
 #                             primary_oil_products = IEATools::primary_oil_products,
-#                             primary_coal_products = c(IEATools::primary_coal_products, IEATools::primary_peat_products),
+#                             primary_coal_products = IEATools::primary_coal_products,
 #                             primary_gas_products = "Natural gas",
 #                             country = IEATools::iea_cols$country,
 #                             method = IEATools::iea_cols$method,
@@ -72,25 +98,12 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 #     gas_products
 #   )
 #
-#   shares_per_group_excl_non_energy_uses <- calc_shares_per_groups(.tidy_iea_df,
-#                                                                   excl_non_energy_uses = TRUE,
-#                                                                   oil_products,
-#                                                                   coal_products,
-#                                                                   gas_products,
-#                                                                   primary_oil_products,
-#                                                                   primary_coal_products,
-#                                                                   primary_gas_products,
-#                                                                   list_all_ff_carriers)
+#   shares_use_per_ff_group_excl_non_energy_uses <- calc_shares_per_ff_group(.tidy_iea_df,
+#                                                                   excl_non_energy_uses = TRUE)
 #
-#   shares_per_group_with_non_energy_uses <- calc_shares_per_groups(.tidy_iea_df,
-#                                                                   excl_non_energy_uses = TRUE,
-#                                                                   oil_products,
-#                                                                   coal_products,
-#                                                                   gas_products,
-#                                                                   primary_oil_products,
-#                                                                   primary_coal_products,
-#                                                                   primary_gas_products,
-#                                                                   list_all_ff_carriers)
+#   shares_use_per_group_with_non_energy_uses <- calc_shares_per_ff_group(.tidy_iea_df,
+#                                                                   excl_non_energy_uses = TRUE)
+#
 #
 #   shares_use_per_group <- shares_per_group_excl_non_energy_uses %>%
 #     dplyr::bind_rows(shares_per_group_with_non_energy_uses)
@@ -104,21 +117,6 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 #       eroi = sum(.data[[share_by_product]] * (1/eroi))
 #     )
 # }
-
-
-
-# calc_shares_per_groups(.tidy_iea_df,
-#                        excl_non_energy_uses = TRUE){
-#
-#
-#
-#
-#
-#
-#
-#
-# }
-
 
 
 
@@ -145,7 +143,7 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 
 
 # This function extracts industry level erois in a tidy format.
-extract_tidy_product_erois <- function(.tidy_io_mats,
+extract_tidy_industry_erois <- function(.tidy_io_mats,
                                        country = IEATools::iea_cols$country,
                                        method = IEATools::iea_cols$method,
                                        energy_type = IEATools::iea_cols$energy_type,

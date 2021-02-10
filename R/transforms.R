@@ -3,6 +3,21 @@
 
 
 # This function specifies the multiregional R matrix
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param R_matrix
+#' @param matnames
+#' @param imports
+#' @param country
+#' @param flow
+#' @param product
+#' @param aggregate_country_name
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_MR_R <- function(.tidy_iea_df,
                          R_matrix = "R",
                          matnames = "matnames",
@@ -25,6 +40,23 @@ specify_MR_R <- function(.tidy_iea_df,
 
 
 # This function specifies the multiregional V matrix.
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param V_matrix
+#' @param Epsilon_matrix
+#' @param matnames
+#' @param imports
+#' @param country
+#' @param flow
+#' @param product
+#' @param e_dot
+#' @param aggregate_country_name
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_MR_V <- function(.tidy_iea_df,
                          V_matrix = "V",
                          Epsilon_matrix = "Epsilon",
@@ -330,6 +362,25 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
 
 
 # This function specifies the multiregional Y matrix using the GMA assumption
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param flow
+#' @param product
+#' @param year
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param e_dot
+#' @param unit
+#' @param country
+#' @param aggregate_country_name
+#' @param provenience
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                flow = IEATools::iea_cols$flow,
                                product = IEATools::iea_cols$product,
@@ -413,6 +464,14 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
 
 # Transform to gma function
+#' Title
+#'
+#' @param .tidy_iea_df
+#'
+#' @return
+#' @export
+#'
+#' @examples
 transform_to_gma <- function(.tidy_iea_df){
 
   # (1) Create MR-R matrix data frame
@@ -439,6 +498,21 @@ transform_to_gma <- function(.tidy_iea_df){
 # (ii) if the user loads an incomplete trade matrix in the specify_MR_Y_U_bta() function (likely as trade data is not available for all years!);
 # then the missing information is loaded from the GMA bilateral trade matrix.
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param year
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param country
+#' @param provenience
+#' @param matnames
+#'
+#' @return
+#' @export
+#'
+#' @examples
 calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
                                                year = IEATools::iea_cols$year,
                                                method = IEATools::iea_cols$method,
@@ -470,6 +544,26 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 # This function specifies the multiregional Y matrix using the BTA assumption, using the specific trade matrix provided as input.
 # For values that are not available in the provided trade matrix, it fills in using the GMA assumption.
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param bilateral_trade_matrix_df
+#' @param flow
+#' @param product
+#' @param year
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param e_dot
+#' @param country
+#' @param unit
+#' @param aggregate_country_name
+#' @param provenience
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_MR_Y_U_bta <- function(.tidy_iea_df,
                                bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
                                flow = IEATools::iea_cols$flow,
@@ -580,6 +674,15 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
 
 # Transform to bta function
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param bilateral_trade_matrix_df
+#'
+#' @return
+#' @export
+#'
+#' @examples
 transform_to_bta <- function(.tidy_iea_df,
                              bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df)){
 
@@ -603,6 +706,28 @@ transform_to_bta <- function(.tidy_iea_df,
 
 # Find list of observations for which the DTA can be implemented
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param country
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param year
+#' @param flow
+#' @param product
+#' @param imports
+#' @param matnames
+#' @param y_matrix
+#' @param u_eiou_matrix
+#' @param u_feed_matrix
+#' @param v_matrix
+#' @param r_matrix
+#'
+#' @return
+#' @export
+#'
+#' @examples
 find_list_dta_observations <- function(.tidy_iea_df,
                                        country = IEATools::iea_cols$country,
                                        method = IEATools::iea_cols$method,
@@ -648,6 +773,25 @@ find_list_dta_observations <- function(.tidy_iea_df,
 
 # Transform to dta function
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param country
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param year
+#' @param flow
+#' @param ledger_side
+#' @param e_dot
+#' @param imports
+#' @param matnames
+#' @param epsilon
+#'
+#' @return
+#' @export
+#'
+#' @examples
 transform_to_dta <- function(.tidy_iea_df,
                              country = IEATools::iea_cols$country,
                              method = IEATools::iea_cols$method,

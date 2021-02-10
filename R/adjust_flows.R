@@ -1,4 +1,15 @@
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param product
+#' @param flow
+#' @param e_dot
+#'
+#' @return
+#' @export
+#'
+#' @examples
 convert_fuel_gasoline_into_motor_gasoline <- function(.tidy_iea_df,
                                                       product = IEATools::iea_cols$product,
                                                       flow = IEATools::iea_cols$flow,
