@@ -405,7 +405,8 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                           last_stage = IEATools::iea_cols$last_stage,
                                                           year = IEATools::iea_cols$year,
                                                           unit = IEATools::iea_cols$unit,
-                                                          product = IEATools::iea_cols$product
+                                                          product = IEATools::iea_cols$product,
+                                                          boolean_non_energy_uses = "Boolean_Non_Energy_Uses"
                                                           ){
 
 
@@ -429,8 +430,13 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
       dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
       dplyr::mutate(
         "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
-        "{non_energy_uses}" := include_non_energy_uses
-      )
+        "{boolean_non_energy_uses}" := include_non_energy_uses,
+        "{non_energy_uses}" := dplyr::case_when(
+          isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
+          isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+        )
+      ) %>%
+      dplyr::select(-.data[[boolean_non_energy_uses]])
 
     return(share_primary_ff_use_by_product_by_group)
 }
@@ -455,7 +461,8 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                   last_stage = IEATools::iea_cols$last_stage,
                                                   year = IEATools::iea_cols$year,
                                                   unit = IEATools::iea_cols$unit,
-                                                  product = IEATools::iea_cols$product
+                                                  product = IEATools::iea_cols$product,
+                                                  boolean_non_energy_uses = "Boolean_Non_Energy_Uses"
                                                   ){
 
   if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
@@ -476,8 +483,13 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
-      "{non_energy_uses}" := include_non_energy_uses
-    )
+      "{boolean_non_energy_uses}" := include_non_energy_uses,
+      "{non_energy_uses}" := dplyr::case_when(
+        isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
+        isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+      )
+    ) %>%
+    dplyr::select(-.data[[boolean_non_energy_uses]])
 
   return(share_ff_use_by_product_by_group)
 }
@@ -503,7 +515,8 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
                                                  last_stage = IEATools::iea_cols$last_stage,
                                                  year = IEATools::iea_cols$year,
                                                  unit = IEATools::iea_cols$unit,
-                                                 product = IEATools::iea_cols$product
+                                                 product = IEATools::iea_cols$product,
+                                                 boolean_non_energy_uses = "Boolean_Non_Energy_Uses"
                                                  ){
 
   if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
@@ -521,8 +534,13 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
-      "{non_energy_uses}" := include_non_energy_uses
-    )
+      "{boolean_non_energy_uses}" := include_non_energy_uses,
+      "{non_energy_uses}" := dplyr::case_when(
+        isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
+        isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+      )
+    ) %>%
+    dplyr::select(-.data[[boolean_non_energy_uses]])
 
   return(share_primary_ff_use_by_product)
 }
@@ -548,7 +566,8 @@ calc_share_ff_use_by_product <- function(.tidy_iea_df,
                                          last_stage = IEATools::iea_cols$last_stage,
                                          year = IEATools::iea_cols$year,
                                          unit = IEATools::iea_cols$unit,
-                                         product = IEATools::iea_cols$product
+                                         product = IEATools::iea_cols$product,
+                                         boolean_non_energy_uses = "Boolean_Non_Energy_Uses"
                                          ){
 
 
@@ -567,8 +586,13 @@ calc_share_ff_use_by_product <- function(.tidy_iea_df,
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
-      "{non_energy_uses}" := include_non_energy_uses
-    )
+      "{boolean_non_energy_uses}" := include_non_energy_uses,
+      "{non_energy_uses}" := dplyr::case_when(
+        isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
+        isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+      )
+    ) %>%
+    dplyr::select(-.data[[boolean_non_energy_uses]])
 
   return(share_ff_use_by_product)
 }
