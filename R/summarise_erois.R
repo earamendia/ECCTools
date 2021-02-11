@@ -95,11 +95,13 @@ summarise_erois <- function(.tidy_erois_df,
                             last_stage = IEATools::iea_cols$last_stage,
                             year = IEATools::iea_cols$year,
                             product = IEATools::iea_cols$product,
-
-
                             non_energy_uses = "Non_Energy_Uses",
-
-
+                            eroi.method = "Eroi.method",
+                            type = "Type",
+                            boundary = "Boundary",
+                            share = "Share",
+                            eroi = "EROI",
+                            group.eroi = "Group.eroi"
                             ){
 
   tidy_shares_df <- dplyr::bind_rows(
@@ -122,9 +124,9 @@ summarise_erois <- function(.tidy_erois_df,
   summarised_erois <- tidy_shares_df %>%
     dplyr::left_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-                    .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]]) %>%
+                    .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]]) %>%
     dplyr::summarise(
-      eroi = 1/(sum(.data[[share]] * (1/eroi)))
+      "{group.eroi}" := 1/(sum(.data[[share]] * (1/.data[[eroi]])))
     )
 
   return(summarised_erois)
