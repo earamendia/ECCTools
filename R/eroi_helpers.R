@@ -390,21 +390,41 @@ calc_ff_use <- function(.tidy_iea_df,
 # Calculates shares of each product in the primary fossil fuel consumption by group
 
 calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
-                                                          include_non_energy_uses = FALSE){
+                                                          include_non_energy_uses = FALSE,
+                                                          list_primary_oil_products = IEATools::primary_oil_products,
+                                                          list_primary_coal_products = IEATools::primary_coal_products,
+                                                          list_primary_gas_products = list(natural_gas = "Natural gas"),
+                                                          product.group = "Product.group",
+                                                          total_product_use = "Total_Product_Use",
+                                                          total_group_use = "Total_Group_Use",
+                                                          country = IEATools::iea_cols$country,
+                                                          method = IEATools::iea_cols$method,
+                                                          energy_type = IEATools::iea_cols$energy_type,
+                                                          last_stage = IEATools::iea_cols$last_stage,
+                                                          year = IEATools::iea_cols$year
+                                                          ){
 
-  if (isTRUE(include_non_energy_uses)){
 
 
 
-  } else if (isFALSE(include_non_energy_uses)){
-
-
-
-  } else {
+  if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
     stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
   }
 
+    use_primary_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
+                                                           include_non_energy_uses = include_non_energy_uses) %>%
+      dplyr::mutate(
+        "{product.group}" := dplyr::case_when(
+          .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ "Primary oil and gas products",
+          .data[[product]] %in% list_primary_coal_products ~ "Primary coal products"
+        )
+      )
 
+    share_primary_ff_use_by_product_by_group <- calc_primary_products_use_by_group(.tidy_iea_df) %>%
+      dplyr::left_join(use_primary_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group})) %>%
+      dplyr::mutate(
+        "{share}" := .data[[total_product_use]] / .data[[total_group_use]]
+      )
 }
 
 
@@ -412,7 +432,8 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
 # Calculates shares of each product in all the fossil fuel consumption by group
 
 calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
-                                                  include_non_energy_uses = FALSE){
+                                                  include_non_energy_uses = FALSE,
+                                                  ){
 
   if (isTRUE(include_non_energy_uses)){
 
