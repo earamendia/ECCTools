@@ -385,3 +385,103 @@ calc_ff_use <- function(.tidy_iea_df,
     stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
   }
 }
+
+
+# Calculates shares of each product in the primary fossil fuel consumption by group
+
+calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
+                                                          include_non_energy_uses = FALSE){
+
+  if (isTRUE(include_non_energy_uses)){
+
+
+
+  } else if (isFALSE(include_non_energy_uses)){
+
+
+
+  } else {
+    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
+  }
+
+
+}
+
+
+
+# Calculates shares of each product in all the fossil fuel consumption by group
+
+calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
+                                                  include_non_energy_uses = FALSE){
+
+  if (isTRUE(include_non_energy_uses)){
+
+
+
+  } else if (isFALSE(include_non_energy_uses)){
+
+
+
+  } else {
+    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
+  }
+
+
+}
+
+
+
+
+
+# Calculates shares of each product in the total primary fossil fuel consumption
+calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
+                                                  include_non_energy_uses = FALSE){
+
+  if (isTRUE(include_non_energy_uses)){
+
+
+
+  } else if (isFALSE(include_non_energy_uses)){
+
+
+
+  } else {
+    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
+  }
+
+
+}
+
+
+
+
+
+# Calculates shares of each product in the total fossil fuel consumption
+calc_share_ff_use_by_product <- function(.tidy_iea_df,
+                                                 include_non_energy_uses = FALSE){
+
+  if (isTRUE(include_non_energy_uses)){
+
+
+
+  } else if (isFALSE(include_non_energy_uses)){
+
+
+
+  } else {
+    stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
+  }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
