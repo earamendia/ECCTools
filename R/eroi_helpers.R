@@ -432,8 +432,8 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
         "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
         "{boolean_non_energy_uses}" := include_non_energy_uses,
         "{non_energy_uses}" := dplyr::case_when(
-          isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
-          isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+          .data[[boolean_non_energy_uses]] == TRUE ~ "Included",
+          .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
         )
       ) %>%
       dplyr::select(-.data[[boolean_non_energy_uses]])
@@ -485,8 +485,8 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
       "{boolean_non_energy_uses}" := include_non_energy_uses,
       "{non_energy_uses}" := dplyr::case_when(
-        isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
-        isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+        .data[[boolean_non_energy_uses]] == TRUE ~ "Included",
+        .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
       )
     ) %>%
     dplyr::select(-.data[[boolean_non_energy_uses]])
@@ -536,8 +536,8 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
       "{boolean_non_energy_uses}" := include_non_energy_uses,
       "{non_energy_uses}" := dplyr::case_when(
-        isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
-        isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+        .data[[boolean_non_energy_uses]] == TRUE ~ "Included",
+        .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
       )
     ) %>%
     dplyr::select(-.data[[boolean_non_energy_uses]])
@@ -588,8 +588,8 @@ calc_share_ff_use_by_product <- function(.tidy_iea_df,
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
       "{boolean_non_energy_uses}" := include_non_energy_uses,
       "{non_energy_uses}" := dplyr::case_when(
-        isTRUE(.data[[boolean_non_energy_uses]]) ~ "Included",
-        isFALSE(.data[[boolean_non_energy_uses]]) ~ "Excluded"
+        .data[[boolean_non_energy_uses]] == TRUE ~ "Included",
+        .data[[boolean_non_energy_uses]] == FALSE ~ "Excluded"
       )
     ) %>%
     dplyr::select(-.data[[boolean_non_energy_uses]])
