@@ -75,48 +75,60 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 
 
 
-# # This function summarises EROIs per main groups
-# summarise_erois <- function(.tidy_erois_df,
-#                             .tidy_iea_df,
-#                             oil_products = IEATools::oil_and_oil_products,
-#                             coal_products = IEATools::coal_and_coal_products,
-#                             gas_products = "Natural gas",
-#                             primary_oil_products = IEATools::primary_oil_products,
-#                             primary_coal_products = IEATools::primary_coal_products,
-#                             primary_gas_products = "Natural gas",
-#                             country = IEATools::iea_cols$country,
-#                             method = IEATools::iea_cols$method,
-#                             energy_type = IEATools::iea_cols$energy_type,
-#                             last_stage = IEATools::iea_cols$last_stage,
-#                             year = IEATools::iea_cols$year,
-#                             product = IEATools::iea_cols$product
-#                             ){
-#
-#   list_all_ff_carriers <- c(
-#     oil_products,
-#     coal_products,
-#     gas_products
-#   )
-#
-#   shares_use_per_ff_group_excl_non_energy_uses <- calc_shares_per_ff_group(.tidy_iea_df,
-#                                                                   excl_non_energy_uses = TRUE)
-#
-#   shares_use_per_group_with_non_energy_uses <- calc_shares_per_ff_group(.tidy_iea_df,
-#                                                                   excl_non_energy_uses = TRUE)
-#
-#
-#   shares_use_per_group <- shares_per_group_excl_non_energy_uses %>%
-#     dplyr::bind_rows(shares_per_group_with_non_energy_uses)
-#
-#
-#   .tidy_erois_df %>%
-#     dplyr::left_join(shares_use_per_group, by = by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-#     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
-#                     .data[[type]], .data[[boundary]], .data[[non_energy]], .data[[carrier_group]]) %>%
-#     dplyr::summarise(
-#       eroi = sum(.data[[share_by_product]] * (1/eroi))
-#     )
-# }
+# This function summarises EROIs per main groups
+summarise_erois <- function(.tidy_erois_df,
+                            .tidy_iea_df,
+                            # Whether you want to include non-energy uses products in the EROI calculation
+                            include_non_energy_uses = FALSE,
+                            # Lists defining each product group
+                            list_primary_oil_products = IEATools::primary_oil_products,
+                            list_primary_coal_products = IEATools::primary_coal_products,
+                            list_primary_gas_products = "Natural gas",
+                            list_oil_products = IEATools::oil_and_oil_products,
+                            list_coal_products = IEATools::coal_and_coal_products,
+                            list_gas_products = "Natural gas",
+                            # Do not change
+                            product.group = "Product.Group",
+                            country = IEATools::iea_cols$country,
+                            method = IEATools::iea_cols$method,
+                            energy_type = IEATools::iea_cols$energy_type,
+                            last_stage = IEATools::iea_cols$last_stage,
+                            year = IEATools::iea_cols$year,
+                            product = IEATools::iea_cols$product,
+
+
+                            non_energy_uses = "Non_Energy_Uses",
+
+
+                            ){
+
+  tidy_shares_df <- dplyr::bind_rows(
+    # First, shares of primary fossil fuel use by product, by main group:
+    calc_share_primary_ff_use_by_product_by_group(.tidy_iea_df,
+                                                  include_non_energy_uses = include_non_energy_uses),
+    # Second, shares of all fossil fuel use by product, by main group
+    calc_share_ff_use_by_product_by_group(.tidy_iea_df,
+                                          include_non_energy_uses = include_non_energy_uses),
+    # Third, shares of primary fossil fuel use by product
+    calc_share_primary_ff_use_by_product(.tidy_iea_df,
+                                         include_non_energy_uses = include_non_energy_uses),
+    # Fourth, shares of all fossil fuel use, by product
+    calc_share_ff_use_by_product(.tidy_iea_df,
+                                 include_non_energy_uses = include_non_energy_uses)
+  )
+
+  # create a tidy_shares_df first
+
+  summarised_erois <- tidy_shares_df %>%
+    dplyr::left_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+                    .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]]) %>%
+    dplyr::summarise(
+      eroi = 1/(sum(.data[[share]] * (1/eroi)))
+    )
+
+  return(summarised_erois)
+}
 
 
 
@@ -131,15 +143,6 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
 #
 #
 # }
-
-
-
-
-
-
-
-
-
 
 
 # This function extracts industry level erois in a tidy format.
