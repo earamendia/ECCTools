@@ -95,7 +95,7 @@ calc_primary_products_use_by_group <- function(.tidy_iea_df,
                                                Y_mat = IEATools::psut_cols$Y,
                                                U_eiou_mat = IEATools::psut_cols$U_eiou,
                                                product.group = "Product.Group",
-                                               total_product_use = "Total_Product_Use"){
+                                               total_group_use = "Total_Group_Use"){
 
   if (isFALSE(include_non_energy_uses)){
 
@@ -118,7 +118,7 @@ calc_primary_products_use_by_group <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -143,7 +143,7 @@ calc_primary_products_use_by_group <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -176,7 +176,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
                                            Y_mat = IEATools::psut_cols$Y,
                                            U_eiou_mat = IEATools::psut_cols$U_eiou,
                                            product.group = "Product.Group",
-                                           total_product_use = "Total_Product_Use"){
+                                           total_group_use = "Total_Group_Use"){
 
   if (isFALSE(include_non_energy_uses)){
 
@@ -199,7 +199,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -224,7 +224,7 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -257,7 +257,7 @@ calc_primary_ff_use <- function(.tidy_iea_df,
                                   Y_mat = IEATools::psut_cols$Y,
                                   U_eiou_mat = IEATools::psut_cols$U_eiou,
                                   product.group = "Product.Group",
-                                  total_product_use = "Total_Product_Use"){
+                                  total_group_use = "Total_Group_Use"){
 
   if (isFALSE(include_non_energy_uses)){
 
@@ -277,7 +277,7 @@ calc_primary_ff_use <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -301,7 +301,7 @@ calc_primary_ff_use <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -334,7 +334,7 @@ calc_ff_use <- function(.tidy_iea_df,
                           Y_mat = IEATools::psut_cols$Y,
                           U_eiou_mat = IEATools::psut_cols$U_eiou,
                           product.group = "Product.Group",
-                          total_product_use = "Total_Product_Use"){
+                          total_group_use = "Total_Group_Use"){
 
   if (isFALSE(include_non_energy_uses)){
 
@@ -354,7 +354,7 @@ calc_ff_use <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
@@ -376,7 +376,7 @@ calc_ff_use <- function(.tidy_iea_df,
       ) %>%
       dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product.group]], .data[[unit]]) %>%
       dplyr::summarise(
-        "{total_product_use}" := sum(.data[[e_dot]])
+        "{total_group_use}" := sum(.data[[e_dot]])
       )
 
     return(to_return)
