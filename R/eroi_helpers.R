@@ -427,6 +427,8 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
         "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
         "{non_energy_uses}" := include_non_energy_uses
       )
+
+    return(share_primary_ff_use_by_product_by_group)
 }
 
 
@@ -449,19 +451,27 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                   year = IEATools::iea_cols$year
                                                   ){
 
-  if (isTRUE(include_non_energy_uses)){
-
-
-
-  } else if (isFALSE(include_non_energy_uses)){
-
-
-
-  } else {
+  if (! (isTRUE(include_non_energy_uses) | isFALSE(include_non_energy_uses))){
     stop("The include_non_energy_uses argument must be either TRUE or FALSE.")
   }
 
+  use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
+                                                  include_non_energy_uses = include_non_energy_uses) %>%
+    dplyr::mutate(
+      "{product.group}" := dplyr::case_when(
+        .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "Oil and gas products",
+        .data[[product]] %in% list_coal_products ~ "Coal products"
+      )
+    )
 
+  share_ff_use_by_product_by_group <- calc_all_products_use_by_group(.tidy_iea_df) %>%
+    dplyr::left_join(use_primary_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group})) %>%
+    dplyr::mutate(
+      "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
+      "{non_energy_uses}" := include_non_energy_uses
+    )
+
+  return(share_ff_use_by_product_by_group)
 }
 
 
