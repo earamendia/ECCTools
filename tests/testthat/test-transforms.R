@@ -12,7 +12,7 @@ test_that("find_list_dta_observations works", {
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all() %>%
-    add_psut_matnames_epsilon()
+    IEATools::add_psut_matnames()
 
   # Checking that the DTA assumption can only be applied to country A:
   expect_equal(AB_data %>% find_list_dta_observations(), "A_PCM_E_Final_2018")
@@ -59,7 +59,7 @@ test_that("transform_to_dta works", {
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all() %>%
-    add_psut_matnames_epsilon()
+    IEATools::add_psut_matnames()
 
 
   # Adding observations
@@ -126,7 +126,7 @@ test_that("specify_MR_R works", {
     IEATools::specify_all()
 
   AB_resources_MR <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_MR_R()
 
 
@@ -198,7 +198,7 @@ test_that("specify_MR_V works", {
     )
 
   AB_supply_MR <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     stock_changes_to_epsilon() %>%
     specify_MR_V()
 
@@ -273,7 +273,7 @@ test_that("calc_total_consumption_by_product works", {
     IEATools::specify_all()
 
   total_consumption_by_product <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_total_consumption_by_product()
 
   expect_equal(dim(total_consumption_by_product), c(21, 8))
@@ -357,7 +357,7 @@ test_that("calc_share_imports_by_product works", {
     IEATools::specify_all()
 
   share_imports_by_product <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_share_imports_by_products()
 
   # Check all shares <= 1
@@ -409,7 +409,7 @@ test_that("specify_imported_products works", {
     IEATools::specify_all()
 
   defined_imported_products <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_imported_products()
 
 
@@ -516,7 +516,7 @@ test_that("specify_imported_products works", {
     )
 
   defined_imported_products <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     stock_changes_to_epsilon() %>%
     specify_imported_products()
 
@@ -596,7 +596,7 @@ test_that("calc_share_exports_by_product works", {
     IEATools::specify_all()
 
   share_global_exports_per_product <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_share_exports_by_product()
 
   expect_equal(dim(share_global_exports_per_product),
@@ -785,7 +785,7 @@ test_that("specify_MR_Y_U_gma works", {
     IEATools::specify_all()
 
   AB_MR_Y_U_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_MR_Y_U_gma()
 
   # Check that there is only Y and U flows in resulting data frame.
@@ -889,7 +889,7 @@ test_that("specify_MR_Y_U_gma works", {
     )
 
   AB_MR_Y_U_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     stock_changes_to_epsilon() %>%
     specify_MR_Y_U_gma()
 
@@ -941,7 +941,7 @@ test_that("transform_to_gma works", {
 
 
   AB_MR_PSUT_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     transform_to_gma()
 
 
@@ -1116,7 +1116,7 @@ test_that("transform_to_gma works", {
     )
 
   AB_MR_PSUT_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     stock_changes_to_epsilon() %>%
     transform_to_gma()
 
@@ -1187,7 +1187,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
     IEATools::specify_all()
 
   bilateral_trade_matrix_df_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_bilateral_trade_matrix_df_gma()
 
   # Check length
@@ -1237,12 +1237,12 @@ test_that("specify_MR_Y_U_bta works", {
     IEATools::specify_all()
 
   MR_Y_U_bta <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_MR_Y_U_bta()
 
   # In theory, we should get exactly the same outcome as when running the gma assumption here.
   MR_Y_U_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_MR_Y_U_gma()
 
   # Nice. Same data frames.
@@ -1254,12 +1254,12 @@ test_that("specify_MR_Y_U_bta works", {
   # Then all the coke oven coke that A imports from B should now come instead from A!
 
   dummy_AB_trade_matrix <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_bilateral_trade_matrix_df_gma() %>%
     dplyr::filter(Provenience != "B")
 
   MR_Y_U_bta <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_MR_Y_U_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
 
   # These should still be equal
@@ -1271,7 +1271,7 @@ test_that("specify_MR_Y_U_bta works", {
 
   # Now, say we modify the bilateral trade matrix, so that everything comes from country A!
   second_dummy_AB_trade_matrix <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_bilateral_trade_matrix_df_gma() %>%
     dplyr::filter(Provenience != "B") %>%
     tibble::add_row(
@@ -1286,7 +1286,7 @@ test_that("specify_MR_Y_U_bta works", {
     )
 
   MR_Y_U_bta <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     specify_MR_Y_U_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
 
   # Checking data frames are NOT the same
@@ -1345,11 +1345,11 @@ test_that("transform_to_bta works", {
 
   # First checking whether gma and bta, without trade matrix, give the same result:
   MR_PSUT_gma <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     transform_to_gma()
 
   MR_PSUT_bta <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     transform_to_bta()
 
   # Nice one!
@@ -1358,12 +1358,12 @@ test_that("transform_to_bta works", {
 
   # Then, try with one missing flow.
   dummy_AB_trade_matrix <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_bilateral_trade_matrix_df_gma() %>%
     dplyr::filter(Provenience != "B")
 
   MR_PSUT_bta <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     transform_to_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
 
   # Nice one!
@@ -1374,7 +1374,7 @@ test_that("transform_to_bta works", {
 
   # Then, try with a "fake" flow
   second_dummy_AB_trade_matrix <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     calc_bilateral_trade_matrix_df_gma() %>%
     dplyr::filter(Provenience != "B") %>%
     tibble::add_row(
@@ -1389,7 +1389,7 @@ test_that("transform_to_bta works", {
     )
 
   MR_PSUT_bta <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     transform_to_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
 
 

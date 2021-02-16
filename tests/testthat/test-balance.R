@@ -41,7 +41,7 @@ test_that("add_balancing_vector works", {
                  IEATools::tidy_iea_df_balanced())
 
   AB_tidy_MR <- AB_data %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     transform_to_gma()
 
   expect_false(AB_tidy_MR %>%

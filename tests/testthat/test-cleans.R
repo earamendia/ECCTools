@@ -91,7 +91,7 @@ test_that("stat_diffs_to_epsilon works",{
     IEATools::specify_all()
 
   AB_data_stat_diffs_to_epsilon <- AB_data_specified %>%
-    add_psut_matnames_epsilon() %>%
+    IEATools::add_psut_matnames() %>%
     stat_diffs_to_epsilon()
 
   expect_equal(AB_data_stat_diffs_to_epsilon[1,] %>%

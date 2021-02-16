@@ -30,7 +30,7 @@ add_balancing_vector <- function(.tidy_iea_df,
 
   # Check for which products the flows are unbalanced
   balances <- .tidy_iea_df %>%
-    calc_tidy_iea_df_balances_balancing()
+    IEATools::calc_tidy_iea_df_balances()
 
   balancing_vector <- balances %>%
     dplyr::filter(balance_OK == FALSE) %>%
