@@ -133,13 +133,13 @@ test_that("specify_MR_R works", {
   expect_equal(dim(AB_resources_MR)[1], 3)
 
   expect_equal(AB_resources_MR %>%
-                 dplyr::filter(Product == "{A}_Coking coal") %>%
+                 dplyr::filter(Product == "{A}_Coking coal [from Resources]") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                5000)
 
   expect_equal(AB_resources_MR %>%
-                 dplyr::filter(Product == "{A}_Crude oil") %>%
+                 dplyr::filter(Product == "{A}_Crude oil [from Resources]") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                8500)
@@ -290,7 +290,7 @@ test_that("calc_total_consumption_by_product works", {
   expect_equal(total_consumption_by_product %>%
                  dplyr::filter(
                    Country == "A",
-                   Product == "Crude oil [of Oil and gas extraction]"
+                   Product == "Crude oil"
                  ) %>%
                  dplyr::select(Total_Consumption_From_Func) %>%
                  dplyr::pull(),
@@ -299,7 +299,7 @@ test_that("calc_total_consumption_by_product works", {
   expect_equal(total_consumption_by_product %>%
                  dplyr::filter(
                    Country == "A",
-                   Product == "Crude oil"
+                   Product == "Crude oil [from Resources]"
                  ) %>%
                  dplyr::select(Total_Consumption_From_Func) %>%
                  dplyr::pull(),
@@ -308,7 +308,7 @@ test_that("calc_total_consumption_by_product works", {
   expect_equal(total_consumption_by_product %>%
                  dplyr::filter(
                    Country == "B",
-                   Product == "Crude oil [of Oil and gas extraction]"
+                   Product == "Crude oil"
                  ) %>%
                  dplyr::select(Total_Consumption_From_Func) %>%
                  dplyr::pull(),
@@ -391,7 +391,7 @@ test_that("calc_share_imports_by_product works", {
   expect_equal(share_imports_by_product %>%
                  dplyr::filter(
                    Country == "B",
-                   Product == "Natural gas [of Oil and gas extraction]"
+                   Product == "Natural gas"
                  ) %>%
                  dplyr::select(Share_Imports_From_Func) %>%
                  dplyr::pull(),
@@ -476,7 +476,7 @@ test_that("specify_imported_products works", {
                  dplyr::filter(
                    Country == "B",
                    Flow == "Blast furnaces",
-                   Product == "Natural gas [of Oil and gas extraction]",
+                   Product == "Natural gas",
                    Origin == "Imported"
                  ) %>%
                  dplyr::select(E.dot) %>%
@@ -579,7 +579,7 @@ test_that("calc_global_exports works", {
                400)
 
   expect_equal(global_exports_per_product %>%
-                 dplyr::filter(Product == "Crude oil [of Oil and gas extraction]") %>%
+                 dplyr::filter(Product == "Crude oil") %>%
                  dplyr::select(Total_Exports_From_Func) %>%
                  dplyr::pull(),
                3500)
@@ -649,12 +649,12 @@ test_that("calc_national_production_by_product works", {
     expect_equal(250)
 
   national_production_by_product %>%
-    dplyr::filter(Country == "A" & Product == "Natural gas") %>%
+    dplyr::filter(Country == "A" & Product == "Natural gas [from Resources]") %>%
     magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(4000)
 
   national_production_by_product %>%
-    dplyr::filter(Country == "A" & Product == "Natural gas [of Oil and gas extraction]") %>%
+    dplyr::filter(Country == "A" & Product == "Natural gas") %>%
     magrittr::extract2("National_Production_From_Func") %>%
     expect_equal(4100)
 
@@ -710,7 +710,7 @@ test_that("calc_global_production_by_product works", {
     expect_equal(750)
 
   global_production_by_product %>%
-    dplyr::filter(Product == "Natural gas [of Oil and gas extraction]") %>%
+    dplyr::filter(Product == "Natural gas") %>%
     magrittr::extract2("Global_Production_From_Func") %>%
     expect_equal(4100)
 })
@@ -842,7 +842,7 @@ test_that("specify_MR_Y_U_gma works", {
   expect_equal(AB_MR_Y_U_gma %>%
                  dplyr::filter(
                    Flow == "{B}_Blast furnaces",
-                   Product == "{A}_Natural gas [of Oil and gas extraction]"
+                   Product == "{A}_Natural gas"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -851,7 +851,7 @@ test_that("specify_MR_Y_U_gma works", {
   expect_equal(AB_MR_Y_U_gma %>%
                  dplyr::filter(
                    Flow == "{B}_Road",
-                   Product == "{A}_Natural gas [of Oil and gas extraction]"
+                   Product == "{A}_Natural gas"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -951,14 +951,14 @@ test_that("transform_to_gma works", {
 
   # Checking R matrix flows
   expect_equal(AB_MR_PSUT_gma %>%
-                 dplyr::filter(Product == "{A}_Coking coal",
+                 dplyr::filter(Product == "{A}_Coking coal [from Resources]",
                                matnames == "R") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                5000)
 
   expect_equal(AB_MR_PSUT_gma %>%
-                 dplyr::filter(Product == "{A}_Crude oil",
+                 dplyr::filter(Product == "{A}_Crude oil [from Resources]",
                                matnames == "R") %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
@@ -1066,7 +1066,7 @@ test_that("transform_to_gma works", {
   expect_equal(AB_MR_PSUT_gma %>%
                  dplyr::filter(
                    Flow == "{B}_Blast furnaces",
-                   Product == "{A}_Natural gas [of Oil and gas extraction]",
+                   Product == "{A}_Natural gas",
                    matnames == "U_EIOU"
                  ) %>%
                  dplyr::select(E.dot) %>%
@@ -1076,7 +1076,7 @@ test_that("transform_to_gma works", {
   expect_equal(AB_MR_PSUT_gma %>%
                  dplyr::filter(
                    Flow == "{B}_Road",
-                   Product == "{A}_Natural gas [of Oil and gas extraction]",
+                   Product == "{A}_Natural gas",
                    matnames == "Y"
                  ) %>%
                  dplyr::select(E.dot) %>%
@@ -1204,7 +1204,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
   expect_equal(bilateral_trade_matrix_df_gma %>%
                  dplyr::filter(
                    Country == "A",
-                   Product == "Natural gas [of Oil and gas extraction]") %>%
+                   Product == "Natural gas") %>%
                  dplyr::select(Share_Exports_From_Func) %>%
                  dplyr::pull(),
                0)
@@ -1212,7 +1212,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
   expect_equal(bilateral_trade_matrix_df_gma %>%
                  dplyr::filter(
                    Country == "B",
-                   Product == "Natural gas [of Oil and gas extraction]") %>%
+                   Product == "Natural gas") %>%
                  dplyr::select(Share_Exports_From_Func) %>%
                  dplyr::pull(),
                1)
