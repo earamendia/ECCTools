@@ -24,15 +24,15 @@ test_that("convert_to_net_trade works", {
 
   AB_net_trade_testing <- AB_data %>%
     dplyr::bind_rows(dummy_net_trade) %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
 
   # First test, that shouldn't change the data frame at all
   test_unchanged_df <- convert_to_net_trade(AB_data %>%
-                                              specify_all_revisited())
+                                              IEATools::specify_all())
 
   checking_row_equality <- dplyr::left_join(AB_data %>%
-                                              specify_all_revisited(),
+                                              IEATools::specify_all(),
                                             test_unchanged_df,
                                      by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
@@ -48,7 +48,7 @@ test_that("convert_to_net_trade works", {
   test_changed_df <- convert_to_net_trade(AB_net_trade_testing)
 
   checking_row_equality <- dplyr::left_join(AB_data %>%
-                                              specify_all_revisited(),
+                                              IEATools::specify_all(),
                                             test_changed_df,
                                      by = c("Country", "Method", "Energy.type", "Last.stage", "Year", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
     dplyr::mutate(
@@ -67,15 +67,15 @@ test_that("convert_to_net_trade works", {
   expect_equal(check_trade[[1, "E.dot"]], -800)
   expect_equal(check_trade[[1, "Flow"]], "Exports [of Coke oven coke]")
   expect_equal(check_trade[[2, "E.dot"]], -1160)
-  expect_equal(check_trade[[2, "Flow"]], "Exports [of Coking coal [of Coal mines]]")
+  expect_equal(check_trade[[2, "Flow"]], "Exports [of Coking coal]")
   expect_equal(check_trade[[3, "E.dot"]], 500)
-  expect_equal(check_trade[[3, "Flow"]], "Imports [of Crude oil [of Oil and gas extraction]]")
+  expect_equal(check_trade[[3, "Flow"]], "Imports [of Crude oil]")
   expect_equal(check_trade[[4, "E.dot"]], -1400)
-  expect_equal(check_trade[[4, "Flow"]], "Exports [of Natural gas [of Oil and gas extraction]]")
+  expect_equal(check_trade[[4, "Flow"]], "Exports [of Natural gas]")
   expect_equal(check_trade[[5, "E.dot"]], 200)
   expect_equal(check_trade[[5, "Flow"]], "Imports [of Coke oven coke]")
   expect_equal(check_trade[[8, "E.dot"]], 2500)
-  expect_equal(check_trade[[8, "Flow"]], "Imports [of Natural gas [of Oil and gas extraction]]")
+  expect_equal(check_trade[[8, "Flow"]], "Imports [of Natural gas]")
 })
 
 
@@ -207,7 +207,7 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
       Ledger.side = c("Consumption", "Consumption", "Consumption"),
       Flow.aggregation.point = c("Transport", "Transport", "Transport"),
       Flow = c("Road", "Road", "Road"),
-      Product = c("Anthracite [of Coal mines]", "Hard coal (if no detail) [of Coal mines]", "Brown coal (if no detail) [of Coal mines]"),
+      Product = c("Anthracite", "Hard coal (if no detail)", "Brown coal (if no detail)"),
       Unit = c("ktoe", "ktoe", "ktoe"),
       E.dot = c(-50, -40, -10)
     )
@@ -235,28 +235,28 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 
   # Without Epsilon, sum_Y_U method
-  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Anthracite [of Coal mines]", 1]], 50)
-  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 40)
-  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]], 30)
-  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5020)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Anthracite", 1]], 50)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Hard coal (if no detail)", 1]], 40)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Brown coal (if no detail)", 1]], 30)
+  expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Coking coal", 1]], 5020)
 
   # Without Epsilon, sum_R_V method
-  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Anthracite [of Coal mines]", 1]], 20)
-  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 20)
-  expect_error(AB_data_specified_io_R_V_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]])
-  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5000)
+  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Anthracite", 1]], 20)
+  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Hard coal (if no detail)", 1]], 20)
+  expect_error(AB_data_specified_io_R_V_method$q[[1]][["Brown coal (if no detail)", 1]])
+  expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Coking coal", 1]], 5000)
 
   # With Epsilon, sum_Y_U method
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Anthracite [of Coal mines]", 1]], 50)
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 40)
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]], 20)
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5000)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Anthracite", 1]], 50)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Hard coal (if no detail)", 1]], 40)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Brown coal (if no detail)", 1]], 20)
+  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Coking coal", 1]], 5000)
 
   # With Epsilon, sum_R_V method
-  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Anthracite [of Coal mines]", 1]])
-  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Hard coal (if no detail) [of Coal mines]", 1]], 10)
-  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Brown coal (if no detail) [of Coal mines]", 1]])
-  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Coking coal [of Coal mines]", 1]], 5000)
+  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Anthracite", 1]])
+  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Hard coal (if no detail)", 1]], 10)
+  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Brown coal (if no detail)", 1]])
+  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Coking coal", 1]], 5000)
 })
 
 

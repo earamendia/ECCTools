@@ -23,7 +23,7 @@ test_that("find_list_dta_observations works", {
     dplyr::mutate(
       Year = 1989
     ) %>%
-    dplyr::filter(! Product %in% c("Coking coal", "Crude oil", "Natural gas", "Coking coal [of Coal mines]", "Crude oil [of Oil and gas extraction]", "Natural gas [of Oil and gas extraction]")) %>%
+    dplyr::filter(! Product %in% c("Coking coal [from Resources]", "Crude oil [from Resources]", "Natural gas [from Resources]", "Coking coal", "Crude oil", "Natural gas")) %>%
     dplyr::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 1989, Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "a weird industry", Product = "A_very_weird_product", Unit = "ktoe", E.dot = 200, matnames = "Y") %>%
     dplyr::add_row(Country = "A", Method = "A_weird_method", Energy.type = "E", Last.stage = "Final", Year = 1989, Ledger.side = "Supply", Flow.aggregation.point = "Industry", Flow = "a weird industry", Product = "A_very_weird_product", Unit = "ktoe", E.dot = 200, matnames = "V")
 
@@ -31,7 +31,7 @@ test_that("find_list_dta_observations works", {
     dplyr::mutate(
       Method = "crash-test-metod"
     ) %>%
-    dplyr::filter(! Product %in% c("Coking coal", "Crude oil", "Natural gas", "Coking coal [of Coal mines]", "Crude oil [of Oil and gas extraction]", "Natural gas [of Oil and gas extraction]"))
+    dplyr::filter(! Product %in% c("Coking coal [from Resources]", "Crude oil [from Resources]", "Natural gas [from Resources]", "Coking coal", "Crude oil", "Natural gas"))
 
   testing <- AB_data %>% dplyr::bind_rows(to_add_1, to_add_2)
 
@@ -67,7 +67,7 @@ test_that("transform_to_dta works", {
     dplyr::mutate(
       Year = 1989
     ) %>%
-    dplyr::filter(! Product %in% c("Coking coal", "Crude oil", "Natural gas", "Coking coal [of Coal mines]", "Crude oil [of Oil and gas extraction]", "Natural gas [of Oil and gas extraction]")) %>%
+    dplyr::filter(! Product %in% c("Coking coal [from Resources]", "Crude oil [from Resources]", "Natural gas [from Resources]", "Coking coal", "Crude oil", "Natural gas")) %>%
     dplyr::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 1989, Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "a weird industry", Product = "A_very_weird_product", Unit = "ktoe", E.dot = 200, matnames = "Y") %>%
     dplyr::add_row(Country = "A", Method = "A_weird_method", Energy.type = "E", Last.stage = "Final", Year = 1989, Ledger.side = "Supply", Flow.aggregation.point = "Industry", Flow = "a weird industry", Product = "A_very_weird_product", Unit = "ktoe", E.dot = 200, matnames = "V")
 
@@ -75,7 +75,7 @@ test_that("transform_to_dta works", {
     dplyr::mutate(
       Method = "crash-test-metod"
     ) %>%
-    dplyr::filter(! Product %in% c("Coking coal", "Crude oil", "Natural gas", "Coking coal [of Coal mines]", "Crude oil [of Oil and gas extraction]", "Natural gas [of Oil and gas extraction]"))
+    dplyr::filter(! Product %in% c("Coking coal [from Resources]", "Crude oil [from Resources]", "Natural gas [from Resources]", "Coking coal", "Crude oil", "Natural gas"))
 
   testing <- AB_data %>% dplyr::bind_rows(to_add_1, to_add_2)
 
@@ -123,7 +123,7 @@ test_that("specify_MR_R works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   AB_resources_MR <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -169,7 +169,7 @@ test_that("specify_MR_V works", {
   # We wheck what happens when we add an epsilon flow to the supply side.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited() %>%
+    IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
       Method = "PCM",
@@ -270,7 +270,7 @@ test_that("calc_total_consumption_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   total_consumption_by_product <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -322,7 +322,7 @@ test_that("calc_imports_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   imports_by_product <- AB_data %>%
     calc_imports_by_product()
@@ -354,7 +354,7 @@ test_that("calc_share_imports_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   share_imports_by_product <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -406,7 +406,7 @@ test_that("specify_imported_products works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   defined_imported_products <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -487,7 +487,7 @@ test_that("specify_imported_products works", {
   # We add a stock changes flow that will go to the Epsilon matrix for a more comprehensive test.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited() %>%
+    IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
       Method = "PCM",
@@ -567,7 +567,7 @@ test_that("calc_global_exports works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   global_exports_per_product <- AB_data %>%
     calc_global_exports()
@@ -593,7 +593,7 @@ test_that("calc_share_exports_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   share_global_exports_per_product <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -627,7 +627,7 @@ test_that("calc_national_production_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   national_production_by_product <- AB_data %>%
     IEATools::add_psut_matnames() %>%
@@ -683,7 +683,7 @@ test_that("calc_global_production_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   global_production_by_product <- AB_data %>%
     IEATools::add_psut_matnames() %>%
@@ -722,7 +722,7 @@ test_that("calc_share_global_production_by_product works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   share_production_by_product <- AB_data %>%
     IEATools::add_psut_matnames() %>%
@@ -782,7 +782,7 @@ test_that("specify_MR_Y_U_gma works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   AB_MR_Y_U_gma <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -860,7 +860,7 @@ test_that("specify_MR_Y_U_gma works", {
   # We add a stock changes flow that will go to the Epsilon matrix for a more comprehensive test.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited() %>%
+    IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
       Method = "PCM",
@@ -937,7 +937,7 @@ test_that("transform_to_gma works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
 
   AB_MR_PSUT_gma <- AB_data %>%
@@ -1087,7 +1087,7 @@ test_that("transform_to_gma works", {
   # Then just check with stock changes and Epsilon matrix too.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited() %>%
+    IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
       Method = "PCM",
@@ -1184,7 +1184,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   bilateral_trade_matrix_df_gma <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -1234,7 +1234,7 @@ test_that("specify_MR_Y_U_bta works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   MR_Y_U_bta <- AB_data %>%
     add_psut_matnames_epsilon() %>%
@@ -1341,7 +1341,7 @@ test_that("transform_to_bta works", {
 
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   # First checking whether gma and bta, without trade matrix, give the same result:
   MR_PSUT_gma <- AB_data %>%

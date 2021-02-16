@@ -15,7 +15,7 @@ test_that("calc_tidy_iea_df_balance works correctly for 2018 data", {
 
 test_that("calc_tidy_iea_df_balance works correctly for 2019 data", {
   Ebal_2019 <- IEATools::load_tidy_iea_df(IEATools::sample_iea_data_path(2019)) %>%
-    IEAToolscalc_tidy_iea_df_balances()
+    IEATools::calc_tidy_iea_df_balances()
   expect_false(all(Ebal_2019$balance_OK))
   expect_true(Ebal_2019 %>% dplyr::filter(Country == "GHA", Year == 1971, Product == "Aviation gasoline") %>% magrittr::extract2("balance_OK"))
   expect_false(Ebal_2019 %>% dplyr::filter(Country == "GHA", Year == 1971, Product == "Electricity") %>% magrittr::extract2("balance_OK"))
@@ -35,7 +35,7 @@ test_that("add_balancing_vector works", {
     IEATools::load_tidy_iea_df()
 
   AB_tidy_data <- AB_data %>%
-    specify_all_revisited()
+    IEATools::specify_all()
 
   expect_true(AB_data %>%
                  IEATools::tidy_iea_df_balanced())
@@ -53,7 +53,7 @@ test_that("add_balancing_vector works", {
     add_balancing_vector()
 
   expect_true(AB_tidy_MR_with_balancing %>%
-                 IEATools::calc_tidy_iea_df_balances %>%
+                 IEATools::calc_tidy_iea_df_balances() %>%
                  magrittr::extract2("balance_OK") %>%
                  all())
 })
