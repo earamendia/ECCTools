@@ -3,6 +3,7 @@
 # Note it excludes exports, it excludes U_feed.
 calc_total_use_by_product <- function(.tidy_iea_df,
                                 include_non_energy_uses = FALSE,
+                                total_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                 list_oil_products = IEATools::oil_and_oil_products,
                                 list_coal_products = IEATools::coal_and_coal_products,
                                 list_gas_products = list(natural_gas = "Natural gas"),
@@ -19,8 +20,6 @@ calc_total_use_by_product <- function(.tidy_iea_df,
                                 flow = IEATools::iea_cols$flow,
                                 e_dot = IEATools::iea_cols$e_dot,
                                 matnames = IEATools::mat_meta_cols$matnames,
-                                Y_mat = IEATools::psut_cols$Y,
-                                U_eiou_mat = IEATools::psut_cols$U_eiou,
                                 total_product_use = "Total_Product_Use"
                                 ){
 
@@ -31,7 +30,7 @@ calc_total_use_by_product <- function(.tidy_iea_df,
       dplyr::filter(
         ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
       ) %>%
-      dplyr::filter(matnames == Y_mat | matnames == U_eiou_mat) %>%
+      dplyr::filter(matnames %in% total_use_mats) %>%
       dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
       dplyr::mutate(
         "{e_dot}" := dplyr::case_when(
@@ -53,7 +52,7 @@ calc_total_use_by_product <- function(.tidy_iea_df,
       dplyr::filter(
         ! (stringr::str_detect(.data[[flow]], exports) | stringr::str_detect(.data[[flow]], losses))
       ) %>%
-      dplyr::filter(matnames == Y_mat | matnames == U_eiou_mat) %>%
+      dplyr::filter(matnames %in% total_use_mats) %>%
       dplyr::mutate(
         "{e_dot}" := dplyr::case_when(
           .data[[matnames]] == U_eiou_mat ~ -.data[[e_dot]],
@@ -391,6 +390,7 @@ calc_ff_use <- function(.tidy_iea_df,
 
 calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                           include_non_energy_uses = FALSE,
+                                                          primary_production_mats = c(IEATools::psut_cols$V),
                                                           list_primary_oil_products = IEATools::primary_oil_products,
                                                           list_primary_coal_products = IEATools::primary_coal_products,
                                                           list_primary_gas_products = list(natural_gas = "Natural gas"),
@@ -417,7 +417,8 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
   }
 
     use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
-                                                           include_non_energy_uses = include_non_energy_uses) %>%
+                                                   include_non_energy_uses = include_non_energy_uses,
+                                                   total_use_mats = primary_production_mats) %>%
       dplyr::filter(
         .data[[product]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
       ) %>%
@@ -429,7 +430,8 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
       )
 
     share_primary_ff_use_by_product_by_group <- calc_primary_products_use_by_group(.tidy_iea_df,
-                                                                                   include_non_energy_uses = include_non_energy_uses) %>%
+                                                                                   include_non_energy_uses = include_non_energy_uses,
+                                                                                   primary_production_mats = primary_production_mats) %>%
       dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
       dplyr::mutate(
         "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
@@ -450,6 +452,7 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
 
 calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                   include_non_energy_uses = FALSE,
+                                                  final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                                   list_oil_products = IEATools::oil_and_oil_products,
                                                   list_coal_products = IEATools::coal_and_coal_products,
                                                   list_gas_products = list(natural_gas = "Natural gas"),
@@ -473,7 +476,8 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
   }
 
   use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
-                                                  include_non_energy_uses = include_non_energy_uses) %>%
+                                                 include_non_energy_uses = include_non_energy_uses,
+                                                 total_use_mats = final_use_mats) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
         .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "All oil and gas products",
@@ -482,7 +486,8 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
     )
 
   share_ff_use_by_product_by_group <- calc_all_products_use_by_group(.tidy_iea_df,
-                                                                     include_non_energy_uses = include_non_energy_uses) %>%
+                                                                     include_non_energy_uses = include_non_energy_uses,
+                                                                     final_use_mats = final_use_mats) %>%
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
@@ -504,6 +509,7 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
 # Calculates shares of each product in the total primary fossil fuel consumption
 calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
                                                  include_non_energy_uses = FALSE,
+                                                 primary_production_mats = c(IEATools::psut_cols$V),
                                                  list_primary_oil_products = IEATools::primary_oil_products,
                                                  list_primary_coal_products = IEATools::primary_coal_products,
                                                  list_primary_gas_products = list(natural_gas = "Natural gas"),
@@ -527,7 +533,8 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
   }
 
   use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
-                                                 include_non_energy_uses = include_non_energy_uses) %>%
+                                                 include_non_energy_uses = include_non_energy_uses,
+                                                 total_use_mats = primary_production_mats) %>%
     dplyr::filter(
       .data[[product]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
       ) %>%
@@ -536,7 +543,8 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
     )
 
   share_primary_ff_use_by_product <- calc_primary_ff_use(.tidy_iea_df,
-                                                         include_non_energy_uses = include_non_energy_uses) %>%
+                                                         include_non_energy_uses = include_non_energy_uses,
+                                                         primary_production_mats = primary_production_mats) %>%
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
@@ -553,11 +561,10 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
 
 
 
-
-
 # Calculates shares of each product in the total fossil fuel consumption
 calc_share_ff_use_by_product <- function(.tidy_iea_df,
                                          include_non_energy_uses = FALSE,
+                                         final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                                          list_oil_products = IEATools::oil_and_oil_products,
                                          list_coal_products = IEATools::coal_and_coal_products,
                                          list_gas_products = list(natural_gas = "Natural gas"),
@@ -582,13 +589,15 @@ calc_share_ff_use_by_product <- function(.tidy_iea_df,
   }
 
   use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
-                                                 include_non_energy_uses = include_non_energy_uses) %>%
+                                                 include_non_energy_uses = include_non_energy_uses,
+                                                 total_use_mats = final_use_mats) %>%
     dplyr::mutate(
       "{product.group}" := "All fossil fuels"
     )
 
   share_ff_use_by_product <- calc_ff_use(.tidy_iea_df,
-                                                         include_non_energy_uses = include_non_energy_uses) %>%
+                                         include_non_energy_uses = include_non_energy_uses,
+                                         final_use_mats = final_use_mats) %>%
     dplyr::left_join(use_ff_by_product, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {unit}, {product.group})) %>%
     dplyr::mutate(
       "{share}" := .data[[total_product_use]] / .data[[total_group_use]],
