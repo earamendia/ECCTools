@@ -418,6 +418,9 @@ calc_share_primary_ff_use_by_product_by_group <- function(.tidy_iea_df,
 
     use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
                                                            include_non_energy_uses = include_non_energy_uses) %>%
+      dplyr::filter(
+        .data[[product]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
+      ) %>%
       dplyr::mutate(
         "{product.group}" := dplyr::case_when(
           .data[[product]] %in% c(list_primary_oil_products, list_primary_gas_products) ~ "Primary oil and gas products",
@@ -525,6 +528,9 @@ calc_share_primary_ff_use_by_product <- function(.tidy_iea_df,
 
   use_ff_by_product <- calc_total_use_by_product(.tidy_iea_df,
                                                  include_non_energy_uses = include_non_energy_uses) %>%
+    dplyr::filter(
+      .data[[product]] %in% c(list_primary_oil_products, list_primary_coal_products, list_primary_gas_products)
+      ) %>%
     dplyr::mutate(
       "{product.group}" := "Primary fossil fuels"
     )
