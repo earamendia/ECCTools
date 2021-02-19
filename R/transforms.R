@@ -729,6 +729,8 @@ transform_to_bta <- function(.tidy_iea_df,
 #'
 #' @examples
 find_list_dta_observations <- function(.tidy_iea_df,
+                                       products_to_look_for = IEATools::products,
+                                       requirement_matrices_list = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed),
                                        country = IEATools::iea_cols$country,
                                        method = IEATools::iea_cols$method,
                                        energy_type = IEATools::iea_cols$energy_type,
@@ -793,6 +795,8 @@ find_list_dta_observations <- function(.tidy_iea_df,
 #'
 #' @examples
 transform_to_dta <- function(.tidy_iea_df,
+                             products_to_look_for = IEATools::products,
+                             requirement_matrices_list = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed),
                              country = IEATools::iea_cols$country,
                              method = IEATools::iea_cols$method,
                              energy_type = IEATools::iea_cols$energy_type,
@@ -806,7 +810,8 @@ transform_to_dta <- function(.tidy_iea_df,
                              epsilon = "Epsilon"){
 
   list_dta_observations <- .tidy_iea_df %>%
-    find_list_dta_observations()
+    find_list_dta_observations(products_to_look_for = products_to_look_for,
+                               requirement_matrices_list = requirement_matrices_list)
 
   .tidy_iea_df %>%
     dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
