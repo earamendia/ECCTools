@@ -755,7 +755,8 @@ find_list_dta_observations <- function(.tidy_iea_df,
 
 
   list_dta_observations <- .tidy_iea_df %>%
-    dplyr::filter(.data[[matnames]] == y_matrix | .data[[matnames]] == u_eiou_matrix | .data[[matnames]] == u_feed_matrix) %>% #These are products used
+    dplyr::filter(.data[[matnames]] %in% requirement_matrices_list) %>% #These are products used
+    dplyr::filter(.data[[product]] %in% products_to_look_for) %>%
     dplyr::mutate(
       is_produced_domestically = dplyr::case_when(
         stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], sep = "_") %in% list_supplied_products_per_observation ~ TRUE,
