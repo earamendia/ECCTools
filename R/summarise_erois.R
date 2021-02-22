@@ -89,6 +89,8 @@ summarise_erois <- function(.tidy_erois_df,
                             # Which matrices flows to use for calculating shares
                             final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                             primary_production_mats = c(IEATools::psut_cols$V),
+                            # Method to use for calculating shares
+                            method_shares_calculation = c("all_input_products", "filter_input_products_present_in_V"),
                             # Lists defining each product group
                             list_primary_oil_products = IEATools::primary_oil_products,
                             list_primary_coal_products = IEATools::primary_coal_products,
