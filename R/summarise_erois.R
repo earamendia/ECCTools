@@ -89,8 +89,6 @@ summarise_erois <- function(.tidy_erois_df,
                             # Which matrices flows to use for calculating shares
                             final_use_mats = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou),
                             primary_production_mats = c(IEATools::psut_cols$V),
-                            # Method to use for calculating shares
-                            method_shares_calculation = c("all_input_products", "filter_input_products_present_in_V"),
                             # Lists defining each product group
                             list_primary_oil_products = IEATools::primary_oil_products,
                             list_primary_coal_products = IEATools::primary_coal_products,
@@ -115,23 +113,37 @@ summarise_erois <- function(.tidy_erois_df,
                             group.eroi = "Group.eroi"
                             ){
 
+
   tidy_shares_df <- dplyr::bind_rows(
     # First, shares of primary fossil fuel use by product, by main group:
     calc_share_primary_ff_use_by_product_by_group(.tidy_iea_df,
                                                   include_non_energy_uses = include_non_energy_uses,
-                                                  primary_production_mats = primary_production_mats),
+                                                  primary_production_mats = primary_production_mats,
+                                                  method_shares_calculation = method_shares_calculation,
+                                                  list_primary_oil_products = list_primary_oil_products,
+                                                  list_primary_coal_products = list_primary_coal_products,
+                                                  list_primary_gas_products = list_primary_gas_products),
     # Second, shares of all fossil fuel use by product, by main group
     calc_share_ff_use_by_product_by_group(.tidy_iea_df,
                                           include_non_energy_uses = include_non_energy_uses,
-                                          final_use_mats = final_use_mats),
+                                          final_use_mats = final_use_mats,
+                                          list_oil_products = list_oil_products,
+                                          list_coal_products = list_coal_products,
+                                          list_gas_products = list_gas_products),
     # Third, shares of primary fossil fuel use by product
     calc_share_primary_ff_use_by_product(.tidy_iea_df,
                                          include_non_energy_uses = include_non_energy_uses,
-                                         primary_production_mats = primary_production_mats),
+                                         primary_production_mats = primary_production_mats,
+                                         list_primary_oil_products = list_primary_oil_products,
+                                         list_primary_coal_products = list_primary_coal_products,
+                                         list_primary_gas_products = list_primary_gas_products),
     # Fourth, shares of all fossil fuel use, by product
     calc_share_ff_use_by_product(.tidy_iea_df,
                                  include_non_energy_uses = include_non_energy_uses,
-                                 final_use_mats = final_use_mats)
+                                 final_use_mats = final_use_mats,
+                                 list_oil_products = list_oil_products,
+                                 list_coal_products = list_coal_products,
+                                 list_gas_products = list_gas_products)
   )
 
   # create a tidy_shares_df first
