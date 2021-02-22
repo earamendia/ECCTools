@@ -69,7 +69,13 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
       ) %>%
-    dplyr::filter(! stringr::str_detect(.data[[product]], "[from Resources]"))
+    dplyr::mutate(
+      "{eroi}" := dplyr::case_when(
+        .data[[eroi]] < 0 ~ Inf,
+        TRUE ~ .data[[eroi]]
+      )
+    ) %>%
+    dplyr::filter(! stringr::str_detect(.data[[product]], "\\[from Resources\\]"))
 }
 
 
