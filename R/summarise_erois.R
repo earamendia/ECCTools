@@ -119,7 +119,6 @@ summarise_erois <- function(.tidy_erois_df,
     calc_share_primary_ff_use_by_product_by_group(.tidy_iea_df,
                                                   include_non_energy_uses = include_non_energy_uses,
                                                   primary_production_mats = primary_production_mats,
-                                                  method_shares_calculation = method_shares_calculation,
                                                   list_primary_oil_products = list_primary_oil_products,
                                                   list_primary_coal_products = list_primary_coal_products,
                                                   list_primary_gas_products = list_primary_gas_products),
@@ -146,20 +145,35 @@ summarise_erois <- function(.tidy_erois_df,
                                  list_gas_products = list_gas_products)
   )
 
-  # create a tidy_shares_df first
 
+  # Sum of shares from the anti_join
+  antijoined_erois <- tidy_shares_df %>%
+    dplyr::anti_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
+                    .data[[non_energy_uses]], .data[[product.group]]) %>%
+    dplyr::summarise(
+      sum_antijoined_shares = sum(.data[[share]])
+    )
+
+  # Create a tidy_shares_df first
   summarised_erois <- tidy_shares_df %>%
     dplyr::inner_join(.tidy_erois_df, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]],
                     .data[[eroi.method]], .data[[type]], .data[[boundary]], .data[[non_energy_uses]], .data[[product.group]]) %>%
     dplyr::summarise(
-      "{group.eroi}" := 1/(sum(.data[[share]] * (1/.data[[eroi]])))
-    )
+      Group.eroi.inversed_prelim = sum(.data[[share]] * (1/.data[[eroi]]))
+    ) %>%
+    dplyr::left_join(antijoined_erois, by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product.group}, {non_energy_uses})) %>%
+    dplyr::mutate(
+      sum_antijoined_shares = tidyr::replace_na(sum_antijoined_shares, 0)
+    ) %>%
+    dplyr::mutate(
+      "{group.eroi}" := 1/(.data[["Group.eroi.inversed_prelim"]] / (1 - sum_antijoined_shares))
+    ) %>%
+    dplyr::select(-Group.eroi.inversed_prelim, -sum_antijoined_shares)
 
   return(summarised_erois)
 }
-
-
 
 
 
