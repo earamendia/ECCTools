@@ -69,7 +69,7 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
       ) %>%
-    dplyr::filter(.data[[eroi]] != Inf) # This need to be modified!!!! detect resources.
+    dplyr::filter(! stringr::str_detect(.data[[product]], "[from Resources]"))
 }
 
 
@@ -196,8 +196,7 @@ extract_tidy_industry_erois <- function(.tidy_io_mats,
     dplyr::relocate(.data[[type]], .before = boundary) %>%
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
-    ) %>%
-    dplyr::filter(.data[[eroi]] != Inf) # This need to be modified!!!! detect resources.
+    )
 }
 
 
