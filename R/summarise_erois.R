@@ -92,10 +92,10 @@ summarise_erois <- function(.tidy_erois_df,
                             # Lists defining each product group
                             list_primary_oil_products = IEATools::primary_oil_products,
                             list_primary_coal_products = IEATools::primary_coal_products,
-                            list_primary_gas_products = "Natural gas",
+                            list_primary_gas_products = IEATools::primary_gas_products,
                             list_oil_products = IEATools::oil_and_oil_products,
                             list_coal_products = IEATools::coal_and_coal_products,
-                            list_gas_products = "Natural gas",
+                            list_gas_products = IEATools::primary_gas_products,
                             # Do not change
                             product.group = "Product.Group",
                             country = IEATools::iea_cols$country,
