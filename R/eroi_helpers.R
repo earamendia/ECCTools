@@ -186,8 +186,8 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
       dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
       dplyr::mutate(
         "{product.group}" := dplyr::case_when(
-          .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "All oil and gas products",
-          .data[[product]] %in% list_coal_products ~ "All coal products"
+          .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "Final oil and gas products",
+          .data[[product]] %in% list_coal_products ~ "Final coal products"
         ),
         "{e_dot}" := dplyr::case_when(
           .data[[e_dot]] < 0 ~ -.data[[e_dot]],
@@ -211,8 +211,8 @@ calc_all_products_use_by_group <- function(.tidy_iea_df,
       dplyr::filter(matnames %in% final_use_mats) %>%
       dplyr::mutate(
         "{product.group}" := dplyr::case_when(
-          .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "All oil and gas products",
-          .data[[product]] %in% list_coal_products ~ "All coal products"
+          .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "Final oil and gas products",
+          .data[[product]] %in% list_coal_products ~ "Final coal products"
         ),
         "{e_dot}" := dplyr::case_when(
           .data[[e_dot]] < 0 ~ -.data[[e_dot]],
@@ -341,7 +341,7 @@ calc_ff_use <- function(.tidy_iea_df,
       dplyr::filter(matnames %in% final_use_mats) %>%
       dplyr::filter(! .data[[flow]] %in% list_non_energy_flows) %>%
       dplyr::mutate(
-        "{product.group}" := "All fossil fuels",
+        "{product.group}" := "Final fossil fuels",
         "{e_dot}" := dplyr::case_when(
           .data[[e_dot]] < 0 ~ -.data[[e_dot]],
           TRUE ~ .data[[e_dot]]
@@ -363,7 +363,7 @@ calc_ff_use <- function(.tidy_iea_df,
       ) %>%
       dplyr::filter(matnames %in% final_use_mats) %>%
       dplyr::mutate(
-        "{product.group}" := "All fossil fuels",
+        "{product.group}" := "Final fossil fuels",
         "{e_dot}" := dplyr::case_when(
           .data[[e_dot]] < 0 ~ -.data[[e_dot]],
           TRUE ~ .data[[e_dot]]
@@ -476,8 +476,8 @@ calc_share_ff_use_by_product_by_group <- function(.tidy_iea_df,
                                                  total_use_mats = final_use_mats) %>%
     dplyr::mutate(
       "{product.group}" := dplyr::case_when(
-        .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "All oil and gas products",
-        .data[[product]] %in% list_coal_products ~ "All coal products"
+        .data[[product]] %in% c(list_oil_products, list_gas_products) ~ "Final oil and gas products",
+        .data[[product]] %in% list_coal_products ~ "Final coal products"
       )
     )
 
@@ -588,7 +588,7 @@ calc_share_ff_use_by_product <- function(.tidy_iea_df,
                                                  include_non_energy_uses = include_non_energy_uses,
                                                  total_use_mats = final_use_mats) %>%
     dplyr::mutate(
-      "{product.group}" := "All fossil fuels"
+      "{product.group}" := "Final fossil fuels"
     )
 
   share_ff_use_by_product <- calc_ff_use(.tidy_iea_df,
