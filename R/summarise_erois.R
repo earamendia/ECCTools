@@ -177,15 +177,49 @@ summarise_erois <- function(.tidy_erois_df,
 
 
 
-#
-# add_indirect_energy_to_erois <- funtion(.tidy_erois_df,
-#                                         .tidy_indirect_energy){
-#
-#
-#
-#
-#
-# }
+# Function to add indirect energy
+add_indirect_energy_to_erois <- function(.tidy_summarised_erois_df,
+                                         .tidy_indirect_energy,
+                                         .tidy_iea_df,
+                                         include_non_energy_uses = TRUE){
+
+  total_output_per_group <- dplyr::bind_rows(
+    calc_all_products_use_by_group(.tidy_iea_df,
+                                   include_non_energy_uses = include_non_energy_uses),
+    calc_ff_use(.tidy_iea_df,
+                include_non_energy_uses = include_non_energy_uses),
+    calc_primary_products_use_by_group(.tidy_iea_df,
+                                       include_non_energy_uses = include_non_energy_uses),
+    calc_primary_ff_use(.tidy_iea_df,
+                        include_non_energy_uses = include_non_energy_uses)
+  )
+
+
+  indirect_energy_per_output <- .tidy_indirect_energy %>%
+    dplyr::inner_join(
+      total_output_per_group,
+      by = c("Country", "Year", "Product.Group")
+    ) %>%
+    dplyr::mutate(
+      ratio_indirect_energy_per_output = .data[["Indirect_Energy_ktoe"]] / .data[["Total_Group_Use"]]
+    ) %>%
+    dplyr::select(-.data[["Indirect_Energy_TJ"]], -.data[["Indirect_Energy_ktoe"]], -.data[["Method"]], -.data[["Energy.type"]],
+                  -.data[["Last.stage"]], -.data[["Unit"]], -.data[["Total_Group_Use"]])
+
+  .tidy_summarised_erois_df %>%
+    tidyr::expand_grid(
+      Indirect_Energy = c("Included", "Excluded")
+    ) %>%
+    dplyr::left_join(
+      indirect_energy_per_output,
+      by = c("Country", "Year", "Indirect_Energy", "Product.Group")
+    ) %>%
+    dplyr::mutate(
+      ratio_indirect_energy_per_output = tidyr::replace_na(.data[["ratio_indirect_energy_per_output"]], 0),
+      Group.eroi = 1/(1/Group.eroi + .data[["ratio_indirect_energy_per_output"]])
+    ) %>%
+    dplyr::select(-.data[["ratio_indirect_energy_per_output"]])
+}
 
 
 # This function extracts industry level erois in a tidy format.
