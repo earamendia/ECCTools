@@ -1,7 +1,4 @@
-# This is meant to remain in the ECCTools package
 
-
-# This function converts a tidy data frame into the same tidy data frame but with net trade
 
 #' Title
 #'
@@ -75,7 +72,6 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 
 
-# This function removes Statistical differences from the tidy IEA data frame
 
 #' Title
 #'
@@ -111,7 +107,6 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 
 
 
-# This function removes Stock changes from the tidy IEA data frame
 
 #' Title
 #'
