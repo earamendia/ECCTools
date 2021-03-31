@@ -1,23 +1,42 @@
 
-
-#' Title
+#' Converts data to net trade data
 #'
-#' @param .tidy_iea_df
-#' @param imports
-#' @param exports
-#' @param country
-#' @param e_dot
-#' @param flow
-#' @param year
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param product
-#' @param .net_imports
+#' This function enables to convert a `.tidy_iea_df` to
+#' a new `.tidy_iea_df` in which trade flows are reported as net flows.
+#' So, if a given region or country both imports and exports a given product,
+#' the function will report only the difference between imports and exports,
+#' depending on which flow is dominant. See Details for uses.
 #'
-#' @return
+#' The function may be use after aggregating regions with the
+#' `IEATools::aggregate_regions()` function, or may be applied to IEA data for
+#' aggregated regions (such as World) for which both imports and exports are reported
+#' for a given product.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` which trade flows need to be converted to net trade flows.
+#' @param imports The name of the Imports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$imports`.
+#' @param exports The name of the Exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param country,e_dot,flow,year,ledger_side,flow_aggregation_point,product See `IEATools::iea_cols`.
+#' @param .net_imports A temporary column that calculates net imports as the difference between imports and exports.
+#'                     Default is "Net_Imports".
+#'
+#' @return A `.tidy_iea_df` for which trade flows are converte to net trade.
 #' @export
 #'
 #' @examples
+#' # In this example, we gather all flows for countries A and B
+#' # in a new "AB" region, for which both imports and exports are reported for some products.
+#' tidy_AB_data %>%
+#' dplyr::mutate(Country == "AB) %>%
+#' dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
+#' print()
+#' # After running the function, only either imports or exports are reported for each product.
+#' #' tidy_AB_data %>%
+#' dplyr::mutate(Country == "AB) %>%
+#' convert_to_net_trade() %>%
+#' dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
+#' print()
 convert_to_net_trade <- function(.tidy_iea_df,
                                  imports = IEATools::interface_industries$imports,
                                  exports = IEATools::interface_industries$exports,
@@ -73,19 +92,46 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Moving statistical differences flows to Epsilon matrix
 #'
-#' @param .tidy_iea_df
-#' @param flow
-#' @param matnames
-#' @param e_dot
-#' @param stat_diffs
-#' @param epsilon
+#' This function sends statistical differences flows to a balancing matrix Epsilon.
+#' The Epsilon balancing matrix is akin to an additional final demand matrix,
+#' meaning that flows akin to final demand will be positive,
+#' while flows akin to supply will be negative.
 #'
-#' @return
+#' See the Epsilon balacing matrix vignette for more information.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Epsilon matrix.
+#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param stat_diffs The name of the statistical differences flows.
+#'                   Default is "Statistical differences".
+#' @param epsilon The name of the Epsilon matrix.
+#'                Default is "Epsilon".
+#'
+#' @return A `.tidy_iea_df` for which statistical differences flows have been send to the Epsilon matrix.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' tibble::add_row(
+#' Country = "A",
+#' Method = "PCM",
+#' Energy.type = "Energy",
+#' Last.stage = "Final",
+#' Year = 2018,
+#' Ledger.side = "Supply",
+#' Flow.aggregation.point = "TFC compare",
+#' Flow = "Statistical differences",
+#' Product = "Crude oil",
+#' Unit = "ktoe",
+#' E.dot = 10
+#' ) %>%
+#' IEATools::add_psut_matnames() %>%
+#' stat_diffs_to_epsilon() %>%
+#' dplyr::filter(stringr::str_detect(Flow, "Statistical differences")) %>%
+#' print()
 stat_diffs_to_epsilon <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
                               matnames = "matnames",
@@ -108,14 +154,23 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Moving stock changes flows to Epsilon matrix
 #'
-#' @param .tidy_iea_df
-#' @param flow
-#' @param matnames
-#' @param e_dot
-#' @param stock_changes
-#' @param epsilon
+#' This function sends stock changes flows to a balancing matrix Epsilon.
+#' The Epsilon balancing matrix is akin to an additional final demand matrix,
+#' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
+#' while flows akin to supply (i.e. where stocks decrease) will be negative.
+#'
+#' See the Epsilon balacing matrix vignette for more information.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Epsilon matrix.
+#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param stock_changes The name of the Stock changes flows.
+#'                      Default is "Stock changes".
+#' @param epsilon The name of the Epsilon matrix.
+#'                Default is "Epsilon".
 #'
 #' @return
 #' @export
@@ -141,17 +196,34 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 }
 
 
-#' Title
+#' Converts jet fuel type gasoline into motor gasoline
 #'
-#' @param .tidy_iea_df
-#' @param product
-#' @param flow
-#' @param e_dot
+#' This function converts flows of the "Gasoline type jet fuel" product into flows of "Motor gasoline excl. biofuels".
+#' The function then gathers those flows into a single new flow. Basically, it aggregates those two products and keeps the
+#' "Motor gasoline excl. biofuels" product name.
 #'
-#' @return
+#' @param .tidy_iea_df The `.tidy_iea_df` for which jet fuel type gasoline needs to be converted into motor gasoline.
+#' @param product,e_dot,flow See `IEATools::iea_cols`.
+#'
+#' @return A `.tidy_iea_df` for which jet fuel type gasoline is converted into motor gasoline.
 #' @export
 #'
 #' @examples
+#' # Here we add a flow of "Gasoline type jet fuel":
+#' tidy_AB_data %>%
+#'tibble::add_row(
+#'  Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "Iron and steel", Unit = "ktoe", E.dot = 20
+#') %>%
+#'  dplyr::filter(Country == "A" & stringr::str_detect(Product, "(G|g)asoline")) %>%
+#'  print()
+#' # Then we gather both flows:
+#' tidy_AB_data %>%
+#'tibble::add_row(
+#'  Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "Iron and steel", Unit = "ktoe", E.dot = 20
+#') %>%
+#'  dplyr::filter(Country == "A" & stringr::str_detect(Product, "(G|g)asoline")) %>%
+#'  convert_fuel_gasoline_into_motor_gasoline() %>%
+#'  print()
 convert_fuel_gasoline_into_motor_gasoline <- function(.tidy_iea_df,
                                                       product = IEATools::iea_cols$product,
                                                       flow = IEATools::iea_cols$flow,
