@@ -100,6 +100,8 @@ convert_to_net_trade <- function(.tidy_iea_df,
 #' while flows akin to supply will be negative.
 #'
 #' See the Epsilon balacing matrix vignette for more information.
+#' Note: one needs to add the column containing matrices names first,
+#' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Epsilon matrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.
@@ -162,6 +164,8 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 #' while flows akin to supply (i.e. where stocks decrease) will be negative.
 #'
 #' See the Epsilon balacing matrix vignette for more information.
+#' Note: one needs to add the column containing matrices names first,
+#' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Epsilon matrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.

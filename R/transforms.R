@@ -1,26 +1,36 @@
-# Meant to remain in the ECCTools package
-# This script defines transformation functions
 
-
-# This function specifies the multiregional R matrix
-#' Title
+#' Specifies Multi-Regional R matrix
 #'
-#' @param .tidy_iea_df
-#' @param R_matrix
-#' @param matnames
-#' @param imports
-#' @param country
-#' @param flow
-#' @param product
-#' @param aggregate_country_name
+#' This function specified the Multi-Regional Resources matrix.
+#' Only flows that belong to the Multi-Regional Resources matrix are returned,
+#' other flows are filtered out.
 #'
-#' @return
+#' The specification process is to modify both the flow and the product produced
+#' so that the producing country is added as prefix using brackets first.
+#' Note: matrix names need to be added, most likely using the `IEATools::add_psut_matnames`, prior to using the function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional R matrix needs to be created.
+#' @param R_matrix The name of the R matrix.
+#'                 Default is `IEATools::psut_cols$R`.
+#' @param matnames The name of the matrix names column.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param imports The name of the Imports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$imports`.
+#' @param country,flow,product See `IEATools::iea_cols`.
+#' @param aggregate_country_name The name of the new region that gathers all flows of the `.tidy_iea_df`.
+#'                               Default is "World".
+#'
+#' @return A `.tidy_iea_df` representing the Multi-Regional Resources matrix, with all flows specified by country.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#'  IEATools::add_psut_matnames() %>%
+#'  specify_MR_R() %>%
+#'  print()
 specify_MR_R <- function(.tidy_iea_df,
-                         R_matrix = "R",
-                         matnames = "matnames",
+                         R_matrix = IEATools::psut_cols$R,
+                         matnames = IEATools::mat_meta_cols$matnames,
                          imports = IEATools::interface_industries$imports,
                          country = IEATools::iea_cols$country,
                          flow = IEATools::iea_cols$flow,
@@ -39,28 +49,43 @@ specify_MR_R <- function(.tidy_iea_df,
 }
 
 
-# This function specifies the multiregional V matrix.
-#' Title
+
+#' Specifies Multi-Regional V matrix
 #'
-#' @param .tidy_iea_df
-#' @param V_matrix
-#' @param Epsilon_matrix
-#' @param matnames
-#' @param imports
-#' @param country
-#' @param flow
-#' @param product
-#' @param e_dot
-#' @param aggregate_country_name
+#' This function specified the Multi-Regional Supply (V) matrix.
+#' Only flows that belong to the Multi-Regional Supply matrix are returned,
+#' other flows are filtered out. Exceptions are flows akin to supply (with E.dot < 0) but that have been
+#' previously re-directed to the Epsilon matrix by the analyst - those are also kept.
 #'
-#' @return
+#' The specification process is to modify both the flow and the product produced
+#' so that the producing country is added as prefix using brackets first.
+#' Note: matrix names need to be added, most likely using the `IEATools::add_psut_matnames`, prior to using the function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional R matrix needs to be created.
+#' @param V_matrix The name of the R matrix.
+#'                 Default is `IEATools::psut_cols$V`.
+#' @param Epsilon The name of the Epsilon matrix.
+#'                Default is `IEATools::psut_cols$epsilon`.
+#' @param matnames The name of the matrix names column.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param imports The name of the Imports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$imports`.
+#' @param country,flow,product,e_dot See `IEATools::iea_cols`.
+#' @param aggregate_country_name The name of the new region that gathers all flows of the `.tidy_iea_df`.
+#'                               Default is "World".
+#'
+#' @return A `.tidy_iea_df` representing the Multi-Regional Supply (V) matrix, with all flows specified by country.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#'  IEATools::add_psut_matnames() %>%
+#'  specify_MR_V() %>%
+#'  print()
 specify_MR_V <- function(.tidy_iea_df,
-                         V_matrix = "V",
-                         Epsilon_matrix = "Epsilon",
-                         matnames = "matnames",
+                         V_matrix = IEATools::psut_cols$V,
+                         Epsilon_matrix = IEATools::psut_cols$epsilon,
+                         matnames = IEATools::mat_meta_cols$matnames,
                          imports = IEATools::interface_industries$imports,
                          country = IEATools::iea_cols$country,
                          flow = IEATools::iea_cols$flow,
