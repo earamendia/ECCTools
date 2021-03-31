@@ -40,10 +40,10 @@ test_that("find_list_dta_observations works", {
     find_list_dta_observations()
 
   # There should be 4 of them
-  expect_equal(length(list_dta_observations), 4)
+  expect_equal(length(list_dta_observations), 5)
 
   # All should be in this list
-  are_observations_correct <- list_dta_observations %in% c("A_crash-test-metod_E_Final_2018", "A_PCM_E_Final_2018", "B_crash-test-metod_E_Final_2018", "B_PCM_E_Final_1989")
+  are_observations_correct <- list_dta_observations %in% c("A_crash-test-metod_E_Final_2018", "A_PCM_E_Final_2018", "A_PCM_E_Final_1989", "B_crash-test-metod_E_Final_2018", "B_PCM_E_Final_1989")
 
   is_list_correct <- ! (FALSE %in% are_observations_correct)
 
@@ -92,7 +92,7 @@ test_that("transform_to_dta works", {
     ) %>%
     dplyr::pull()
 
-  expect_equal(n, 2)
+  expect_equal(n, 3)
 
   # Checking that all relevant observations have a dta outcome
   list_observations_included <- testing_dta %>%
@@ -100,10 +100,10 @@ test_that("transform_to_dta works", {
     tidyr::unite(Observations_included, Country, Method, Energy.type, Last.stage, Year, sep = "_") %>%
     dplyr::pull()
 
-  expect_equal(length(list_observations_included), 4)
+  expect_equal(length(list_observations_included), 5)
 
   # All should be in this list
-  are_observations_correct <- list_observations_included %in% c("A_crash-test-metod_E_Final_2018", "A_PCM_E_Final_2018", "B_crash-test-metod_E_Final_2018", "B_PCM_E_Final_1989")
+  are_observations_correct <- list_observations_included %in% c("A_crash-test-metod_E_Final_2018", "A_PCM_E_Final_2018", "A_PCM_E_Final_1989", "B_crash-test-metod_E_Final_2018", "B_PCM_E_Final_1989")
 
   is_list_correct <- ! (FALSE %in% are_observations_correct)
 
