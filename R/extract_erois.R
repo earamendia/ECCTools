@@ -96,7 +96,7 @@ extract_tidy_industry_erois <- function(.tidy_io_mats,
                                        type = "Type",
                                        boundary = "Boundary",
                                        eroi = "EROI",
-                                       industry = "Industry",
+                                       industry = "Industry_name",
                                        colnames = "colnames",
                                        rowtypes = "rowtypes",
                                        coltypes = "coltypes"
@@ -115,7 +115,7 @@ extract_tidy_industry_erois <- function(.tidy_io_mats,
       "{type}" := dplyr::case_when(
         stringr::str_detect(.data[[matnames]], "_g_") ~ "Gross",
         TRUE ~ "Net"
-      )
+      ),
     ) %>%
     dplyr::select(-.data[[matnames]]) %>%
     dplyr::relocate(.data[[boundary]], .before = industry) %>%
