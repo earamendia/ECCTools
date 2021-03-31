@@ -798,6 +798,7 @@ find_list_dta_observations <- function(.tidy_iea_df,
 transform_to_dta <- function(.tidy_iea_df,
                              products_to_look_for = IEATools::products,
                              requirement_matrices_list = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed),
+                             select_dta_observations = TRUE,
                              country = IEATools::iea_cols$country,
                              method = IEATools::iea_cols$method,
                              energy_type = IEATools::iea_cols$energy_type,
@@ -810,23 +811,43 @@ transform_to_dta <- function(.tidy_iea_df,
                              matnames = IEATools::mat_meta_cols$matnames,
                              epsilon = "Epsilon"){
 
-  list_dta_observations <- .tidy_iea_df %>%
-    find_list_dta_observations(products_to_look_for = products_to_look_for,
-                               requirement_matrices_list = requirement_matrices_list)
+  if (select_dta_observations == TRUE){
+    list_dta_observations <- .tidy_iea_df %>%
+      find_list_dta_observations(products_to_look_for = products_to_look_for,
+                                 requirement_matrices_list = requirement_matrices_list)
 
-  .tidy_iea_df %>%
-    dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
-    dplyr::mutate(
-      "{matnames}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], imports) ~ epsilon,
-        TRUE ~ .data[[matnames]]
-      ),
-      "{e_dot}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
-        TRUE ~ .data[[e_dot]]
-      )
-    ) %>%
-    dplyr::ungroup()
+    tidy_iea_dta_df <- .tidy_iea_df %>%
+      dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
+      dplyr::mutate(
+        "{matnames}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ epsilon,
+          TRUE ~ .data[[matnames]]
+        ),
+        "{e_dot}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
+          TRUE ~ .data[[e_dot]]
+        )
+      ) %>%
+      dplyr::ungroup()
+
+    return(tidy_iea_dta_df)
+  } else {
+
+    tidy_iea_dta_df <- .tidy_iea_df %>%
+      dplyr::mutate(
+        "{matnames}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ epsilon,
+          TRUE ~ .data[[matnames]]
+        ),
+        "{e_dot}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
+          TRUE ~ .data[[e_dot]]
+        )
+      ) %>%
+      dplyr::ungroup()
+
+    return(tidy_iea_dta_df)
+  }
 }
 
 
