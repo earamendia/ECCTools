@@ -109,6 +109,24 @@ test_that("transform_to_dta works", {
 
   expect_true(is_list_correct)
 
+
+  # Now, we test the DTA without filtering only relevant ECCs!
+  testing_dta_without_filtering <- AB_data %>%
+    transform_to_dta(select_dta_observations = FALSE)
+
+  list_observations_included <- testing_dta_without_filtering %>%
+    tidyr::expand(tidyr::nesting(Country, Method, Energy.type, Last.stage, Year)) %>%
+    tidyr::unite(Observations_included, Country, Method, Energy.type, Last.stage, Year, sep = "_") %>%
+    dplyr::pull()
+
+  expect_equal(length(list_observations_included), 2)
+
+  # All should be in this list
+  are_observations_correct <- list_observations_included %in% c("A_PCM_E_Final_2018", "B_PCM_E_Final_2018")
+
+  is_list_correct <- ! (FALSE %in% are_observations_correct)
+
+  expect_true(is_list_correct)
 })
 
 
