@@ -260,3 +260,52 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
 })
 
 
+test_that("Convert fuel gasoline works", {
+
+  # Path to dummy AB data
+  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  # Loading AB_data
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "Iron and steel", Unit = "ktoe", E.dot = 20
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", Flow = "Exports", Unit = "ktoe", E.dot = 50
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", Flow = "Imports", Unit = "ktoe", E.dot = 100
+    ) %>%
+    IEATools::specify_all()
+
+
+  AB_data %>%
+    dplyr::filter(Product == "Gasoline type jet fuel") %>%
+    nrow() %>%
+    expect_equal(3)
+
+  test_gathering <- AB_data %>%
+    convert_fuel_gasoline_into_motor_gasoline()
+
+  test_gathering %>%
+    dplyr::filter(Product == "Motor gasoline excl. biofuels", Flow == "Iron and steel", Country == "A") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(520)
+
+  test_gathering %>%
+    dplyr::filter(Product == "Motor gasoline excl. biofuels", Flow == "Imports [of Motor gasoline excl. biofuels]", Country == "A") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(100)
+
+  test_gathering %>%
+    dplyr::filter(Product == "Motor gasoline excl. biofuels", Flow == "Exports [of Motor gasoline excl. biofuels]", Country == "A") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(50)
+
+  test_gathering %>%
+    dplyr::filter(Product == "Gasoline type jet fuel") %>%
+    nrow() %>%
+    expect_equal(0)
+})
+
