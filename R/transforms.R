@@ -62,7 +62,7 @@ specify_MR_R <- function(.tidy_iea_df,
 #' Note: matrix names need to be added, most likely using the `IEATools::add_psut_matnames`, prior to using the function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional R matrix needs to be created.
-#' @param V_matrix The name of the R matrix.
+#' @param V_matrix The name of the V matrix.
 #'                 Default is `IEATools::psut_cols$V`.
 #' @param Epsilon The name of the Epsilon matrix.
 #'                Default is `IEATools::psut_cols$epsilon`.
@@ -107,15 +107,56 @@ specify_MR_V <- function(.tidy_iea_df,
 
 
 
-# Function that specifies imported versus domestically produced products
-
+#' Specifies imported and domestic products
+#'
+#' This function specifies imported and domestic products in the Y, U_EIOU, U_feed, and Epsilon matrices.
+#' For instance, a flow of "Gasoline" will be broken down in two flows: one of imported gasoline, and one of domestic gasoline.
+#' The origin is specified in a new column. One of the two flows may be absent, in the case of a product that is not imported,
+#' or not domestically produced.
+#'
+#' Only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices are returned.
+#' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` that needs being specified.
+#' @param V_matrix The name of the V matrix.
+#'                 Default is `IEATools::psut_cols$V`.
+#' @param Y_matrix The name of the Y matrix.
+#'                 Default is `IEATools::psut_cols$Y`.
+#' @param U_feed_matrix The name of the U_feed matrix.
+#'                 Default is `IEATools::psut_cols$U_feed`.
+#' @param U_EIOU_matrix The name of the U_eiou matrix.
+#'                 Default is `IEATools::psut_cols$U_eiou`.
+#' @param Epsilon_matrix The name of the Epsilon matrix.
+#'                 Default is `IEATools::psut_cols$epsilon`.
+#' @param matnames The name of the matrix names column.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param domestic The string that indicates that the product is of domestic origin in the new origin column.
+#'                 Default is "Domestic".
+#' @param imported The string that indicates that the product is of imported origin in the new origin column.
+#'                 Default is "Imported".
+#' @param origin The name of the colupn that specifies the origin of each product.
+#' @param flow,country,method,energy_type,last_stage,year,product,unit,e_dot See `IEATools::iea_cols`.
+#' @param exports The name of the Exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param imports The name of the Imports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$imports`.
+#'
+#' @return A `.tidy_iea_df` that includes only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices,
+#'         and for which flows are specified in terms of flows or imported or domestic products.
+#' @export
+#'
+#' @examples
+#' .tidy_AB_df %>%
+#' IEATools::add_psut_matnames() %>%
+#' specify_imported_products() %>%
+#' print()
 specify_imported_products <- function(.tidy_iea_df,
-                                      V_matrix = "V",
-                                      Y_matrix = "Y",
-                                      U_feed_matrix = "U_feed",
-                                      U_EIOU_matrix = "U_EIOU",
-                                      Epsilon_matrix = "Epsilon",
-                                      matnames = "matnames",
+                                      V_matrix = IEATools::psut_cols$V,
+                                      Y_matrix = IEATools::psut_cols$Y,
+                                      U_feed_matrix = IEATools::psut_cols$U_feed,
+                                      U_EIOU_matrix = IEATools::psut_cols$U_eiou,
+                                      Epsilon_matrix = IEATools::psut_cols$epsilon,
+                                      matnames = IEATools::mat_meta_cols$matnames,
                                       domestic = "Domestic",
                                       imported = "Imported",
                                       origin = "Origin",
@@ -154,27 +195,37 @@ specify_imported_products <- function(.tidy_iea_df,
 
 
 
-
-# This function specifies the multiregional Y matrix using the GMA assumption
-#' Title
+#' Specifies Multi-Regional final demand (Y) and use (U) matrices with Global Market Assumption
 #'
-#' @param .tidy_iea_df
-#' @param flow
-#' @param product
-#' @param year
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param e_dot
-#' @param unit
-#' @param country
-#' @param aggregate_country_name
-#' @param provenience
+#' This function specifies flows belonging to the Y, U_feed, U_eiou, and Epsilon (only for those flows akin to final demand) matrices,
+#' according to the Global Market Assumption. See details for more explanations.
 #'
-#' @return
+#' First, each flow is separated into a flow of domestic product and imported product, using the `specify_imported_products()` function.
+#' Then, the `calc_share_exports_by_product()` function is used to calculate the share of global exports, for each product, by country.
+#' These shares is used to specify the importations of each country, for each product, hence the assumption of a global market.
+#'
+#' Only flows belonging to the Y, U_feed, U_eiou, and Epsilon matrices are returned.
+#' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional Y and U matrices needs to be created.
+#' @param flow,product,method,year,energy_type,last_stage,e_dot,unit,country See `IEATools::iea_cols`.
+#' @param aggregate_country_name The name of the new aggregate region for which the Multi-Regional tables are created.
+#'                               Default is "World".
+#' @param domestic The string that indicates that the product is of domestic origin in the new origin column.
+#'                 Default is "Domestic".
+#' @param imported The string that indicates that the product is of imported origin in the new origin column.
+#'                 Default is "Imported".
+#' @param provenience The name of a temporary column that provides the provenience of each imported flow, according to the Global Market Assumption.
+#'                    Default is "Provenience".
+#'
+#' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
 #' @export
 #'
 #' @examples
+#' .tidy_AB_df %>%
+#' IEATools::add_psut_matnames() %>%
+#' specify_MR_Y_U_gma() %>%
+#' print()
 specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                flow = IEATools::iea_cols$flow,
                                product = IEATools::iea_cols$product,
@@ -186,6 +237,8 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                unit = IEATools::iea_cols$unit,
                                country = IEATools::iea_cols$country,
                                aggregate_country_name = "World",
+                               domestic = "Domestic",
+                               imported = "Imported",
                                provenience = "Provenience"){
 
   # (1) Differentiating domestically produced and imported products in the Y and U matrices flows
@@ -194,7 +247,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (2) Specifying domestic consumption
   tidy_domestic_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Domestic") %>%
+    dplyr::filter(Origin == domestic) %>%
     dplyr::mutate(
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
@@ -205,7 +258,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (3) Specifying foreign consumption
   tidy_imported_consumption_MR_gma_with_nas <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Imported") %>%
+    dplyr::filter(Origin == imported) %>%
     dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::mutate(
