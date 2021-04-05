@@ -328,7 +328,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 #'
 #' @param .tidy_iea_df
 #'
-#' @return A `.tidy_iea_df`
+#' @return A `.tidy_iea_df` describin a Global Energy Conversion Chain, adopting a Global Market Perspective.
 #' @export
 #'
 #' @examples
@@ -537,16 +537,37 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
 
 
-# Transform to bta function
-#' Title
+#' Transforms to Bilateral Trade Assumption
+#'
+#' This function transforms a `.tidy_iea_df` that contains the representation of the Energy Conversion Chain for multiple
+#' countries into a new tidy_iea_df that represents a Global Energy Conversion Chain, adopting the Bilateral Trade Assumption,
+#' using a bilateral trade data the particular trade data passed as `bilateral_trade_matrix_df` argument.
+#'
+#' This function runs sequentially the following functions:
+#' * `specify_MR_R()`;
+#' * `specify_MR_V()`;
+#' * `specify_MR_Y_U_bta()`;
+#' and then binds all rows obtained using `dplyr::bind_rows()`.
+#'
+#' Note 1: When no bilateral trade data is provided, the function calculates and uses the bilateral trade data associated with
+#' the Global Market Assumption.
+#'
+#' Note 2:
+#'
+#' Note 3: running this function to transform to the Bilateral Trade Assumption only makes sense when the country coverage is
+#' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
+#' producing a very small fraction of global energy producition, are missing).
 #'
 #' @param .tidy_iea_df
 #' @param bilateral_trade_matrix_df
 #'
-#' @return
+#' @return A `.tidy_iea_df` describin a Global Energy Conversion Chain, adopting a Bilateral Trade Perspective.
 #' @export
 #'
 #' @examples
+#' tidy_AB_df %>%
+#' IEATools::add_psut_matnames() %>%
+#' transform_to_bta() # Here, as we pass an empty bilateral trade matrix, the result will be equivalent to the Global Market Assumption.
 transform_to_bta <- function(.tidy_iea_df,
                              bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df)){
 
