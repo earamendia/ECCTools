@@ -38,8 +38,21 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
 }
 
 
-# Function that calculates total imports by products, for each country, in each year.
-
+#' Calculates total imports by product, for each country, for each year.
+#'
+#' The function calculates total imports by product, for each country, for each year.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which total imports need to be calculated.
+#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param imports The name of the column containing the quantity (in energy terms) of imported products.
+#'
+#' @return A data frame returning the value of imported energy by product, for each country and year.
+#' @export
+#'
+#' @examples
+#' tidy_AB_data %>%
+#' calc_imports_by_product() %>%
+#' print()
 calc_imports_by_product <- function(.tidy_iea_df,
                                     flow = IEATools::iea_cols$flow,
                                     e_dot = IEATools::iea_cols$e_dot,
