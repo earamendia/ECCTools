@@ -146,7 +146,7 @@ specify_MR_V <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-#' .tidy_AB_df %>%
+#' tidy_AB_df %>%
 #' IEATools::add_psut_matnames() %>%
 #' specify_imported_products() %>%
 #' print()
@@ -222,7 +222,7 @@ specify_imported_products <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-#' .tidy_AB_df %>%
+#' tidy_AB_df %>%
 #' IEATools::add_psut_matnames() %>%
 #' specify_MR_Y_U_gma() %>%
 #' print()
@@ -310,15 +310,31 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
 
 
-# Transform to gma function
-#' Title
+
+#' Transforms to Global Market Assumption
+#'
+#' This function transforms a `.tidy_iea_df` that contains the representation of the Energy Conversion Chain for multiple
+#' countries into a new tidy_iea_df that represents a Global Energy Conversion Chain, adopting the Global Market Assumption.
+#'
+#' This function runs sequentially the following functions:
+#' * `specify_MR_R()`;
+#' * `specify_MR_V()`;
+#' * `specify_MR_Y_U_gma()`;
+#' and then binds all rows obtained using `dplyr::bind_rows()`.
+#'
+#' Note: running this function to transform to the Global Market Assumption only makes sense when the country coverage is
+#' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
+#' producing a very small fraction of global energy producition, are missing).
 #'
 #' @param .tidy_iea_df
 #'
-#' @return
+#' @return A `.tidy_iea_df`
 #' @export
 #'
 #' @examples
+#' tidy_AB_df %>%
+#' IEATools::add_psut_matnames() %>%
+#' transform_to_gma()
 transform_to_gma <- function(.tidy_iea_df){
 
   # (1) Create MR-R matrix data frame
@@ -344,6 +360,7 @@ transform_to_gma <- function(.tidy_iea_df){
 # (i) if the user doesn't load a trade matrix in the specify_MR_Y_U_bta() function, then the default trade matrix is the one built from the GMA assumption;
 # (ii) if the user loads an incomplete trade matrix in the specify_MR_Y_U_bta() function (likely as trade data is not available for all years!);
 # then the missing information is loaded from the GMA bilateral trade matrix.
+
 
 #' Title
 #'
