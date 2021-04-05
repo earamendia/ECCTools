@@ -355,28 +355,32 @@ transform_to_gma <- function(.tidy_iea_df){
 
 
 
-# This function calculates the bilateral trade matrix data frame using the GMA assumption.
-# Basically it has two purposes:
-# (i) if the user doesn't load a trade matrix in the specify_MR_Y_U_bta() function, then the default trade matrix is the one built from the GMA assumption;
-# (ii) if the user loads an incomplete trade matrix in the specify_MR_Y_U_bta() function (likely as trade data is not available for all years!);
-# then the missing information is loaded from the GMA bilateral trade matrix.
-
-
-#' Title
+#' Calculates bilateral trade data frame associated with Global Market Assumption
 #'
-#' @param .tidy_iea_df
-#' @param year
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param country
-#' @param provenience
-#' @param matnames
+#' The function calculates the bilateral trade data associated to a `.tidy_iea_df`, using the Global Market Assumption.
 #'
-#' @return
+#' A column specifying matrix name for each flows needs to be added before, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the associated bilateral trade data, using the Global Market Assumption, needs to be calculated.
+#' @param year,method,energy_type,last_stage See `IEATools::iea_cols`.
+#' @param country The name of the column in the output data frame that receives the flow,
+#'                i.e. the importing country for a given flow.
+#'                Default is `IEATools::iea_cols$country`.
+#' @param provenience The name of the column in the output data frame that originates the flow,
+#'                    i.e. the exporting country for a given flow.
+#'                    Default is "Provenience".
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#'
+#' @return A data frame that represents the bilateral trade data associated to the input `.tidy_iea_df`,
+#'         using the Global Market Assumption.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' calc_bilateral_trade_matrix_df_gma() %>%
+#' print()
 calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
                                                year = IEATools::iea_cols$year,
                                                method = IEATools::iea_cols$method,
