@@ -1,7 +1,11 @@
 
 #' Calculates total consumption by product, for each country and year
 #'
-#' The function calculates total consumption by product, for each country and year
+#' The function calculates total consumption by product, for each country and year.
+#'
+#' Flows included in the calculation of the total consumption by product are flows belonging to either the Y,
+#' U_feed, or U_eiou matrices. Flows belonging to the Y matrix but representing exports, are excluded.
+#' In addition, flows belonging to the Epsilon matrix and akin to a final demand (i.e. E.dot > 0) are also included, provided they do not represent exports.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` to which the function should be applied.
 #' @param flow,country,method,energy_type,last_stage,year,product,unit,e_dot See `IEATools::iea_cols`.
@@ -17,6 +21,7 @@
 #'                      Default is `IEATools::psut_cols$U_eiou`.
 #' @param Epsilon_matrix The name of the Epsilon matrix.
 #'                      Default is `IEATools::psut_cols$epsilon`.
+#' @param Total_Consumption_By_Product The name of the new column reporting total consumption by product.
 #'
 #' @return A data frame with total consumption by product, for each country and year.
 #' @export
@@ -41,7 +46,8 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
                                               Y_matrix = "Y",
                                               U_feed_matrix = "U_feed",
                                               U_EIOU_matrix = "U_EIOU",
-                                              Epsilon_matrix = "Epsilon"){
+                                              Epsilon_matrix = "Epsilon",
+                                              Total_Consumption_By_Product = "Total_Consumption_By_Product"){
 
   tidy_total_consumption_by_product <- .tidy_iea_df %>%
     dplyr::filter(
@@ -57,7 +63,7 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%
     dplyr::summarise(
-      Total_Consumption_From_Func = sum(.data[[e_dot]])
+      "{Total_Consumption_By_Product}" = sum(.data[[e_dot]])
     )
 
   return(tidy_total_consumption_by_product)
@@ -145,25 +151,28 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
 }
 
 
-# Function that calculates global production by product
-
-#' Title
+#' Calculates global production by product
 #'
-#' @param .tidy_iea_df
-#' @param country
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param flow
-#' @param e_dot
+#' This function calculates global production by product. Included flows are flows belonging to either the
+#' R or V matrices, excluding import flows.
+#'
+#' Note: the function needs to have a column indicating matrix names added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which global production needs to be calculated.
+#' @param country,ledger_side,flow_aggregation_point,flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames
 #' @param V_matrix
 #' @param R_matrix
 #' @param imports
 #'
-#' @return
+#' @return A data frame representing global production by product, for each year.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' calc_global_production_by_product() %>%
+#' print()
 calc_global_production_by_product <- function(.tidy_iea_df,
                                               country = IEATools::iea_cols$country,
                                               ledger_side = IEATools::iea_cols$ledger_side,
@@ -173,7 +182,8 @@ calc_global_production_by_product <- function(.tidy_iea_df,
                                               matnames = IEATools::mat_meta_cols$matnames,
                                               V_matrix = IEATools::psut_cols$V,
                                               R_matrix = IEATools::psut_cols$R,
-                                              imports = IEATools::interface_industries$imports){
+                                              imports = IEATools::interface_industries$imports,
+                                              Global_Production_By_Product = "Global_Production_By_Product"){
 
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
@@ -181,7 +191,7 @@ calc_global_production_by_product <- function(.tidy_iea_df,
     dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
-      Global_Production_From_Func = sum(.data[[e_dot]])
+      "{Global_Production_From_Func}" = sum(.data[[e_dot]])
     )
 }
 

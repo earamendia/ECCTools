@@ -412,6 +412,7 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 # This function specifies the multiregional Y matrix using the BTA assumption, using the specific trade matrix provided as input.
 # For values that are not available in the provided trade matrix, it fills in using the GMA assumption.
 
+
 #' Title
 #'
 #' @param .tidy_iea_df
