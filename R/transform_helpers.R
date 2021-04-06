@@ -63,7 +63,7 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%
     dplyr::summarise(
-      "{Total_Consumption_By_Product}" = sum(.data[[e_dot]])
+      "{Total_Consumption_By_Product}" := sum(.data[[e_dot]])
     )
 
   return(tidy_total_consumption_by_product)
@@ -105,16 +105,25 @@ calc_imports_by_product <- function(.tidy_iea_df,
 
 
 
-#' Calculates the shares of imports to final consumption by product, for each country and year.
+#' Calculates the shares of imports to total consumption by product, for each country and year.
 #'
-#' @param .tidy_iea_df
+#' The function calculates the shares of imports to total consumption by product, for each country and year.
+#'
+#' Total consumption is calculated using the `calc_total_consumption_by_product()` function.
+#'
+#' Note: the function needs to have a column indicating matrix names added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the shares of imports over final consumption, by produt, need to be calculated.
 #' @param flow,country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,year,product,unit,e_dot See `IEATools::iea_cols`.
-#' @param imports
-#' @param matnames
-#' @param Total_Consumption_By_Product
-#' @param Share_Imports_By_Product
+#' @param imports The name of the column containing the quantity (in energy terms) of imported products.
+#'                Default is `IEATools::interface_industries$imports`.
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param Total_Consumption_By_Product The name of the new column returning total consumption by product.
+#' @param Share_Imports_By_Product The name of the new column returning the share of imports over total consumption.
 #'
-#' @return
+#' @return A data frame returning the share of imports over final consumption, for each product.
 #' @export
 #'
 #' @examples
@@ -140,13 +149,15 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
                                            Share_Imports_By_Product = "Share_Imports_By_Product"){
 
   share_imports_by_product <- dplyr::left_join(
-    calc_total_consumption_by_product(.tidy_iea_df),
-    calc_imports_by_product(.tidy_iea_df),
+    calc_total_consumption_by_product(.tidy_iea_df,
+                                      Total_Consumption_By_Product = Total_Consumption_By_Product),
+    calc_imports_by_product(.tidy_iea_df,
+                            imports = imports),
     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
     dplyr::select(-.data[[ledger_side]], -.data[[matnames]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]]) %>%
     dplyr::mutate(
       "{imports}" := tidyr::replace_na(.data[[imports]], 0),
-      "{Share_Imports_By_Product}" = .data[[imports]] / .data[[Total_Consumption_By_Product]]
+      "{Share_Imports_By_Product}" := .data[[imports]] / .data[[Total_Consumption_By_Product]]
     )
 }
 
@@ -160,10 +171,15 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which global production needs to be calculated.
 #' @param country,ledger_side,flow_aggregation_point,flow,e_dot See `IEATools::iea_cols`.
-#' @param matnames
-#' @param V_matrix
-#' @param R_matrix
-#' @param imports
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param V_matrix The name of the V matrix.
+#'                 Default is `IEATools::psut_cols$V`.
+#' @param R_matrix The name of the R matrix.
+#'                 Default is `IEATools::psut_cols$R`.
+#' @param imports The name of imports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$imports`.
+#' @param Global_Production_By_Product The name of the new column returning global production by product.
 #'
 #' @return A data frame representing global production by product, for each year.
 #' @export
@@ -191,28 +207,37 @@ calc_global_production_by_product <- function(.tidy_iea_df,
     dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
-      "{Global_Production_From_Func}" = sum(.data[[e_dot]])
+      "{Global_Production_By_Product}" := sum(.data[[e_dot]])
     )
 }
 
-# Function that calculates the national production by product
 
-#' Title
+#' Calculates the national production by product
 #'
-#' @param .tidy_iea_df
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param flow
-#' @param e_dot
-#' @param matnames
-#' @param V_matrix
-#' @param R_matrix
-#' @param imports
+#' The function calculates the national production by product. Included flows are flows belonging to either the
+#' R or V matrices, excluding import flows.
 #'
-#' @return
+#' Note: the function needs to have a column indicating matrix names added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which national production by product needs to be calculated.
+#' @param ledger_side,flow_aggregation_point,flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param V_matrix The name of the V matrix.
+#'                 Default is `IEATools::psut_cols$V`.
+#' @param R_matrix The name of the R matrix.
+#'                 Default is `IEATools::psut_cols$R`.
+#' @param imports The name of imports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$imports`.
+#'
+#' @return A data frame that returns the national production by product.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' calc_national_production_by_product() %>%
+#' print()
 calc_national_production_by_product <- function(.tidy_iea_df,
                                                 ledger_side = IEATools::iea_cols$ledger_side,
                                                 flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
@@ -221,40 +246,48 @@ calc_national_production_by_product <- function(.tidy_iea_df,
                                                 matnames = IEATools::mat_meta_cols$matnames,
                                                 V_matrix = IEATools::psut_cols$V,
                                                 R_matrix = IEATools::psut_cols$R,
-                                                imports = IEATools::interface_industries$imports){
+                                                imports = IEATools::interface_industries$imports,
+                                                National_Production_By_Product = "National_Production_By_Product"){
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
     dplyr::ungroup() %>%
     dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
-      National_Production_From_Func = sum(.data[[e_dot]])
+      "{National_Production_By_Product}" := sum(.data[[e_dot]])
     )
 }
 
 
-# Function that calculates the share of global production by product
 
-#' Title
+#' Calculates for each product the share of global production by country
 #'
-#' @param .tidy_iea_df
-#' @param country
-#' @param year
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param flow
-#' @param product
-#' @param e_dot
-#' @param unit
-#' @param matnames
+#' This function calculates for each product the share of global production by country.
 #'
-#' @return
+#' The calculation is done using sequentially the functions:
+#' * `calc_global_production_by_product()`;
+#' * `calc_national_production_by_product()`;
+#' and then calculating shares.
+#'
+#' Note: the function needs to have a column indicating matrix names added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the shares of global production by country, for each product, need to be calculated.
+#' @param country,year,method,energy_type,last_stage,ledger_side,flow_aggregation_point,flow,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param National_Production_By_Product The name of a temporary column that contains the national production by product.
+#' @param Global_Production_By_Product The name of a temporary column that contains the global production by product.
+#' @param Share_Global_Production_By_Product The name of the column containing the share of global production.
+#' @param Producing_Country The name of the column containing the name of the producing country.
+#'
+#' @return A data frame representing the share of global production for each product, by country.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' calc_share_global_production_by_product() %>%
+#' print()
 calc_share_global_production_by_product <- function(.tidy_iea_df,
                                                     country = IEATools::iea_cols$country,
                                                     year = IEATools::iea_cols$year,
@@ -267,19 +300,25 @@ calc_share_global_production_by_product <- function(.tidy_iea_df,
                                                     product = IEATools::iea_cols$product,
                                                     e_dot = IEATools::iea_cols$e_dot,
                                                     unit = IEATools::iea_cols$unit,
-                                                    matnames = IEATools::mat_meta_cols$matnames
-){
+                                                    matnames = IEATools::mat_meta_cols$matnames,
+                                                    National_Production_By_Product = "National_Production_By_Product",
+                                                    Global_Production_By_Product = "Global_Production_By_Product",
+                                                    Share_Global_Production_By_Product = "Share_Global_Production_By_Product",
+                                                    Producing_Country = "Producing_Country"){
 
   share_global_production_by_product <- dplyr::left_join(
-    calc_global_production_by_product(.tidy_iea_df),
-    calc_national_production_by_product(.tidy_iea_df),
+    calc_global_production_by_product(.tidy_iea_df,
+                                      Global_Production_By_Product = Global_Production_By_Product),
+    calc_national_production_by_product(.tidy_iea_df,
+                                        National_Production_By_Product = National_Production_By_Product),
     by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})
   ) %>%
     dplyr::mutate(
-      Share_Global_Production_From_Func = .data[["National_Production_From_Func"]] / .data[["Global_Production_From_Func"]]
+      "{Share_Global_Production_By_Product}" := .data[[National_Production_By_Product]] / .data[[Global_Production_By_Product]]
     ) %>%
-    dplyr::select(-.data[["National_Production_From_Func"]], -.data[["Global_Production_From_Func"]]) %>%
-    dplyr::rename(Producing_Country_From_Func = .data[[country]])
+    dplyr::select(-.data[[National_Production_By_Product]], -.data[[Global_Production_By_Product]]) %>%
+    dplyr::rename(
+      "{Producing_Country}" := .data[[country]])
 
 }
 
