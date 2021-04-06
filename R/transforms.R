@@ -140,6 +140,10 @@ specify_MR_V <- function(.tidy_iea_df,
 #'                Default is `IEATools::interface_industries$exports`.
 #' @param imports The name of the Imports flows in the `.tidy_iea_df`.
 #'                Default is `IEATools::interface_industries$imports`.
+#' @param Share_Imports_By_Product The name of the temporary column that contains the share of imports for each product, by country.
+#'                                 Default is "Share_Imports_By_Product".
+#' @param Total_Consumption_By_Product The name of the temporary column that contains total consumption by product?
+#'                                     Default is "Total_Consumption_By_Product".
 #'
 #' @return A `.tidy_iea_df` that includes only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices,
 #'         and for which flows are specified in terms of flows or imported or domestic products.
@@ -170,7 +174,9 @@ specify_imported_products <- function(.tidy_iea_df,
                                       unit = IEATools::iea_cols$unit,
                                       e_dot = IEATools::iea_cols$e_dot,
                                       exports = IEATools::interface_industries$exports,
-                                      imports = IEATools::interface_industries$imports){
+                                      imports = IEATools::interface_industries$imports,
+                                      Share_Imports_By_Product = "Share_Imports_By_Product",
+                                      Total_Consumption_By_Product = "Total_Consumption_By_Product"){
 
   defined_imported_flows <- .tidy_iea_df %>%
     dplyr::filter(
@@ -178,20 +184,22 @@ specify_imported_products <- function(.tidy_iea_df,
           ((.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0) & (! stringr::str_detect(.data[[flow]], exports)))
     ) %>%
     dplyr::left_join(
-      calc_share_imports_by_products(.tidy_iea_df), by = c({country}, {year}, {product}, {method}, {energy_type}, {last_stage})
+      calc_share_imports_by_products(.tidy_iea_df,
+                                     Share_Imports_By_Product = "Share_Imports_By_Product",
+                                     Total_Consumption_By_Product = "Total_Consumption_By_Product"),
+      by = c({country}, {year}, {product}, {method}, {energy_type}, {last_stage})
     ) %>%
     dplyr::mutate(
-      "{domestic}" := .data[[e_dot]] * (1 - Share_Imports_From_Func),
-      "{imported}" := .data[[e_dot]] * Share_Imports_From_Func
+      "{domestic}" := .data[[e_dot]] * (1 - .data[[Share_Imports_By_Product]]),
+      "{imported}" := .data[[e_dot]] * .data[[Share_Imports_By_Product]]
     ) %>%
-    dplyr::select(-.data[[e_dot]], -.data[[imports]], -Total_Consumption_From_Func, -Share_Imports_From_Func) %>%
+    dplyr::select(-.data[[e_dot]], -.data[[imports]], -.data[[Total_Consumption_By_Product]], -.data[[Share_Imports_By_Product]]) %>%
     tidyr::pivot_longer(cols = c(.data[[domestic]], .data[[imported]]), names_to = origin, values_to = e_dot) %>%
     dplyr::relocate(.data[[origin]], .after = .data[[product]]) %>%
     dplyr::filter(.data[[e_dot]] != 0)
 
   return(defined_imported_flows)
 }
-
 
 
 
@@ -305,7 +313,6 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     dplyr::ungroup()
 
   return(tidy_consumption_MR_gma)
-
 }
 
 

@@ -380,7 +380,7 @@ test_that("calc_share_imports_by_product works", {
 
   # Check all shares <= 1
   expect_equal(share_imports_by_product %>%
-                 dplyr::filter(Share_Imports_From_Func > 1) %>%
+                 dplyr::filter(Share_Imports_By_Product > 1) %>%
                  dplyr::select(Country) %>%
                  dplyr::pull() %>%
                  length(),
@@ -392,7 +392,7 @@ test_that("calc_share_imports_by_product works", {
                    Country == "A",
                    Product == "Coke oven coke"
                  ) %>%
-                 dplyr::select(Share_Imports_From_Func) %>%
+                 dplyr::select(Share_Imports_By_Product) %>%
                  dplyr::pull(),
                0.6)
 
@@ -402,7 +402,7 @@ test_that("calc_share_imports_by_product works", {
                    Country == "A",
                    Product == "Heat"
                  ) %>%
-                 dplyr::select(Share_Imports_From_Func) %>%
+                 dplyr::select(Share_Imports_By_Product) %>%
                  dplyr::pull(),
                0)
 
@@ -411,7 +411,7 @@ test_that("calc_share_imports_by_product works", {
                    Country == "B",
                    Product == "Natural gas"
                  ) %>%
-                 dplyr::select(Share_Imports_From_Func) %>%
+                 dplyr::select(Share_Imports_By_Product) %>%
                  dplyr::pull(),
                1)
 })
