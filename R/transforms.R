@@ -686,7 +686,52 @@ find_list_dta_observations <- function(.tidy_iea_df,
 
 
 
-
+#' Transforms to Domestic Technology Assumption
+#'
+#' The function transforms the `.tidy_iea_df` into a data frame that describes the same Energy Conversion Chain from a Domestic Technology Assumption perspective,
+#' for those assumptions that comply with the required criterion for formulating the Domestic Technology Assumption. See details.
+#'
+#' Strictly speaking, the Domestic Technology Assumption can only be formulated when at least one unit of each consumed product (be it in the U_feed, U_eiou, or Y matrices)
+#' is produced domestically - i.e., appears at least once in the V matrix in a non-importing flow. The default run of the function is set up to return only those observations
+#' that fulfil such a requirement.
+#'
+#' However, one may want to be more flexible about the formulation of the Domestic Technology Assumption. Indeed, nothing prevents from formulating the Domestic
+#' Technology Assumption in cases that do not fulfil the aforementioned conditions, but in that case, any demand for a given product that is not produced anywhere
+#' (be it direct or indirect demand) in the domestic economy will not be translated into any upstream demand, which is an important caveat.
+#'
+#' The `products_to_look_for` and `requirement_matrices_list` offer additional flexibility, so that only products passed as argument to the `products_to_look_for` argument
+#' and matrices passed as arguments to the `requirement_matrices_list` will act as constraining elements. Indeed, the new condition for formulation of the Domestic Technology
+#' Assumption becomes that all products passed as `products_to_look_for` argument and used one of the `requirement_matrices_list`, must be produced at least once in the domestic
+#' conversion chain (i.e. must appear in V in a non-importing flow).
+#'
+#' In addition, the `select_dta_observations` boolean enable to turn on and off the selection of observations that comply with the Domestic Technology Assumption requirements.
+#' When the argument is FALSE (note that default is TRUE!), then no filter is applied to observations, and the Domestic Technology Assumption is applied to all observations.
+#'
+#' A column specifying matrix name for each flows needs to be added before, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` that needs to be transformed to a data frame representing a Domestic Technology Assumption conversion chain.
+#' @param products_to_look_for The list of products that need to be looked for as consumed products.
+#'                             Default is `IEATools::products`.
+#' @param requirement_matrices_list The list of matrices where the `products_to_look_for` are looked for.
+#'                                  Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed)`.
+#' @param select_dta_observations A boolean that states whether observations that do not comply with the Domestic Technology Assumption criterion should be filtered out or not.
+#'                                Default is TRUE.
+#' @param country,method,energy_type,last_stage,year,flow,ledger_side,e_dot See `IEATools::iea_cols`.
+#' @param imports The name of imports flows in the `.tidy_iea_df`.
+#'                Defaut is `IEATools::interface_industries$imports`.
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param epsilon The name of the Epsilon matrix.
+#'                Default is `IEATools::psut_cols$epsilon`.
+#'
+#' @return A `.tidy_iea_df` that describes the Energy Conversion Chain from a Domestic Technology Assumption perspective.
+#' @export
+#'
+#' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' transform_to_dta() %>%
+#' print()
 transform_to_dta <- function(.tidy_iea_df,
                              products_to_look_for = IEATools::products,
                              requirement_matrices_list = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed),
@@ -741,5 +786,3 @@ transform_to_dta <- function(.tidy_iea_df,
     return(tidy_iea_dta_df)
   }
 }
-
-
