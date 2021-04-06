@@ -422,30 +422,8 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 }
 
 
-# This function specifies the multiregional Y matrix using the BTA assumption, using the specific trade matrix provided as input.
-# For values that are not available in the provided trade matrix, it fills in using the GMA assumption.
 
 
-#' Title
-#'
-#' @param .tidy_iea_df
-#' @param bilateral_trade_matrix_df
-#' @param flow
-#' @param product
-#' @param year
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param e_dot
-#' @param country
-#' @param unit
-#' @param aggregate_country_name
-#' @param provenience
-#'
-#' @return
-#' @export
-#'
-#' @examples
 specify_MR_Y_U_bta <- function(.tidy_iea_df,
                                bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
                                flow = IEATools::iea_cols$flow,
@@ -575,7 +553,8 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 #' Note 1: When no bilateral trade data is provided, the function calculates and uses the bilateral trade data associated with
 #' the Global Market Assumption.
 #'
-#' Note 2:
+#' Note 2: When bilateral trade data is provided only for an observation (Country, Product), then bilateral trade data obtained from the Global Market Assumption
+#' is used to fill the gap, for that particular (Country, Product) observation.
 #'
 #' Note 3: running this function to transform to the Bilateral Trade Assumption only makes sense when the country coverage is
 #' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
@@ -614,26 +593,53 @@ transform_to_bta <- function(.tidy_iea_df,
 
 #' Find list of observations for which Domestic Technology Assumption is applicable
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which the list of observations is needed
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param flow
-#' @param product
-#' @param imports
-#' @param matnames
-#' @param y_matrix
-#' @param u_eiou_matrix
-#' @param u_feed_matrix
-#' @param v_matrix
-#' @param r_matrix
+#' This function returns a list of observations for which the Domestic Technology Assumption is applicable,
+#' in the format Country_Method_Energy.type_Last.stage_Year. See details for the process.
 #'
-#' @return
+#' Strictly speaking, the Domestic Technology Assumption can only be formulated when at least one unit of each consumed product (be it in the U_feed, U_eiou, or Y matrices)
+#' is produced domestically - i.e., appears at least once in the V matrix in a non-importing flow. The default run of the function is set up to return only those observations
+#' that fulfil such a requirement.
+#'
+#' However, one may want to be more flexible about the formulation of the Domestic Technology Assumption. Indeed, nothing prevents from formulating the Domestic
+#' Technology Assumption in cases that do not fulfil the aforementioned conditions, but in that case, any demand for a given product that is not produced anywhere
+#' (be it direct or indirect demand) in the domestic economy will not be translated into any upstream demand, which is an important caveat.
+#'
+#' The `products_to_look_for` and `requirement_matrices_list` offer additional flexibility, so that only products passed as argument to the `products_to_look_for` argument
+#' and matrices passed as arguments to the `requirement_matrices_list` will act as constraining elements. Indeed, the new condition for formulation of the Domestic Technology
+#' Assumption becomes that all products passed as `products_to_look_for` argument and used one of the `requirement_matrices_list`, must be produced at least once in the domestic
+#' conversion chain (i.e. must appear in V in a non-importing flow).
+#'
+#' A column specifying matrix name for each flows needs to be added before, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the list of observations is needed.
+#' @param products_to_look_for The list of products that need to be looked for as consumed products.
+#'                             Default is `IEATools::products`.
+#' @param requirement_matrices_list The list of matrices where the `products_to_look_for` are looked for.
+#'                                  Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed)`.
+#' @param country,method,energy_type,last_stage,year,product,flow See `IEATools::iea_cols`.
+#' @param imports The name of imports flows in the `.tidy_iea_df`.
+#'                Defaut is `IEATools::interface_industries$imports`.
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param y_matrix The name of the Y matrix.
+#'                 Default is `IEATools::psut_cols$Y`.
+#' @param u_eiou_matrix The name of the U_EIOU matrix.
+#'                 Default is `IEATools::psut_cols$U_EIOU`.
+#' @param u_feed_matrix The name of the U_feed matrix.
+#'                 Default is `IEATools::psut_cols$U_feed`.
+#' @param v_matrix The name of the V matrix.
+#'                 Default is `IEATools::psut_cols$V`.
+#' @param r_matrix The name of the R matrix.
+#'                 Default is `IEATools::psut_cols$R`.
+#'
+#' @return A list of observations for which the Domestic Technology Assumption is applicable.
+#' Each observation is defined as Country_Method_Energy.type_Last.stage_Year.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' find_list_dta_observations()
 find_list_dta_observations <- function(.tidy_iea_df,
                                        products_to_look_for = IEATools::products,
                                        requirement_matrices_list = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed),
@@ -645,12 +651,12 @@ find_list_dta_observations <- function(.tidy_iea_df,
                                        flow = IEATools::iea_cols$flow,
                                        product = IEATools::iea_cols$product,
                                        imports = IEATools::interface_industries$imports,
-                                       matnames = "matnames",
-                                       y_matrix = "Y",
-                                       u_eiou_matrix = "U_EIOU",
-                                       u_feed_matrix = "U_feed",
-                                       v_matrix = "V",
-                                       r_matrix = "R"){
+                                       matnames = IEATools::mat_meta_cols$matnames,
+                                       y_matrix = IEATools::psut_cols$Y,
+                                       u_eiou_matrix = IEATools::psut_cols$U_eiou,
+                                       u_feed_matrix = IEATools::psut_cols$U_feed,
+                                       v_matrix = IEATools::psut_cols$V,
+                                       r_matrix = IEATools::psut_cols$R){
 
   list_supplied_products_per_observation <- .tidy_iea_df %>%
     dplyr::filter((.data[[matnames]] == v_matrix | .data[[matnames]] == r_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
@@ -680,27 +686,7 @@ find_list_dta_observations <- function(.tidy_iea_df,
 
 
 
-# Transform to dta function
 
-#' Title
-#'
-#' @param .tidy_iea_df
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param flow
-#' @param ledger_side
-#' @param e_dot
-#' @param imports
-#' @param matnames
-#' @param epsilon
-#'
-#' @return
-#' @export
-#'
-#' @examples
 transform_to_dta <- function(.tidy_iea_df,
                              products_to_look_for = IEATools::products,
                              requirement_matrices_list = c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed),
