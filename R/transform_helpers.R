@@ -324,26 +324,24 @@ calc_share_global_production_by_product <- function(.tidy_iea_df,
 
 
 
-# This function computes global exports by product
 
-#' Title
+#' Calculates global exports by product
 #'
-#' @param .tidy_iea_df
-#' @param flow
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param product
-#' @param e_dot
-#' @param exports
+#' The function calculates global exports by product.
 #'
-#' @return
+#' @param .tidy_iea_df The `.tidy_iea_df` for which global exports by product need to be calculated.
+#' @param flow,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,product,e_dot See `IEATools::iea_cols`.
+#' @param exports The name of exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param Global_Exports_By_Product The name of the column containing global exports by product.
+#'
+#' @return A data frame reporting global exports by product.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' calc_global_exports() %>%
+#' print()
 calc_global_exports <- function(.tidy_iea_df,
                                 flow = IEATools::iea_cols$flow,
                                 method = IEATools::iea_cols$method,
@@ -354,7 +352,8 @@ calc_global_exports <- function(.tidy_iea_df,
                                 flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                 product = IEATools::iea_cols$product,
                                 e_dot = IEATools::iea_cols$e_dot,
-                                exports = IEATools::interface_industries$exports){
+                                exports = IEATools::interface_industries$exports,
+                                Global_Exports_By_Product = "Global_Exports_By_Product"){
 
 
   tidy_global_exports_by_product <- .tidy_iea_df %>%
@@ -365,37 +364,40 @@ calc_global_exports <- function(.tidy_iea_df,
     dplyr::group_by(.data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[ledger_side]], .data[[flow_aggregation_point]],
                     .data[[product]]) %>%
     dplyr::summarise(
-      Total_Exports_From_Func = sum(.data[[e_dot]])
+      "{Global_Exports_By_Product}" := sum(.data[[e_dot]])
     )
 
   return(tidy_global_exports_by_product)
 }
 
 
-# This function computes the shares of exports for each country, for each product
 
-#' Title
+#' Calculates the share of exports for each product, by country
 #'
-#' @param .tidy_iea_df
-#' @param flow
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param product
-#' @param e_dot
-#' @param unit
-#' @param exports
-#' @param matnames
-#' @param provenience
+#' This function calculates the share of exports for each product, by country.
 #'
-#' @return
+#' The function calls first the `calc_global_exports()` function.
+#'
+#' Note: the function needs to have a column indicating matrix names added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the shares of exports for each product need to be calculated.
+#' @param flow,country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,product,e_dot,unit See `IEATools::iea_cols`.
+#' @param exports The name of exports flows in the `.tidy_iea_df`.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param matnames The column name for matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param provenience The name of the column reporting the country of provenience, i.e. the exporting country.
+#' @param Global_Exports_By_Product The name of a temporary column that contains global exports by product.
+#' @param Share_Exports_By_Product The name of the column that contains the share of exports for each product, by country.
+#'
+#' @return A data frame that reports the share of exports for each product, by country.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' calc_share_exports_by_product() %>%
+#' print()
 calc_share_exports_by_product <- function(.tidy_iea_df,
                                           flow = IEATools::iea_cols$flow,
                                           country = IEATools::iea_cols$country,
@@ -410,20 +412,23 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
                                           unit = IEATools::iea_cols$unit,
                                           exports = IEATools::interface_industries$exports,
                                           matnames = "matnames",
-                                          provenience = "Provenience"){
+                                          provenience = "Provenience",
+                                          Total_Exports_By_Product = "Global_Exports_By_Product",
+                                          Share_Exports_By_Product = "Share_Exports_By_Product"){
 
   tidy_share_exports_by_product <- .tidy_iea_df %>%
     dplyr::filter(stringr::str_detect(.data[[flow]], exports)) %>%
     dplyr::mutate(
       "{e_dot}" := abs(.data[[e_dot]])
     ) %>%
-    dplyr::left_join(calc_global_exports(.tidy_iea_df), by = c({method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {product})) %>%
+    dplyr::left_join(calc_global_exports(.tidy_iea_df,
+                                         Total_Exports_By_Product = Total_Exports_By_Product), by = c({method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {product})) %>%
     dplyr::mutate(
-      Share_Exports_From_Func = .data[[e_dot]] / Total_Exports_From_Func
+      "{Share_Exports_By_Product}" := .data[[e_dot]] / .data[[Global_Exports_By_Product]]
     ) %>%
     dplyr::rename("{provenience}" := .data[[country]]) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]], -.data[[e_dot]], -.data[[matnames]], -.data[["Total_Exports_From_Func"]])
+    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]], -.data[[e_dot]], -.data[[matnames]], -.data[[Global_Exports_By_Product]])
 
   return(tidy_share_exports_by_product)
 }
