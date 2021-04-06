@@ -1196,7 +1196,7 @@ test_that("transform_to_gma works", {
 
 # Testing Bilateral Trade Assumption functions
 
-test_that("calc_bilateral_trade_matrix_df_gma works", {
+test_that("calc_bilateral_trade_df_gma works", {
 
   A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
 
@@ -1204,14 +1204,14 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all()
 
-  bilateral_trade_matrix_df_gma <- AB_data %>%
+  bilateral_trade_df_gma <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    calc_bilateral_trade_matrix_df_gma()
+    calc_bilateral_trade_df_gma()
 
   # Check length
-  expect_equal(dim(bilateral_trade_matrix_df_gma), c(8, 8))
+  expect_equal(dim(bilateral_trade_df_gma), c(8, 8))
 
-  expect_equal(bilateral_trade_matrix_df_gma %>%
+  expect_equal(bilateral_trade_df_gma %>%
                  dplyr::filter(
                    Country == "A",
                    Product == "Coke oven coke") %>%
@@ -1219,7 +1219,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::pull(),
                1)
 
-  expect_equal(bilateral_trade_matrix_df_gma %>%
+  expect_equal(bilateral_trade_df_gma %>%
                  dplyr::filter(
                    Country == "A",
                    Product == "Natural gas") %>%
@@ -1227,7 +1227,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::pull(),
                0)
 
-  expect_equal(bilateral_trade_matrix_df_gma %>%
+  expect_equal(bilateral_trade_df_gma %>%
                  dplyr::filter(
                    Country == "B",
                    Product == "Natural gas") %>%
@@ -1235,7 +1235,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::pull(),
                1)
 
-  expect_equal(bilateral_trade_matrix_df_gma %>%
+  expect_equal(bilateral_trade_df_gma %>%
                  dplyr::filter(
                    Country == "B",
                    Product == "Coke oven coke") %>%
@@ -1273,12 +1273,12 @@ test_that("specify_MR_Y_U_bta works", {
 
   dummy_AB_trade_matrix <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    calc_bilateral_trade_matrix_df_gma() %>%
+    calc_bilateral_trade_df_gma() %>%
     dplyr::filter(Provenience != "B")
 
   MR_Y_U_bta <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    specify_MR_Y_U_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
+    specify_MR_Y_U_bta(bilateral_trade_df = dummy_AB_trade_matrix)
 
   # These should still be equal
   expect_equal(MR_Y_U_bta %>%
@@ -1290,7 +1290,7 @@ test_that("specify_MR_Y_U_bta works", {
   # Now, say we modify the bilateral trade matrix, so that everything comes from country A!
   second_dummy_AB_trade_matrix <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    calc_bilateral_trade_matrix_df_gma() %>%
+    calc_bilateral_trade_df_gma() %>%
     dplyr::filter(Provenience != "B") %>%
     tibble::add_row(
       Provenience = "A",
@@ -1305,7 +1305,7 @@ test_that("specify_MR_Y_U_bta works", {
 
   MR_Y_U_bta <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    specify_MR_Y_U_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
+    specify_MR_Y_U_bta(bilateral_trade_df = second_dummy_AB_trade_matrix)
 
   # Checking data frames are NOT the same
   expect_true(! nrow(MR_Y_U_bta) == nrow(MR_Y_U_gma))
@@ -1377,12 +1377,12 @@ test_that("transform_to_bta works", {
   # Then, try with one missing flow.
   dummy_AB_trade_matrix <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    calc_bilateral_trade_matrix_df_gma() %>%
+    calc_bilateral_trade_df_gma() %>%
     dplyr::filter(Provenience != "B")
 
   MR_PSUT_bta <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    transform_to_bta(bilateral_trade_matrix_df = dummy_AB_trade_matrix)
+    transform_to_bta(bilateral_trade_df = dummy_AB_trade_matrix)
 
   # Nice one!
   expect_equal(MR_PSUT_bta %>%
@@ -1393,7 +1393,7 @@ test_that("transform_to_bta works", {
   # Then, try with a "fake" flow
   second_dummy_AB_trade_matrix <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    calc_bilateral_trade_matrix_df_gma() %>%
+    calc_bilateral_trade_df_gma() %>%
     dplyr::filter(Provenience != "B") %>%
     tibble::add_row(
       Provenience = "A",
@@ -1408,7 +1408,7 @@ test_that("transform_to_bta works", {
 
   MR_PSUT_bta <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    transform_to_bta(bilateral_trade_matrix_df = second_dummy_AB_trade_matrix)
+    transform_to_bta(bilateral_trade_df = second_dummy_AB_trade_matrix)
 
 
   # Checking data frames are NOT the same

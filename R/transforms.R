@@ -391,9 +391,9 @@ transform_to_gma <- function(.tidy_iea_df){
 #' @examples
 #' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
-#' calc_bilateral_trade_matrix_df_gma() %>%
+#' calc_bilateral_trade_df_gma() %>%
 #' print()
-calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
+calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
                                                year = IEATools::iea_cols$year,
                                                method = IEATools::iea_cols$method,
                                                energy_type = IEATools::iea_cols$energy_type,
@@ -403,7 +403,7 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
                                                matnames = "matnames",
                                                Share_Exports_By_Product = "Share_Exports_By_Product"){
 
-  bilateral_trade_matrix_df_gma <- calc_share_exports_by_product(.tidy_iea_df,
+  bilateral_trade_df_gma <- calc_share_exports_by_product(.tidy_iea_df,
                                                                  Share_Exports_By_Product = Share_Exports_By_Product) %>%
     tidyr::expand_grid(
       "{country}" := .tidy_iea_df %>%
@@ -418,7 +418,7 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
     ) %>%
     dplyr::relocate(.data[[country]], .after = .data[[provenience]])
 
-  return(bilateral_trade_matrix_df_gma)
+  return(bilateral_trade_df_gma)
 
 }
 
@@ -430,14 +430,14 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 #' according to the Bilateral Trade Assumption. See details for more explanations.
 #'
 #' First, each flow is separated into a flow of domestic product and imported product, using the `specify_imported_products()` function.
-#' Then, the bilateral trade data passed as `bilateral_trade_matrix_df` argument, is used to specify the flows that are imported.
+#' Then, the bilateral trade data passed as `bilateral_trade_df` argument, is used to specify the flows that are imported.
 #'
 #' Only flows belonging to the Y, U_feed, U_eiou, and Epsilon matrices are returned.
 #' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional Y and U matrices needs to be created.
-#' @param bilateral_trade_matrix_df The bilateral trade data to be used to specify Y and U matrices flows.
-#'                                  Default is bilateral trade data corresponding to the Global Market Assumption, calculated as `calc_bilateral_trade_matrix_df_gma(.tidy_iea_df)`.
+#' @param bilateral_trade_df The bilateral trade data to be used to specify Y and U matrices flows.
+#'                                  Default is bilateral trade data corresponding to the Global Market Assumption, calculated as `calc_bilateral_trade_df_gma(.tidy_iea_df)`.
 #' @param flow,product,year,method,energy_type,last_stage,e_dot,country,unit See `IEATools::iea_cols`.
 #' @param aggregate_country_name The name of the new region that gathers all flows of the `.tidy_iea_df`.
 #'                               Default is "World".
@@ -465,7 +465,7 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 #' specify_MR_Y_U_bta() %>%
 #' print()
 specify_MR_Y_U_bta <- function(.tidy_iea_df,
-                               bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
+                               bilateral_trade_df = calc_bilateral_trade_df_gma(.tidy_iea_df),
                                flow = IEATools::iea_cols$flow,
                                product = IEATools::iea_cols$product,
                                year = IEATools::iea_cols$year,
@@ -503,7 +503,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
   # (3.i) Specifying foreign consumption with the provided trade matrix
   tidy_imported_consumption_with_bt_matrix <- tidy_iea_df_specified_imports %>%
     dplyr::filter(.data[[origin]] == "Imported") %>%
-    dplyr::left_join(bilateral_trade_matrix_df,
+    dplyr::left_join(bilateral_trade_df,
                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::filter(! is.na(.data[[Share_Exports_By_Product]])) %>%
     dplyr::mutate(
@@ -517,12 +517,12 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
   # (3.ii) Specifying the rest with the global market assumption GMA
   tidy_imported_consumption_with_gma_bt_matrix_with_nas <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
-    dplyr::left_join(bilateral_trade_matrix_df,
+    dplyr::left_join(bilateral_trade_df,
                      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::filter(is.na(.data[[Share_Exports_By_Product]])) %>%
     dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]]) %>%
     dplyr::left_join(
-      calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
+      calc_bilateral_trade_df_gma(.tidy_iea_df),
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})
     ) %>%
     dplyr::mutate(
@@ -584,7 +584,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 #'
 #' This function transforms a `.tidy_iea_df` that contains the representation of the Energy Conversion Chain for multiple
 #' countries into a new tidy_iea_df that represents a Global Energy Conversion Chain, adopting the Bilateral Trade Assumption,
-#' using a bilateral trade data the particular trade data passed as `bilateral_trade_matrix_df` argument.
+#' using a bilateral trade data the particular trade data passed as `bilateral_trade_df` argument.
 #'
 #' This function runs sequentially the following functions:
 #' * `specify_MR_R()`;
@@ -602,8 +602,8 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 #' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
 #' producing a very small fraction of global energy producition, are missing).
 #'
-#' @param .tidy_iea_df
-#' @param bilateral_trade_matrix_df
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the Bilateral Trade Assumption flows need to be calculated according to a given `bilateral_trade_df`.
+#' @param bilateral_trade_df The bilateral trade data frame that will be used.
 #'
 #' @return A `.tidy_iea_df` describin a Global Energy Conversion Chain, adopting a Bilateral Trade Perspective.
 #' @export
@@ -613,7 +613,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 #' IEATools::add_psut_matnames() %>%
 #' transform_to_bta() # Here, as we pass an empty bilateral trade matrix, the result will be equivalent to the Global Market Assumption.
 transform_to_bta <- function(.tidy_iea_df,
-                             bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df)){
+                             bilateral_trade_df = calc_bilateral_trade_df_gma(.tidy_iea_df)){
 
   # (1) Create MR-R matrix data frame
   MR_R_bta <- specify_MR_R(.tidy_iea_df)
@@ -622,7 +622,7 @@ transform_to_bta <- function(.tidy_iea_df,
   MR_V_bta <- specify_MR_V(.tidy_iea_df)
 
   # (3) Creating MR-Y and MR-U matrix data frames, with GMA assumption
-  MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df, bilateral_trade_matrix_df = bilateral_trade_matrix_df)
+  MR_Y_U_bta <- specify_MR_Y_U_bta(.tidy_iea_df, bilateral_trade_df = bilateral_trade_df)
 
   # Binding all rows and returning full data frame
   tidy_iea_MR_bta_df <- dplyr::bind_rows(MR_R_bta, MR_V_bta, MR_Y_U_bta) %>%
