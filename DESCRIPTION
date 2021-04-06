@@ -27,6 +27,8 @@ Imports:
     Recca,
     matsbyname,
     matsindf,
-    stringr
+    stringr,
+    rlang,
+    tibble
 Depends: 
     R (>= 2.10)

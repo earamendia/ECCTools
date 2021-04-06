@@ -64,7 +64,7 @@ specify_MR_R <- function(.tidy_iea_df,
 #' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional R matrix needs to be created.
 #' @param V_matrix The name of the V matrix.
 #'                 Default is `IEATools::psut_cols$V`.
-#' @param Epsilon The name of the Epsilon matrix.
+#' @param Epsilon_matrix The name of the Epsilon matrix.
 #'                Default is `IEATools::psut_cols$epsilon`.
 #' @param matnames The name of the matrix names column.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
@@ -150,7 +150,7 @@ specify_MR_V <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-#' tidy_AB_df %>%
+#' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
 #' specify_imported_products() %>%
 #' print()
@@ -225,12 +225,20 @@ specify_imported_products <- function(.tidy_iea_df,
 #'                 Default is "Imported".
 #' @param provenience The name of a temporary column that provides the provenience of each imported flow, according to the Global Market Assumption.
 #'                    Default is "Provenience".
+#' @param origin The name of the temporary column specifying whether a given flow is of domestic or imported origin.
+#'               Default is "Origin.
+#' @param Share_Exports_By_Product The name of the temporary column containing the share of exports for each product, by country.
+#'                                 Default is "Share_Exports_By_Product".
+#' @param Share_Global_Production_By_Product The name of the temporary column containing the share of global production for each product, by country.
+#'                                           Default is "Share_Global_Production_By_Product".
+#' @param Producing_Country The name of the temporary column containing the country of origin of a given flow, i.e. the exporting country.
+#'                          Default is "Producing_Country".
 #'
 #' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
 #' @export
 #'
 #' @examples
-#' tidy_AB_df %>%
+#' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
 #' specify_MR_Y_U_gma() %>%
 #' print()
@@ -249,7 +257,6 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                domestic = "Domestic",
                                imported = "Imported",
                                provenience = "Provenience",
-                               origin = "Origin",
                                Share_Exports_By_Product = "Share_Exports_By_Product",
                                Share_Global_Production_By_Product = "Share_Global_Production_By_Product",
                                Producing_Country = "Producing_Country"){
@@ -271,7 +278,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (3) Specifying foreign consumption
   tidy_imported_consumption_MR_gma_with_nas <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == imported) %>%
+    dplyr::filter(.data[[origin]] == imported) %>%
     dplyr::left_join(calc_share_exports_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::mutate(
@@ -283,7 +290,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[["Origin"]])
+    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[[origin]])
 
   # (4) When a given product is imported by a given country, but no country exports such product, then calculate the global production mix.
   tidy_imported_consumption_MR_gma_whout_nas <- tidy_imported_consumption_MR_gma_with_nas %>%
@@ -338,13 +345,14 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 #' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
 #' producing a very small fraction of global energy producition, are missing).
 #'
-#' @param .tidy_iea_df
+#' @param .tidy_iea_df The `.tidy_iea_df` that needs to be converted into a data frame describing a Global Energy Conversion Chain,
+#' adopting the Global Market Assumption.
 #'
 #' @return A `.tidy_iea_df` describin a Global Energy Conversion Chain, adopting a Global Market Perspective.
 #' @export
 #'
 #' @examples
-#' tidy_AB_df %>%
+#' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
 #' transform_to_gma()
 transform_to_gma <- function(.tidy_iea_df){
@@ -383,6 +391,8 @@ transform_to_gma <- function(.tidy_iea_df){
 #'                    Default is "Provenience".
 #' @param matnames The column name for matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param Share_Exports_By_Product The name of the column containing the share of exports by country, for each product.
+#'                                 Default is "Share_Exports_By_Product".
 #'
 #' @return A data frame that represents the bilateral trade data associated to the input `.tidy_iea_df`,
 #'         using the Global Market Assumption.
@@ -456,6 +466,7 @@ calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
 #' @param Share_Global_Production_By_Product The name if a temporary column that contains the share of global product by country, for each product.
 #'                                           Default is "Share_Global_Production_By_Product".
 #'
+#'
 #' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
 #' @export
 #'
@@ -516,7 +527,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
   # (3.ii) Specifying the rest with the global market assumption GMA
   tidy_imported_consumption_with_gma_bt_matrix_with_nas <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Imported") %>%
+    dplyr::filter(.data[[origin]] == "Imported") %>%
     dplyr::left_join(bilateral_trade_df,
                      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::filter(is.na(.data[[Share_Exports_By_Product]])) %>%
@@ -609,9 +620,10 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
-#' tidy_AB_df %>%
+#' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
-#' transform_to_bta() # Here, as we pass an empty bilateral trade matrix, the result will be equivalent to the Global Market Assumption.
+#' transform_to_bta() # Here, as we pass an empty bilateral trade matrix,
+#' # the result will be equivalent to the Global Market Assumption.
 transform_to_bta <- function(.tidy_iea_df,
                              bilateral_trade_df = calc_bilateral_trade_df_gma(.tidy_iea_df)){
 

@@ -229,6 +229,8 @@ calc_global_production_by_product <- function(.tidy_iea_df,
 #'                 Default is `IEATools::psut_cols$R`.
 #' @param imports The name of imports flows in the `.tidy_iea_df`.
 #'                Default is `IEATools::interface_industries$imports`.
+#' @param National_Production_By_Product The name of the column containing national production for each product, by country.
+#'                                       Default is "National_Production_By_Product".
 #'
 #' @return A data frame that returns the national production by product.
 #' @export

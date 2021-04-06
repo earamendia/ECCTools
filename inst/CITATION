@@ -1,16 +1,15 @@
 citHeader("To cite ECCTools in publications use:")
 
 citEntry(
-  entry    = "Article",
-  title    = ,
-  author   = ,
-  journal  = ,
-  year     = ,
-  volume   = ,
-  number   = ,
-  pages    = ,
-  url      = ,
-  textVersion = paste(
-
-  )
+  entry    = "Manual",
+  title    = "ECCTools: Tools for modifying the Energy Conversion Chain",
+  author       = personList(as.person("Matthew Kuperus Heun"),
+                            as.person("Emmanuel Aramendia"),
+                            as.person("Zeke Marshall")),
+  year     = "2021",
+  url      = "https://github.com/earamendia/ECCTools",
+  textVersion =   paste(
+  "Emmanuel Aramendia (2021).",
+        "ECCTools: Tools for modifying the Energy Conversion Chain",
+        "R package version 0.0.1.")
 )

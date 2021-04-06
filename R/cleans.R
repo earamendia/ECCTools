@@ -22,18 +22,20 @@
 #'                     Default is "Net_Imports".
 #'
 #' @return A `.tidy_iea_df` for which trade flows are converte to net trade.
+#' @importFrom rlang :=
+#' @importFrom rlang .data
 #' @export
 #'
 #' @examples
 #' # In this example, we gather all flows for countries A and B
 #' # in a new "AB" region, for which both imports and exports are reported for some products.
 #' tidy_AB_data %>%
-#' dplyr::mutate(Country == "AB) %>%
+#' dplyr::mutate(Country = "AB") %>%
 #' dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
 #' print()
 #' # After running the function, only either imports or exports are reported for each product.
-#' #' tidy_AB_data %>%
-#' dplyr::mutate(Country == "AB) %>%
+#' tidy_AB_data %>%
+#' dplyr::mutate(Country = "AB") %>%
 #' convert_to_net_trade() %>%
 #' dplyr::filter(stringr::str_detect(Flow, "Imports") | stringr::str_detect(Flow, "Exports")) %>%
 #' print()
@@ -176,10 +178,28 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 #' @param epsilon The name of the Epsilon matrix.
 #'                Default is "Epsilon".
 #'
-#' @return
+#' @return A `.tidy_iea_df` with Stock changes flows sent to the Epsilon matrix.
 #' @export
 #'
 #' @examples
+#' tidy_AB_data %>%
+#' tibble::add_row(
+#' Country = "A",
+#' Method = "PCM",
+#' Energy.type = "Energy",
+#' Last.stage = "Final",
+#' Year = 2018,
+#' Ledger.side = "Supply",
+#' Flow.aggregation.point = "Supply",
+#' Flow = "Stock changes",
+#' Product = "Crude oil",
+#' Unit = "ktoe",
+#' E.dot = 10
+#' ) %>%
+#' IEATools::add_psut_matnames() %>%
+#' stock_changes_to_epsilon() %>%
+#' dplyr::filter(stringr::str_detect(Flow, "Statistical differences")) %>%
+#' print()
 stock_changes_to_epsilon <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
                                  matnames = "matnames",
@@ -216,14 +236,34 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 #' # Here we add a flow of "Gasoline type jet fuel":
 #' tidy_AB_data %>%
 #'tibble::add_row(
-#'  Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "Iron and steel", Unit = "ktoe", E.dot = 20
+#'  Country = "A",
+#'  Method = "PCM",
+#'  Energy.type = "E",
+#'  Last.stage = "Final",
+#'  Year = 2018,
+#'  Product = "Gasoline type jet fuel",
+#'  Ledger.side = "Consumption",
+#'  Flow.aggregation.point = "Industry",
+#'  Flow = "Iron and steel",
+#'  Unit = "ktoe",
+#'  E.dot = 20
 #') %>%
 #'  dplyr::filter(Country == "A" & stringr::str_detect(Product, "(G|g)asoline")) %>%
 #'  print()
 #' # Then we gather both flows:
 #' tidy_AB_data %>%
 #'tibble::add_row(
-#'  Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Product = "Gasoline type jet fuel", Ledger.side = "Consumption", Flow.aggregation.point = "Industry", Flow = "Iron and steel", Unit = "ktoe", E.dot = 20
+#'  Country = "A",
+#'  Method = "PCM",
+#'  Energy.type = "E",
+#'  Last.stage = "Final",
+#'  Year = 2018,
+#'  Product = "Gasoline type jet fuel",
+#'  Ledger.side = "Consumption",
+#'  Flow.aggregation.point = "Industry",
+#'  Flow = "Iron and steel",
+#'  Unit = "ktoe",
+#'  E.dot = 20
 #') %>%
 #'  dplyr::filter(Country == "A" & stringr::str_detect(Product, "(G|g)asoline")) %>%
 #'  convert_fuel_gasoline_into_motor_gasoline() %>%

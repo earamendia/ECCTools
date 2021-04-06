@@ -44,7 +44,7 @@
 #' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
 #'  transform_to_gma() %>%
-#'  calc_tidy_iea_df_balances() %>%
+#'  IEATools::calc_tidy_iea_df_balances() %>%
 #'  dplyr::filter(balance_OK == FALSE) %>%
 #'  print()
 #' # Now, if we add the balancing vector, we obtain balanced flows:
@@ -52,7 +52,7 @@
 #' IEATools::add_psut_matnames() %>%
 #'  transform_to_gma() %>%
 #'  add_balancing_vector() %>%
-#'  calc_tidy_iea_df_balances() %>%
+#'  IEATools::calc_tidy_iea_df_balances() %>%
 #'  dplyr::filter(balance_OK == FALSE) %>%
 #'  print()
 #' # Let's have a look to balancing flows, which are all ascribed to the Epsilon matrix:
