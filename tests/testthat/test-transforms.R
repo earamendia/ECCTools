@@ -301,7 +301,7 @@ test_that("calc_total_consumption_by_product works", {
                    Country == "A",
                    Product == "Blast furnace gas"
                  ) %>%
-                 dplyr::select(Total_Consumption_From_Func) %>%
+                 dplyr::select(Total_Consumption_By_Product) %>%
                  dplyr::pull(),
                850)
 
@@ -310,7 +310,7 @@ test_that("calc_total_consumption_by_product works", {
                    Country == "A",
                    Product == "Crude oil"
                  ) %>%
-                 dplyr::select(Total_Consumption_From_Func) %>%
+                 dplyr::select(Total_Consumption_By_Product) %>%
                  dplyr::pull(),
                5000)
 
@@ -319,7 +319,7 @@ test_that("calc_total_consumption_by_product works", {
                    Country == "A",
                    Product == "Crude oil [from Resources]"
                  ) %>%
-                 dplyr::select(Total_Consumption_From_Func) %>%
+                 dplyr::select(Total_Consumption_By_Product) %>%
                  dplyr::pull(),
                8500)
 
@@ -328,7 +328,7 @@ test_that("calc_total_consumption_by_product works", {
                    Country == "B",
                    Product == "Crude oil"
                  ) %>%
-                 dplyr::select(Total_Consumption_From_Func) %>%
+                 dplyr::select(Total_Consumption_By_Product) %>%
                  dplyr::pull(),
                3000)
 })
@@ -592,13 +592,13 @@ test_that("calc_global_exports works", {
 
   expect_equal(global_exports_per_product %>%
                  dplyr::filter(Product == "Coke oven coke") %>%
-                 dplyr::select(Total_Exports_From_Func) %>%
+                 dplyr::select(Global_Exports_By_Product) %>%
                  dplyr::pull(),
                400)
 
   expect_equal(global_exports_per_product %>%
                  dplyr::filter(Product == "Crude oil") %>%
-                 dplyr::select(Total_Exports_From_Func) %>%
+                 dplyr::select(Global_Exports_By_Product) %>%
                  dplyr::pull(),
                3500)
 })
@@ -624,7 +624,7 @@ test_that("calc_share_exports_by_product works", {
                  dplyr::filter(
                    Provenience == "A"
                  ) %>%
-                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::select(Share_Exports_By_Product) %>%
                  dplyr::pull(),
                c(1, 1, 1))
 
@@ -633,7 +633,7 @@ test_that("calc_share_exports_by_product works", {
                    Provenience == "B",
                    Product == "Coke oven coke"
                  ) %>%
-                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::select(Share_Exports_By_Product) %>%
                  dplyr::pull(),
                1)
 })
@@ -653,42 +653,42 @@ test_that("calc_national_production_by_product works", {
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Crude oil") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(8500)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Coke oven coke") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(400)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Heat") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(250)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Natural gas [from Resources]") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(4000)
 
   national_production_by_product %>%
     dplyr::filter(Country == "A" & Product == "Natural gas") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(4100)
 
   national_production_by_product %>%
     dplyr::filter(Country == "B" & Product == "Electricity") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(1000)
 
   national_production_by_product %>%
     dplyr::filter(Country == "B" & Product == "Blast furnace gas") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     expect_equal(850)
 
   national_production_by_product %>%
     dplyr::filter(Country == "B" & Product == "Crude oil") %>%
-    magrittr::extract2("National_Production_From_Func") %>%
+    magrittr::extract2("National_Production_By_Product") %>%
     length() %>%
     expect_equal(0)
 })
@@ -709,27 +709,27 @@ test_that("calc_global_production_by_product works", {
 
   global_production_by_product %>%
     dplyr::filter(Product == "Crude oil") %>%
-    magrittr::extract2("Global_Production_From_Func") %>%
+    magrittr::extract2("Global_Production_By_Product") %>%
     expect_equal(8500)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Blast furnace gas") %>%
-    magrittr::extract2("Global_Production_From_Func") %>%
+    magrittr::extract2("Global_Production_By_Product") %>%
     expect_equal(1700)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Coke oven coke") %>%
-    magrittr::extract2("Global_Production_From_Func") %>%
+    magrittr::extract2("Global_Production_By_Product") %>%
     expect_equal(1800)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Heat") %>%
-    magrittr::extract2("Global_Production_From_Func") %>%
+    magrittr::extract2("Global_Production_By_Product") %>%
     expect_equal(750)
 
   global_production_by_product %>%
     dplyr::filter(Product == "Natural gas") %>%
-    magrittr::extract2("Global_Production_From_Func") %>%
+    magrittr::extract2("Global_Production_By_Product") %>%
     expect_equal(4100)
 })
 
@@ -747,42 +747,42 @@ test_that("calc_share_global_production_by_product works", {
     calc_share_global_production_by_product()
 
   share_production_by_product %>%
-    dplyr::filter(Producing_Country_From_Func == "A", Product == "Crude oil") %>%
-    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    dplyr::filter(Producing_Country == "A", Product == "Crude oil") %>%
+    magrittr::extract2("Share_Global_Production_By_Product") %>%
     expect_equal(1)
 
   share_production_by_product %>%
-    dplyr::filter(Producing_Country_From_Func == "A", Product == "Blast furnace gas") %>%
-    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    dplyr::filter(Producing_Country == "A", Product == "Blast furnace gas") %>%
+    magrittr::extract2("Share_Global_Production_By_Product") %>%
     expect_equal(0.5)
 
   share_production_by_product %>%
-    dplyr::filter(Producing_Country_From_Func == "A", Product == "Electricity") %>%
-    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    dplyr::filter(Producing_Country == "A", Product == "Electricity") %>%
+    magrittr::extract2("Share_Global_Production_By_Product") %>%
     expect_equal(0.7619048,
                  tolerance = 0.0001)
 
   share_production_by_product %>%
-    dplyr::filter(Producing_Country_From_Func == "A", Product == "Crude oil") %>%
-    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    dplyr::filter(Producing_Country == "A", Product == "Crude oil") %>%
+    magrittr::extract2("Share_Global_Production_By_Product") %>%
     expect_equal(1)
 
   share_production_by_product %>%
-    dplyr::filter(Producing_Country_From_Func == "B", Product == "Kerosene type jet fuel excl. biofuels") %>%
-    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    dplyr::filter(Producing_Country == "B", Product == "Kerosene type jet fuel excl. biofuels") %>%
+    magrittr::extract2("Share_Global_Production_By_Product") %>%
     expect_equal(0.3636364,
                  tolerance = 0.0001)
 
   share_production_by_product %>%
-    dplyr::filter(Producing_Country_From_Func == "B", Product == "Coke oven coke") %>%
-    magrittr::extract2("Share_Global_Production_From_Func") %>%
+    dplyr::filter(Producing_Country == "B", Product == "Coke oven coke") %>%
+    magrittr::extract2("Share_Global_Production_By_Product") %>%
     expect_equal(0.7777778,
                  tolerance = 0.0001)
 
   share_production_by_product %>%
     dplyr::group_by(Method, Energy.type, Last.stage, Year, Product, Unit) %>%
     dplyr::summarise(
-      total_share_by_product = sum(Share_Global_Production_From_Func)
+      total_share_by_product = sum(Share_Global_Production_By_Product)
     ) %>%
     dplyr::mutate(
       is_equal_unity = total_share_by_product == 1
@@ -1215,7 +1215,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::filter(
                    Country == "A",
                    Product == "Coke oven coke") %>%
-                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::select(Share_Exports_By_Product) %>%
                  dplyr::pull(),
                1)
 
@@ -1223,7 +1223,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::filter(
                    Country == "A",
                    Product == "Natural gas") %>%
-                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::select(Share_Exports_By_Product) %>%
                  dplyr::pull(),
                0)
 
@@ -1231,7 +1231,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::filter(
                    Country == "B",
                    Product == "Natural gas") %>%
-                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::select(Share_Exports_By_Product) %>%
                  dplyr::pull(),
                1)
 
@@ -1239,7 +1239,7 @@ test_that("calc_bilateral_trade_matrix_df_gma works", {
                  dplyr::filter(
                    Country == "B",
                    Product == "Coke oven coke") %>%
-                 dplyr::select(Share_Exports_From_Func) %>%
+                 dplyr::select(Share_Exports_By_Product) %>%
                  dplyr::pull(),
                0)
 })
@@ -1300,7 +1300,7 @@ test_that("specify_MR_Y_U_bta works", {
       Last.stage = "Final",
       Year = 2018,
       Product = "Coke oven coke",
-      Share_Exports_From_Func = 1
+      Share_Exports_By_Product = 1
     )
 
   MR_Y_U_bta <- AB_data %>%
@@ -1403,7 +1403,7 @@ test_that("transform_to_bta works", {
       Last.stage = "Final",
       Year = 2018,
       Product = "Coke oven coke",
-      Share_Exports_From_Func = 1
+      Share_Exports_By_Product = 1
     )
 
   MR_PSUT_bta <- AB_data %>%

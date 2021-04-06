@@ -247,7 +247,11 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                aggregate_country_name = "World",
                                domestic = "Domestic",
                                imported = "Imported",
-                               provenience = "Provenience"){
+                               provenience = "Provenience",
+                               origin = "Origin",
+                               Share_Exports_By_Product = "Share_Exports_By_Product",
+                               Share_Global_Production_By_Product = "Share_Global_Production_By_Product",
+                               Producing_Country = "Producing_Country"){
 
   # (1) Differentiating domestically produced and imported products in the Y and U matrices flows
   tidy_iea_df_specified_imports <- .tidy_iea_df %>%
@@ -255,13 +259,13 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 
   # (2) Specifying domestic consumption
   tidy_domestic_consumption_MR_gma <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == domestic) %>%
+    dplyr::filter(.data[[origin]] == domestic) %>%
     dplyr::mutate(
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-Origin)
+    dplyr::select(-.data[[origin]])
 
 
   # (3) Specifying foreign consumption
@@ -271,14 +275,14 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::mutate(
       "{e_dot}" := dplyr::case_when(
-        is.na(Share_Exports_From_Func) ~ .data[[e_dot]],
-        TRUE ~ .data[[e_dot]] * Share_Exports_From_Func
+        is.na(Share_Exports_By_Product) ~ .data[[e_dot]],
+        TRUE ~ .data[[e_dot]] * Share_Exports_By_Product
       ),
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
+    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[["Origin"]])
 
   # (4) When a given product is imported by a given country, but no country exports such product, then calculate the global production mix.
   tidy_imported_consumption_MR_gma_whout_nas <- tidy_imported_consumption_MR_gma_with_nas %>%
@@ -289,10 +293,10 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
-      "{product}" := stringr::str_c("{", .data[["Producing_Country_From_Func"]], "}_", .data[[product]])
+      "{e_dot}" := .data[[e_dot]] * Share_Global_Production_By_Product,
+      "{product}" := stringr::str_c("{", .data[[Producing_Country]], "}_", .data[[product]])
     ) %>%
-    dplyr::select(-.data[["Producing_Country_From_Func"]], -.data[["Share_Global_Production_From_Func"]])
+    dplyr::select(-.data[[Producing_Country]], -.data[[Share_Global_Production_By_Product]])
 
   # (5) Bind rows.
   tidy_imported_consumption_MR_gma <- tidy_imported_consumption_MR_gma_with_nas %>%
@@ -395,18 +399,20 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
                                                last_stage = IEATools::iea_cols$last_stage,
                                                country = IEATools::iea_cols$country,
                                                provenience = "Provenience",
-                                               matnames = "matnames"){
+                                               matnames = "matnames",
+                                               Share_Exports_By_Product = "Share_Exports_By_Product"){
 
-  bilateral_trade_matrix_df_gma <- calc_share_exports_by_product(.tidy_iea_df) %>%
+  bilateral_trade_matrix_df_gma <- calc_share_exports_by_product(.tidy_iea_df,
+                                                                 Share_Exports_By_Product = Share_Exports_By_Product) %>%
     tidyr::expand_grid(
       "{country}" := .tidy_iea_df %>%
         tidyr::expand(.data[[country]]) %>%
         dplyr::pull()
     ) %>%
     dplyr::mutate(
-      Share_Exports_From_Func = dplyr::case_when(
+      "{Share_Exports_By_Product}" := dplyr::case_when(
        .data[[provenience]] == .data[[country]] ~ 0,
-       TRUE ~ Share_Exports_From_Func
+       TRUE ~ .data[[Share_Exports_By_Product]]
       )
     ) %>%
     dplyr::relocate(.data[[country]], .after = .data[[provenience]])
@@ -452,7 +458,12 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
                                country = IEATools::iea_cols$country,
                                unit = IEATools::iea_cols$unit,
                                aggregate_country_name = "World",
-                               provenience = "Provenience"){
+                               provenience = "Provenience",
+                               origin = "Origin",
+                               Share_Exports_By_Product = "Share_Exports_By_Product",
+                               Producing_Country = "Producing_Country",
+                               Share_Global_Production_By_Product = "Share_Global_Production_By_Product"
+                               ){
 
 
   # (1) Differentiating domestically produced and imported products in the Y and U matrices flows
@@ -461,49 +472,49 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 
   # (2) Specifying domestic consumption
   tidy_domestic_consumption_MR_bta <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Domestic") %>%
+    dplyr::filter(.data[[origin]] == "Domestic") %>%
     dplyr::mutate(
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-Origin)
+    dplyr::select(-.data[[origin]])
 
   # (3.i) Specifying foreign consumption with the provided trade matrix
   tidy_imported_consumption_with_bt_matrix <- tidy_iea_df_specified_imports %>%
-    dplyr::filter(Origin == "Imported") %>%
+    dplyr::filter(.data[[origin]] == "Imported") %>%
     dplyr::left_join(bilateral_trade_matrix_df,
                     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::filter(! is.na(.data[["Share_Exports_From_Func"]])) %>%
+    dplyr::filter(! is.na(.data[[Share_Exports_By_Product]])) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_Exports_From_Func,
+      "{e_dot}" := .data[[e_dot]] * Share_Exports_By_Product,
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
+    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[[origin]])
 
   # (3.ii) Specifying the rest with the global market assumption GMA
   tidy_imported_consumption_with_gma_bt_matrix_with_nas <- tidy_iea_df_specified_imports %>%
     dplyr::filter(Origin == "Imported") %>%
     dplyr::left_join(bilateral_trade_matrix_df,
                      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
-    dplyr::filter(is.na(.data[["Share_Exports_From_Func"]])) %>%
-    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]]) %>%
+    dplyr::filter(is.na(.data[[Share_Exports_By_Product]])) %>%
+    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]]) %>%
     dplyr::left_join(
       calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})
     ) %>%
     dplyr::mutate(
       "{e_dot}" := dplyr::case_when(
-        is.na(Share_Exports_From_Func) ~ .data[[e_dot]],
-        TRUE ~ .data[[e_dot]] * Share_Exports_From_Func
+        is.na(Share_Exports_By_Product) ~ .data[[e_dot]],
+        TRUE ~ .data[[e_dot]] * Share_Exports_By_Product
       ),
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[["Share_Exports_From_Func"]], -.data[["Origin"]])
+    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[[origin]])
 
 
   # (3.iii) Where there are NAs - i.e. where an imported product is not exported by any country, use the global production mix!
@@ -515,10 +526,10 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::left_join(calc_share_global_production_by_product(.tidy_iea_df),
                      by = c({method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] * Share_Global_Production_From_Func,
-      "{product}" := stringr::str_c("{", .data[["Producing_Country_From_Func"]], "}_", .data[[product]])
+      "{e_dot}" := .data[[e_dot]] * Share_Global_Production_By_Product,
+      "{product}" := stringr::str_c("{", .data[["Producing_Country"]], "}_", .data[[product]])
     ) %>%
-    dplyr::select(-.data[["Producing_Country_From_Func"]], -.data[["Share_Global_Production_From_Func"]])
+    dplyr::select(-.data[[Producing_Country]], -.data[[Share_Global_Production_By_Product]])
 
 
   # (3.iv) Bind rows of the tidy_imported_consumption_with_gma_bt_matrix data frame
@@ -601,11 +612,9 @@ transform_to_bta <- function(.tidy_iea_df,
 
 
 
-# Find list of observations for which the DTA can be implemented
-
-#' Title
+#' Find list of observations for which Domestic Technology Assumption is applicable
 #'
-#' @param .tidy_iea_df
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the list of observations is needed
 #' @param country
 #' @param method
 #' @param energy_type

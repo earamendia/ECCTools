@@ -413,7 +413,7 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
                                           exports = IEATools::interface_industries$exports,
                                           matnames = "matnames",
                                           provenience = "Provenience",
-                                          Total_Exports_By_Product = "Global_Exports_By_Product",
+                                          Global_Exports_By_Product = "Global_Exports_By_Product",
                                           Share_Exports_By_Product = "Share_Exports_By_Product"){
 
   tidy_share_exports_by_product <- .tidy_iea_df %>%
@@ -422,7 +422,7 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
       "{e_dot}" := abs(.data[[e_dot]])
     ) %>%
     dplyr::left_join(calc_global_exports(.tidy_iea_df,
-                                         Total_Exports_By_Product = Total_Exports_By_Product), by = c({method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {product})) %>%
+                                         Global_Exports_By_Product = Global_Exports_By_Product), by = c({method}, {energy_type}, {last_stage}, {year}, {ledger_side}, {flow_aggregation_point}, {product})) %>%
     dplyr::mutate(
       "{Share_Exports_By_Product}" := .data[[e_dot]] / .data[[Global_Exports_By_Product]]
     ) %>%
