@@ -245,6 +245,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
                                unit = IEATools::iea_cols$unit,
                                country = IEATools::iea_cols$country,
                                aggregate_country_name = "World",
+                               origin = "Origin",
                                domestic = "Domestic",
                                imported = "Imported",
                                provenience = "Provenience",
@@ -423,7 +424,46 @@ calc_bilateral_trade_matrix_df_gma <- function(.tidy_iea_df,
 
 
 
-
+#' Specifies Multi-Regional final demand (Y) and use (U) matrices with Bilateral Trade Assumption
+#'
+#' This function specifies flows belonging to the Y, U_feed, U_eiou, and Epsilon (only for those flows akin to final demand) matrices,
+#' according to the Bilateral Trade Assumption. See details for more explanations.
+#'
+#' First, each flow is separated into a flow of domestic product and imported product, using the `specify_imported_products()` function.
+#' Then, the bilateral trade data passed as `bilateral_trade_matrix_df` argument, is used to specify the flows that are imported.
+#'
+#' Only flows belonging to the Y, U_feed, U_eiou, and Epsilon matrices are returned.
+#' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional Y and U matrices needs to be created.
+#' @param bilateral_trade_matrix_df The bilateral trade data to be used to specify Y and U matrices flows.
+#'                                  Default is bilateral trade data corresponding to the Global Market Assumption, calculated as `calc_bilateral_trade_matrix_df_gma(.tidy_iea_df)`.
+#' @param flow,product,year,method,energy_type,last_stage,e_dot,country,unit See `IEATools::iea_cols`.
+#' @param aggregate_country_name The name of the new region that gathers all flows of the `.tidy_iea_df`.
+#'                               Default is "World".
+#' @param provenience The name of the temporary column that specifies the origin of a given flow.
+#'                    Default is "Provenience".
+#' @param origin The name of the column specifying whether a given flow comes refers to a domestic or imported product.
+#'               Default is "Origin".
+#' @param domestic The string that indicates that the product is of domestic origin in the new origin column.
+#'                 Default is "Domestic".
+#' @param imported The string that indicates that the product is of imported origin in the new origin column.
+#'                 Default is "Imported".
+#' @param Share_Exports_By_Product The name of a temporary column that contains the share of global exports by country, for each product.
+#'                                 Default is "Share_Exports_By_Product".
+#' @param Producing_Country The name of a temporary column that contains the provenience country for a given flow, i.e. the exportin country of a given flow.
+#'                          Default is "Producing_Country".
+#' @param Share_Global_Production_By_Product The name if a temporary column that contains the share of global product by country, for each product.
+#'                                           Default is "Share_Global_Production_By_Product".
+#'
+#' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
+#' @export
+#'
+#' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' specify_MR_Y_U_bta() %>%
+#' print()
 specify_MR_Y_U_bta <- function(.tidy_iea_df,
                                bilateral_trade_matrix_df = calc_bilateral_trade_matrix_df_gma(.tidy_iea_df),
                                flow = IEATools::iea_cols$flow,
@@ -438,6 +478,8 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
                                aggregate_country_name = "World",
                                provenience = "Provenience",
                                origin = "Origin",
+                               domestic = "Domestic",
+                               imported = "Imported",
                                Share_Exports_By_Product = "Share_Exports_By_Product",
                                Producing_Country = "Producing_Country",
                                Share_Global_Production_By_Product = "Share_Global_Production_By_Product"
