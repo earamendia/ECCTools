@@ -1,3 +1,5 @@
-# ECCTools 0.0.0.9000
+* Added codecov.io test coverage integration.
+* Added GitHub actions continuous integration testing.
 
-* Added a `NEWS.md` file to track changes to the package.
+
+
