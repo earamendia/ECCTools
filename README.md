@@ -5,10 +5,14 @@
 
 <!-- badges: start -->
 
-[![Codecov test
-coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master)
-[![Travis build
-status](https://travis-ci.com/earamendia/ECCTools.svg?branch=master)](https://travis-ci.com/earamendia/ECCTools)
+[![CRAN
+status](https://www.r-pkg.org/badges/version/ReboundTools)](https://cran.r-project.org/package=ECCTools)
+[![lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![R-CMD-check](https://github.com/earamendia/ECCTools/workflows/R-CMD-check/badge.svg)](https://github.com/earamendia/ECCTools/actions)
+[![codecov](https://codecov.io/gh/earamendia/ECCTools/branch/develop/graph/badge.svg?token=IG68VLDYEY)](https://codecov.io/gh/earamendia/ECCTools)
 <!-- badges: end -->
 
 The goal of ECCTools is to …
@@ -60,4 +64,4 @@ You can also embed plots, for example:
 <img src="man/figures/README-pressure-1.png" width="100%" />
 
 In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub\!
+files, so they display on GitHub!
