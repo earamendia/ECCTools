@@ -13,6 +13,8 @@ state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/earamendia/ECCTools/workflows/R-CMD-check/badge.svg)](https://github.com/earamendia/ECCTools/actions)
 [![codecov](https://codecov.io/gh/earamendia/ECCTools/branch/develop/graph/badge.svg?token=IG68VLDYEY)](https://codecov.io/gh/earamendia/ECCTools)
+[![Codecov test
+coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master)
 <!-- badges: end -->
 
 The goal of ECCTools is to …
