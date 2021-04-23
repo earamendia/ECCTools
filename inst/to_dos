@@ -1,6 +1,6 @@
 ECCTools things to do:
 
-- Clean up notes
+- Clean up package (split files etc)
 - Write vignettes
 - Do a first release
 - Check that the codecov thing works

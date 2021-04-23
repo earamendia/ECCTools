@@ -7,7 +7,7 @@
 # Reading and saving default AB data
 #
 
-A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
+A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
 tidy_AB_data <- A_B_path %>%
   IEATools::load_tidy_iea_df() %>%

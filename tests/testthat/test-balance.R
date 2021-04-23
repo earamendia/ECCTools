@@ -28,7 +28,7 @@ test_that("calc_tidy_iea_df_balance works correctly for 2019 data", {
 test_that("add_balancing_vector works", {
 
   # Path to dummy AB data
-  A_B_path <- system.file("A_B_data_full_2018_format.csv", package = "ECCTools")
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   # Loading AB_data
   AB_data <- A_B_path %>%
