@@ -1,0 +1,12 @@
+ECCTools things to do:
+
+- Clean up notes
+- Write vignettes
+- Do a first release
+- Check that the codecov thing works
+- Write following functions:
+	* aggregate_products()
+	* split_elec_heat_chp_plants()
+	* check_btd()
+	* summarise_erois() + all helpers functions
+

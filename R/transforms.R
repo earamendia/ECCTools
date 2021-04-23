@@ -312,9 +312,10 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
     dplyr::bind_rows(tidy_imported_consumption_MR_gma_whout_nas)
 
   # (6) Testing if we have any NAs in the join...
-  if (NA %in% tidy_imported_consumption_MR_gma[[e_dot]]){
-    stop("There an NA in the join here, do worry about it.")# How do I get code coverage here?
-  }
+  assertthat::assert_that(
+    ! NA %in% tidy_imported_consumption_MR_gma[[e_dot]],
+    msg = "There an NA in the join here, do worry about it.")
+
 
   # Right. And here we need to "gather" flows of the same things, are these may appear in (4) if the country also produces locally the product.
   tidy_consumption_MR_gma <- dplyr::bind_rows(tidy_domestic_consumption_MR_gma, tidy_imported_consumption_MR_gma) %>%
@@ -568,9 +569,10 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::filter(! stringr::str_detect(.data[[product]], "\\{NA\\}_")) %>%
     dplyr::bind_rows(tidy_imported_consumption_with_gma_bt_matrix_whout_nas)
 
-  if (NA %in% tidy_imported_consumption_with_bt_matrix[[e_dot]]){
-    stop("There an NA in the join here, do worry about it.")# How do I get code coverage here?
-  }
+  assertthat::assert_that(
+    ! NA %in% tidy_imported_consumption_with_bt_matrix[[e_dot]],
+    msg = "There an NA in the join here, do worry about it.")
+
 
   # (3.vi) Binding data frames computed with bt matrix and with gma trade matrix
   tidy_imported_consumption_MR_bta <- dplyr::bind_rows(tidy_imported_consumption_with_bt_matrix,

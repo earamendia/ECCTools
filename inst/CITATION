@@ -3,9 +3,8 @@ citHeader("To cite ECCTools in publications use:")
 citEntry(
   entry    = "Manual",
   title    = "ECCTools: Tools for modifying the Energy Conversion Chain",
-  author       = personList(as.person("Matthew Kuperus Heun"),
-                            as.person("Emmanuel Aramendia"),
-                            as.person("Zeke Marshall")),
+  author       = personList(as.person("Emmanuel Aramendia"),
+                            as.person("Matthew Kuperus Heun")),
   year     = "2021",
   url      = "https://github.com/earamendia/ECCTools",
   textVersion =   paste(
