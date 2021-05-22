@@ -222,20 +222,30 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Moves international bunkers flows to the Epsilon matrix
 #'
-#' @param .tidy_iea_df
-#' @param flow
-#' @param matnames
-#' @param e_dot
-#' @param international_marine_bunkers
-#' @param international_aviation_bunkers
-#' @param epsilon
+#' This function moves international bunkers flows to the Epsilon matrix.
+#' The Epsilon balancing matrix is akin to an additional final demand matrix,
+#' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
+#' while flows akin to supply (i.e. where stocks decrease) will be negative.
+#'
+#' See the Epsilon balacing matrix vignette for more information.
+#' Note: one needs to add the column containing matrices names first,
+#' most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Epsilon matrix.
+#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param international_marine_bunkers The name of the international marine bunkers flows in the `.tidy_iea_df`.
+#'                                     Default is `IEATools::interface_industries$international_marine_bunkers`.
+#' @param international_aviation_bunkers The name of the international aviation bunkers flows in the `.tidy_iea_df`.
+#'                                     Default is `IEATools::interface_industries$international_aviation_bunkers`.
+#' @param epsilon The name of the Epsilon matrix.
+#'                Default is "Epsilon".
 #'
 #' @return
 #' @export
-#'
-#' @examples
 international_bunkers_to_epsilon <- function(.tidy_iea_df,
                                              flow = IEATools::iea_cols$flowm,
                                              matnames = IEATools::mat_meta_cols$matnames,
