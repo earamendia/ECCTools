@@ -138,10 +138,10 @@ convert_to_net_trade <- function(.tidy_iea_df,
 #' print()
 stat_diffs_to_epsilon <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
-                              matnames = "matnames",
+                              matnames = matnames = IEATools::mat_meta_cols$matnames,
                               e_dot = IEATools::iea_cols$e_dot,
                               stat_diffs = "Statistical differences",
-                              epsilon = "Epsilon"){
+                              epsilon = IEATools::psut_cols$epsilon){
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
@@ -202,10 +202,10 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 #' print()
 stock_changes_to_epsilon <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
-                                 matnames = "matnames",
+                                 matnames = IEATools::mat_meta_cols$matnames,
                                  e_dot = IEATools::iea_cols$e_dot,
-                                 stock_changes = "Stock changes",
-                                 epsilon = "Epsilon"){
+                                 stock_changes = IEATools::interface_industries$stock_changes,
+                                 epsilon = IEATools::psut_cols$epsilon){
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
@@ -222,6 +222,20 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 
 
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param flow
+#' @param matnames
+#' @param e_dot
+#' @param international_marine_bunkers
+#' @param international_aviation_bunkers
+#' @param epsilon
+#'
+#' @return
+#' @export
+#'
+#' @examples
 international_bunkers_to_epsilon <- function(.tidy_iea_df,
                                              flow = IEATools::iea_cols$flowm,
                                              matnames = IEATools::mat_meta_cols$matnames,
