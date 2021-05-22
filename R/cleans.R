@@ -220,6 +220,30 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 }
 
 
+
+
+international_bunkers_to_epsilon <- function(.tidy_iea_df,
+                                             flow = IEATools::iea_cols$flowm,
+                                             matnames = IEATools::mat_meta_cols$matnames,
+                                             e_dot = IEATools::iea_cols$e_dot,
+                                             international_marine_bunkers = IEATools::interface_industries$international_marine_bunkers,
+                                             international_aviation_bunkers = IEATools::interface_industries$international_aviation_bunkers,
+                                             epsilon = IEATools::psut_cols$epsilon){
+
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{matnames}" := dplyr::case_when(
+        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ epsilon,
+        TRUE ~ .data[[matnames]]
+      ),
+      "{e_dot}" := dplyr::case_when(
+        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ -.data[[e_dot]]
+        TRUE ~ .data[[e_dot]]
+      )
+    )
+}
+
+
 #' Converts jet fuel type gasoline into motor gasoline
 #'
 #' This function converts flows of the "Gasoline type jet fuel" product into flows of "Motor gasoline excl. biofuels".
