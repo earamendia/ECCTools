@@ -9,10 +9,6 @@ First release - ready when sending the first version of MR-PSUT paper, to do whi
 	* Transform_to_gma
 
 - Do a first release
-	* Needs to add the check_btd() function!
-	* Create function that enables to modify final demand Yr for only a given region!
-	* Function that calculates primary energy vector kp?
-	* Same for GHG emissions vector?
 
 - Check that the codecov thing works
 
