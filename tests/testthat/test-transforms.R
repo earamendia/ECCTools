@@ -1245,6 +1245,59 @@ test_that("calc_bilateral_trade_df_gma works", {
 })
 
 
+# Testing the checking_bilateral_trade_df function
+
+test_that("check_bilateral_trade_df works", {
+
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df() %>%
+    IEATools::specify_all()
+
+  bilateral_trade_df_gma <- AB_data %>%
+    IEATools::add_psut_matnames() %>%
+    calc_bilateral_trade_df_gma()
+
+  expect_true(check_bilateral_trade_df(bilateral_trade_df_gma))
+
+  # Doing a second one
+  bilateral_trade_df_gma_2 <- bilateral_trade_df_gma %>%
+    dplyr::bind_rows(
+      bilateral_trade_df_gma %>%
+        dplyr::mutate(
+          Year = 2014
+        )
+    ) %>%
+    dplyr::bind_rows(
+      bilateral_trade_df_gma %>%
+        dplyr::mutate(
+          Method = "A very odd method"
+        )
+    ) %>%
+    dplyr::bind_rows(
+      bilateral_trade_df_gma %>%
+        dplyr::mutate(
+          Last.stage = "A very odd stage"
+        )
+    ) %>%
+    dplyr::bind_rows(
+      bilateral_trade_df_gma %>%
+        dplyr::mutate(
+          Energy.type = "A very odd energy type"
+        )
+    )
+  expect_true(check_bilateral_trade_df(bilateral_trade_df_gma_2))
+
+  # A third one that shouldn't work
+  res <- bilateral_trade_df_gma %>%
+    dplyr::mutate(
+      Product = "an odd product"
+    )
+  expect_error(check_bilateral_trade_df(res))
+})
+
+
 
 test_that("specify_MR_Y_U_bta works", {
 

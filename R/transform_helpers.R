@@ -58,7 +58,9 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
       "{e_dot}" := dplyr::case_when(
         .data[[matnames]] == U_feed_matrix ~ -.data[[e_dot]],
         .data[[matnames]] == U_EIOU_matrix ~ -.data[[e_dot]],
-        TRUE ~ .data[[e_dot]]
+        # Try to take abs(.data[[e_dot]])!
+        # This may enable to deal with losses, which have negative e_dot values, but which are part of Y....
+        TRUE ~ abs(.data[[e_dot]])
       )
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%

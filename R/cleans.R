@@ -138,7 +138,7 @@ convert_to_net_trade <- function(.tidy_iea_df,
 #' print()
 stat_diffs_to_epsilon <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
-                              matnames = matnames = IEATools::mat_meta_cols$matnames,
+                              matnames = IEATools::mat_meta_cols$matnames,
                               e_dot = IEATools::iea_cols$e_dot,
                               stat_diffs = "Statistical differences",
                               epsilon = IEATools::psut_cols$epsilon){
@@ -221,7 +221,6 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 
 
 
-
 #' Moves international bunkers flows to the Epsilon matrix
 #'
 #' This function moves international bunkers flows to the Epsilon matrix.
@@ -247,7 +246,7 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 #' @return
 #' @export
 international_bunkers_to_epsilon <- function(.tidy_iea_df,
-                                             flow = IEATools::iea_cols$flowm,
+                                             flow = IEATools::iea_cols$flow,
                                              matnames = IEATools::mat_meta_cols$matnames,
                                              e_dot = IEATools::iea_cols$e_dot,
                                              international_marine_bunkers = IEATools::interface_industries$international_marine_bunkers,
@@ -261,7 +260,7 @@ international_bunkers_to_epsilon <- function(.tidy_iea_df,
         TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(
-        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ -.data[[e_dot]]
+        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ -.data[[e_dot]],
         TRUE ~ .data[[e_dot]]
       )
     )

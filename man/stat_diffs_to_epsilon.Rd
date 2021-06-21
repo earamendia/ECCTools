@@ -7,10 +7,10 @@
 stat_diffs_to_epsilon(
   .tidy_iea_df,
   flow = IEATools::iea_cols$flow,
-  matnames = "matnames",
+  matnames = IEATools::mat_meta_cols$matnames,
   e_dot = IEATools::iea_cols$e_dot,
   stat_diffs = "Statistical differences",
-  epsilon = "Epsilon"
+  epsilon = IEATools::psut_cols$epsilon
 )
 }
 \arguments{
