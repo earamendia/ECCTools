@@ -6,18 +6,23 @@
 \usage{
 check_bilateral_trade_df(
   .bilateral_trade_df,
+  country = IEATools::iea_cols$country,
   provenience = "Provenience",
   method = IEATools::iea_cols$method,
   energy_type = IEATools::iea_cols$energy_type,
   last_stage = IEATools::iea_cols$last_stage,
   year = IEATools::iea_cols$year,
   product = IEATools::iea_cols$product,
+  e_dot = IEATools::iea_cols$e_dot,
   share_exports_by_product = "Share_Exports_By_Product",
   .sum_share_exports = ".sum_share_exports"
 )
 }
 \arguments{
 \item{.bilateral_trade_df}{The bilateral trade data frame to be checked.}
+
+\item{country}{The name of the country column.
+Default is \code{IEATools::iea_cols$country}.}
 
 \item{provenience}{The name of the country of provenience (i.e. exporting country).
 Default is "Provenience".}
@@ -35,7 +40,7 @@ Default is \code{IEATools::iea_cols$last_stage}.}
 Default is \code{year = IEATools::iea_cols$year}.}
 
 \item{product}{The name of the product column.
-Default is \code{product = IEATools::iea_cols$product}.}
+Default is \code{IEATools::iea_cols$product}.}
 
 \item{share_exports_by_product}{The name of the share of exports by product column.
 Default is "Share_Exports_By_Product".}

@@ -443,6 +443,8 @@ calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
 #'
 #'
 #' @param .bilateral_trade_df The bilateral trade data frame to be checked.
+#' @param country The name of the country column.
+#'                Default is `IEATools::iea_cols$country`.
 #' @param provenience The name of the country of provenience (i.e. exporting country).
 #'                    Default is "Provenience".
 #' @param method The name of the Method column.
@@ -454,7 +456,7 @@ calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
 #' @param year The name of the year column.
 #'             Default is `year = IEATools::iea_cols$year`.
 #' @param product The name of the product column.
-#'                Default is `product = IEATools::iea_cols$product`.
+#'                Default is `IEATools::iea_cols$product`.
 #' @param share_exports_by_product The name of the share of exports by product column.
 #'                                 Default is "Share_Exports_By_Product".
 #' @param .sum_share_exports The name of the temporary sum shares of exports by product column.
@@ -474,15 +476,18 @@ calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
 #'  calc_bilateral_trade_df_gma()
 #' check_bilateral_trade_df(bilateral_trade_df_gma)
 check_bilateral_trade_df <- function(.bilateral_trade_df,
+                                     country = IEATools::iea_cols$country,
                                      provenience = "Provenience",
                                      method = IEATools::iea_cols$method,
                                      energy_type = IEATools::iea_cols$energy_type,
                                      last_stage = IEATools::iea_cols$last_stage,
                                      year = IEATools::iea_cols$year,
                                      product = IEATools::iea_cols$product,
+                                     e_dot = IEATools::iea_cols$e_dot,
                                      share_exports_by_product = "Share_Exports_By_Product",
                                      .sum_share_exports = ".sum_share_exports"){
 
+  # First, sum by exporting country, by product
   bilateral_trade_df_testing_res <- .bilateral_trade_df %>%
     dplyr::group_by(.data[[provenience]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
     dplyr::summarise(
@@ -491,6 +496,18 @@ check_bilateral_trade_df <- function(.bilateral_trade_df,
 
   assertthat::assert_that(all(abs(bilateral_trade_df_testing_res[[.sum_share_exports]] - 1) <= 1e-3),
               msg = "The sum of shares by product and exporting country is not equal to 1.")
+
+
+  # Second, sum by importing country, by product
+  bilateral_trade_df_testing_res2 <- .bilateral_trade_df %>%
+    dplyr::filter(.data[[share_exports_by_product]] != 0) %>%
+    dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
+    dplyr::summarise(
+      "{.sum_share_exports}" := sum(.data[[share_exports_by_product]])
+    )
+
+  assertthat::assert_that(all(abs(bilateral_trade_df_testing_res2[[.sum_share_exports]] - 1) <= 1e-3),
+                          msg = "The sum of shares by product and importing country is not equal to 1.")
 }
 
 
