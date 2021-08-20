@@ -90,11 +90,11 @@ test_that("stat_diffs_to_balancing works",{
   AB_data_specified <- AB_data %>%
     IEATools::specify_all()
 
-  AB_data_stat_diffs_to_epsilon <- AB_data_specified %>%
+  AB_data_stat_diffs_to_balancing <- AB_data_specified %>%
     IEATools::add_psut_matnames() %>%
-    stat_diffs_to_epsilon()
+    stat_diffs_to_balancing()
 
-  expect_equal(AB_data_stat_diffs_to_epsilon[1,] %>%
+  expect_equal(AB_data_stat_diffs_to_balancing[1,] %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                500)
@@ -125,7 +125,7 @@ test_that("stat_diffs_to_balancing works",{
 })
 
 
-# Testing stock_changes_to_epsilon:
+# Testing stock_changes_to_balancing:
 test_that("stock_changes_to_balancing works",{
 
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "ECCTools")
@@ -226,11 +226,11 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
     IEATools::prep_psut() %>%
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 
-  AB_data_stock_changes_to_epsilon_io_Y_U_method <- AB_data_stock_changes_to_balancing %>%
+  AB_data_stock_changes_to_balancing_io_Y_U_method <- AB_data_stock_changes_to_balancing %>%
     IEATools::prep_psut() %>%
     Recca::calc_io_mats()
 
-  AB_data_stock_changes_to_epsilon_io_R_V_method <- AB_data_stock_changes_to_balancing %>%
+  AB_data_stock_changes_to_balancing_io_R_V_method <- AB_data_stock_changes_to_balancing %>%
     IEATools::prep_psut() %>%
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 

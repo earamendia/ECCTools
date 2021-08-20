@@ -46,7 +46,7 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
                                               Y_matrix = "Y",
                                               U_feed_matrix = "U_feed",
                                               U_EIOU_matrix = "U_EIOU",
-                                              Epsilon_matrix = "B",
+                                              balancing_matrix = "B",
                                               Total_Consumption_By_Product = "Total_Consumption_By_Product"){
 
   tidy_total_consumption_by_product <- .tidy_iea_df %>%

@@ -20,7 +20,7 @@ calc_total_consumption_by_product(
   Y_matrix = "Y",
   U_feed_matrix = "U_feed",
   U_EIOU_matrix = "U_EIOU",
-  Epsilon_matrix = "Epsilon",
+  balancing_matrix = "B",
   Total_Consumption_By_Product = "Total_Consumption_By_Product"
 )
 }
@@ -44,8 +44,8 @@ Default is \code{IEATools::psut_cols$U_feed}.}
 \item{U_EIOU_matrix}{The name of the U_eiou matrix.
 Default is \code{IEATools::psut_cols$U_eiou}.}
 
-\item{Epsilon_matrix}{The name of the Epsilon matrix.
-Default is \code{IEATools::psut_cols$epsilon}.}
+\item{balancing_matrix}{The name of the Balancing matrix.
+Default is "B".}
 
 \item{Total_Consumption_By_Product}{The name of the new column reporting total consumption by product.}
 }
@@ -58,7 +58,7 @@ The function calculates total consumption by product, for each country and year.
 \details{
 Flows included in the calculation of the total consumption by product are flows belonging to either the Y,
 U_feed, or U_eiou matrices. Flows belonging to the Y matrix but representing exports, are excluded.
-In addition, flows belonging to the Epsilon matrix and akin to a final demand (i.e. E.dot > 0) are also included, provided they do not represent exports.
+In addition, flows belonging to the Balancing matrix and akin to a final demand (i.e. E.dot > 0) are also included, provided they do not represent exports.
 }
 \examples{
 tidy_AB_data \%>\%

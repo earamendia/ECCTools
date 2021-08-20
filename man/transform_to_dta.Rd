@@ -20,7 +20,7 @@ transform_to_dta(
   e_dot = IEATools::iea_cols$e_dot,
   imports = IEATools::interface_industries$imports,
   matnames = IEATools::mat_meta_cols$matnames,
-  epsilon = "Epsilon"
+  balancing_matrix = "B"
 )
 }
 \arguments{
@@ -43,8 +43,8 @@ Defaut is \code{IEATools::interface_industries$imports}.}
 \item{matnames}{The column name for matrices names.
 Default is \code{IEATools::mat_meta_cols$matnames}.}
 
-\item{epsilon}{The name of the Epsilon matrix.
-Default is \code{IEATools::psut_cols$epsilon}.}
+\item{balancing_matrix}{The name of the Balancing matrix.
+Default is \code{IEATools::psut_cols$balancing_matrix}.}
 }
 \value{
 A \code{.tidy_iea_df} that describes the Energy Conversion Chain from a Domestic Technology Assumption perspective.

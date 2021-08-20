@@ -55,10 +55,10 @@ Default is "Share_Global_Production_By_Product".}
 Default is "Producing_Country".}
 }
 \value{
-A \code{.tidy_iea_df} with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
+A \code{.tidy_iea_df} with flows corresponding to the Y, U_feed, U_eiou, and B matrices are specified.
 }
 \description{
-This function specifies flows belonging to the Y, U_feed, U_eiou, and Epsilon (only for those flows akin to final demand) matrices,
+This function specifies flows belonging to the Y, U_feed, U_eiou, and B (only for those flows akin to final demand) matrices,
 according to the Global Market Assumption. See details for more explanations.
 }
 \details{
@@ -66,7 +66,7 @@ First, each flow is separated into a flow of domestic product and imported produ
 Then, the \code{calc_share_exports_by_product()} function is used to calculate the share of global exports, for each product, by country.
 These shares is used to specify the importations of each country, for each product, hence the assumption of a global market.
 
-Only flows belonging to the Y, U_feed, U_eiou, and Epsilon matrices are returned.
+Only flows belonging to the Y, U_feed, U_eiou, and B matrices are returned.
 Note that matrices names need to be added first, most likely using the \code{IEATools::add_psut_matnames()} function.
 }
 \examples{

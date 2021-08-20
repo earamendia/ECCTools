@@ -7,7 +7,7 @@
 specify_MR_V(
   .tidy_iea_df,
   V_matrix = IEATools::psut_cols$V,
-  Epsilon_matrix = IEATools::psut_cols$epsilon,
+  balancing_matrix = "B",
   matnames = IEATools::mat_meta_cols$matnames,
   imports = IEATools::interface_industries$imports,
   country = IEATools::iea_cols$country,
@@ -23,8 +23,8 @@ specify_MR_V(
 \item{V_matrix}{The name of the V matrix.
 Default is \code{IEATools::psut_cols$V}.}
 
-\item{Epsilon_matrix}{The name of the Epsilon matrix.
-Default is \code{IEATools::psut_cols$epsilon}.}
+\item{balancing_matrix}{The name of the Balancing matrix.
+Default is "B".}
 
 \item{matnames}{The name of the matrix names column.
 Default is \code{IEATools::mat_meta_cols$matnames}.}
@@ -44,7 +44,7 @@ A \code{.tidy_iea_df} representing the Multi-Regional Supply (V) matrix, with al
 This function specified the Multi-Regional Supply (V) matrix.
 Only flows that belong to the Multi-Regional Supply matrix are returned,
 other flows are filtered out. Exceptions are flows akin to supply (with E.dot < 0) but that have been
-previously re-directed to the Epsilon matrix by the analyst - those are also kept.
+previously re-directed to the Balancing matrix by the analyst - those are also kept.
 }
 \details{
 The specification process is to modify both the flow and the product produced

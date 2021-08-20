@@ -10,7 +10,7 @@ specify_imported_products(
   Y_matrix = IEATools::psut_cols$Y,
   U_feed_matrix = IEATools::psut_cols$U_feed,
   U_EIOU_matrix = IEATools::psut_cols$U_eiou,
-  Epsilon_matrix = IEATools::psut_cols$epsilon,
+  balancing_matrix = "B",
   matnames = IEATools::mat_meta_cols$matnames,
   domestic = "Domestic",
   imported = "Imported",
@@ -45,8 +45,8 @@ Default is \code{IEATools::psut_cols$U_feed}.}
 \item{U_EIOU_matrix}{The name of the U_eiou matrix.
 Default is \code{IEATools::psut_cols$U_eiou}.}
 
-\item{Epsilon_matrix}{The name of the Epsilon matrix.
-Default is \code{IEATools::psut_cols$epsilon}.}
+\item{balancing_matrix}{The name of the Balancing matrix.
+Default is "B".}
 
 \item{matnames}{The name of the matrix names column.
 Default is \code{IEATools::mat_meta_cols$matnames}.}
@@ -74,17 +74,17 @@ Default is "Share_Imports_By_Product".}
 Default is "Total_Consumption_By_Product".}
 }
 \value{
-A \code{.tidy_iea_df} that includes only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices,
+A \code{.tidy_iea_df} that includes only flows belonging to the Y, U_eiou, U_feed, or Balancing matrices,
 and for which flows are specified in terms of flows or imported or domestic products.
 }
 \description{
-This function specifies imported and domestic products in the Y, U_EIOU, U_feed, and Epsilon matrices.
+This function specifies imported and domestic products in the Y, U_EIOU, U_feed, and Balancing matrices.
 For instance, a flow of "Gasoline" will be broken down in two flows: one of imported gasoline, and one of domestic gasoline.
 The origin is specified in a new column. One of the two flows may be absent, in the case of a product that is not imported,
 or not domestically produced.
 }
 \details{
-Only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices are returned.
+Only flows belonging to the Y, U_eiou, U_feed, or Balancing matrices are returned.
 Note that matrices names need to be added first, most likely using the \code{IEATools::add_psut_matnames()} function.
 }
 \examples{

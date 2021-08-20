@@ -908,7 +908,7 @@ test_that("specify_MR_Y_U_gma works", {
 
   AB_MR_Y_U_gma <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    stock_changes_to_epsilon() %>%
+    stock_changes_to_balancing() %>%
     specify_MR_Y_U_gma()
 
   # Checks.
@@ -1135,7 +1135,7 @@ test_that("transform_to_gma works", {
 
   AB_MR_PSUT_gma <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    stock_changes_to_epsilon() %>%
+    stock_changes_to_balancing() %>%
     transform_to_gma()
 
   # Length should be now 97.
