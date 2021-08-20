@@ -79,8 +79,8 @@ test_that("convert_to_net_trade works", {
 })
 
 
-# Testing stat_diffs_to_epsilon:
-test_that("stat_diffs_to_epsilon works",{
+# Testing stat_diffs_to_balancing:
+test_that("stat_diffs_to_balancing works",{
 
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "ECCTools")
 
@@ -99,13 +99,13 @@ test_that("stat_diffs_to_epsilon works",{
                  dplyr::pull(),
                500)
 
-  stat_diffs_flows <- AB_data_stat_diffs_to_epsilon %>%
+  stat_diffs_flows <- AB_data_stat_diffs_to_balancing %>%
     dplyr::filter(Flow == "Statistical differences")
 
   expect_equal(stat_diffs_flows[1,] %>%
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
-               "Epsilon")
+               "B")
 
   expect_equal(stat_diffs_flows[1,] %>%
                  dplyr::select(E.dot) %>%
@@ -115,7 +115,7 @@ test_that("stat_diffs_to_epsilon works",{
   expect_equal(stat_diffs_flows[2,] %>%
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
-               "Epsilon")
+               "B")
 
   expect_equal(stat_diffs_flows[2,] %>%
                  dplyr::select(E.dot) %>%
@@ -126,7 +126,7 @@ test_that("stat_diffs_to_epsilon works",{
 
 
 # Testing stock_changes_to_epsilon:
-test_that("stock_changes_to_epsilon works",{
+test_that("stock_changes_to_balancing works",{
 
   A_B_path <- system.file("extdata/A_B_data_full_2018_format_stat_diffs_stock_changes.csv", package = "ECCTools")
 
@@ -139,20 +139,20 @@ test_that("stock_changes_to_epsilon works",{
   expect_true(AB_data_specified %>%
                 IEATools::tidy_iea_df_balanced())
 
-  AB_data_stock_changes_to_epsilon <- AB_data_specified %>%
+  AB_data_stock_changes_to_balancing <- AB_data_specified %>%
     IEATools::add_psut_matnames() %>%
-    stock_changes_to_epsilon()
+    stock_changes_to_balancing()
 
-  expect_true(AB_data_stock_changes_to_epsilon %>%
+  expect_true(AB_data_stock_changes_to_balancing %>%
                 IEATools::tidy_iea_df_balanced())
 
 
-  expect_equal(AB_data_stock_changes_to_epsilon[1,] %>%
+  expect_equal(AB_data_stock_changes_to_balancing[1,] %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                500)
 
-  stock_changes_flows <- AB_data_stock_changes_to_epsilon %>%
+  stock_changes_flows <- AB_data_stock_changes_to_balancing %>%
     dplyr::filter(
       stringr::str_detect(.data[["Flow"]], "Stock changes")
       )
@@ -160,7 +160,7 @@ test_that("stock_changes_to_epsilon works",{
   expect_equal(stock_changes_flows[1,] %>%
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
-               "Epsilon")
+               "B")
 
   expect_equal(stock_changes_flows[1,] %>%
                  dplyr::select(E.dot) %>%
@@ -170,7 +170,7 @@ test_that("stock_changes_to_epsilon works",{
   expect_equal(stock_changes_flows[2,] %>%
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
-               "Epsilon")
+               "B")
 
   expect_equal(stock_changes_flows[2,] %>%
                  dplyr::select(E.dot) %>%
@@ -180,12 +180,12 @@ test_that("stock_changes_to_epsilon works",{
   expect_equal(stock_changes_flows[3,] %>%
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
-               "Epsilon")
+               "B")
 
   expect_equal(stock_changes_flows[4,] %>%
                  dplyr::select(matnames) %>%
                  dplyr::pull(),
-               "Epsilon")
+               "B")
 })
 
 
@@ -212,9 +212,9 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
       E.dot = c(-50, -40, -10)
     )
 
-  AB_data_stock_changes_to_epsilon <- AB_data_specified %>%
+  AB_data_stock_changes_to_balancing <- AB_data_specified %>%
     IEATools::add_psut_matnames() %>%
-    stock_changes_to_epsilon()
+    stock_changes_to_balancing()
 
   # Here we add a test: the calc_io_mats() function from Recca must work fine when using the sum_R_V method
 
@@ -226,37 +226,37 @@ test_that("Checking the sum_R_V argument of the calc_io_mats works well", {
     IEATools::prep_psut() %>%
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 
-  AB_data_stock_changes_to_epsilon_io_Y_U_method <- AB_data_stock_changes_to_epsilon %>%
+  AB_data_stock_changes_to_epsilon_io_Y_U_method <- AB_data_stock_changes_to_balancing %>%
     IEATools::prep_psut() %>%
     Recca::calc_io_mats()
 
-  AB_data_stock_changes_to_epsilon_io_R_V_method <- AB_data_stock_changes_to_epsilon %>%
+  AB_data_stock_changes_to_epsilon_io_R_V_method <- AB_data_stock_changes_to_balancing %>%
     IEATools::prep_psut() %>%
     Recca::calc_io_mats(method_q_calculation = "sum_R_V_cols")
 
-  # Without Epsilon, sum_Y_U method
+  # Without Balancing, sum_Y_U method
   expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Anthracite", 1]], 50)
   expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Hard coal (if no detail)", 1]], 40)
   expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Brown coal (if no detail)", 1]], 30)
   expect_equal(AB_data_specified_io_Y_U_method$q[[1]][["Coking coal", 1]], 5020)
 
-  # Without Epsilon, sum_R_V method
+  # Without Balancing, sum_R_V method
   expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Anthracite", 1]], 20)
   expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Hard coal (if no detail)", 1]], 20)
   expect_error(AB_data_specified_io_R_V_method$q[[1]][["Brown coal (if no detail)", 1]])
   expect_equal(AB_data_specified_io_R_V_method$q[[1]][["Coking coal", 1]], 5000)
 
-  # With Epsilon, sum_Y_U method
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Anthracite", 1]], 50)
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Hard coal (if no detail)", 1]], 40)
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Brown coal (if no detail)", 1]], 20)
-  expect_equal(AB_data_stock_changes_to_epsilon_io_Y_U_method$q[[1]][["Coking coal", 1]], 5000)
+  # With Balancing, sum_Y_U method
+  expect_equal(AB_data_stock_changes_to_balancing_io_Y_U_method$q[[1]][["Anthracite", 1]], 50)
+  expect_equal(AB_data_stock_changes_to_balancing_io_Y_U_method$q[[1]][["Hard coal (if no detail)", 1]], 40)
+  expect_equal(AB_data_stock_changes_to_balancing_io_Y_U_method$q[[1]][["Brown coal (if no detail)", 1]], 20)
+  expect_equal(AB_data_stock_changes_to_balancing_io_Y_U_method$q[[1]][["Coking coal", 1]], 5000)
 
-  # With Epsilon, sum_R_V method
-  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Anthracite", 1]])
-  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Hard coal (if no detail)", 1]], 10)
-  expect_error(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Brown coal (if no detail)", 1]])
-  expect_equal(AB_data_stock_changes_to_epsilon_io_R_V_method$q[[1]][["Coking coal", 1]], 5000)
+  # With Balancing, sum_R_V method
+  expect_error(AB_data_stock_changes_to_balancing_io_R_V_method$q[[1]][["Anthracite", 1]])
+  expect_equal(AB_data_stock_changes_to_balancing_io_R_V_method$q[[1]][["Hard coal (if no detail)", 1]], 10)
+  expect_error(AB_data_stock_changes_to_balancing_io_R_V_method$q[[1]][["Brown coal (if no detail)", 1]])
+  expect_equal(AB_data_stock_changes_to_balancing_io_R_V_method$q[[1]][["Coking coal", 1]], 5000)
 })
 
 

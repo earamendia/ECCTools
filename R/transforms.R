@@ -55,7 +55,7 @@ specify_MR_R <- function(.tidy_iea_df,
 #' This function specified the Multi-Regional Supply (V) matrix.
 #' Only flows that belong to the Multi-Regional Supply matrix are returned,
 #' other flows are filtered out. Exceptions are flows akin to supply (with E.dot < 0) but that have been
-#' previously re-directed to the Epsilon matrix by the analyst - those are also kept.
+#' previously re-directed to the Balancing matrix by the analyst - those are also kept.
 #'
 #' The specification process is to modify both the flow and the product produced
 #' so that the producing country is added as prefix using brackets first.
@@ -64,8 +64,8 @@ specify_MR_R <- function(.tidy_iea_df,
 #' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional R matrix needs to be created.
 #' @param V_matrix The name of the V matrix.
 #'                 Default is `IEATools::psut_cols$V`.
-#' @param Epsilon_matrix The name of the Epsilon matrix.
-#'                Default is `IEATools::psut_cols$epsilon`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                Default is "B".
 #' @param matnames The name of the matrix names column.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param imports The name of the Imports flows in the `.tidy_iea_df`.
@@ -84,7 +84,7 @@ specify_MR_R <- function(.tidy_iea_df,
 #'  print()
 specify_MR_V <- function(.tidy_iea_df,
                          V_matrix = IEATools::psut_cols$V,
-                         Epsilon_matrix = IEATools::psut_cols$epsilon,
+                         balancing_matrix = IEATools::psut_cols$epsilon,
                          matnames = IEATools::mat_meta_cols$matnames,
                          imports = IEATools::interface_industries$imports,
                          country = IEATools::iea_cols$country,
@@ -95,7 +95,7 @@ specify_MR_V <- function(.tidy_iea_df,
 
   MR_V <- .tidy_iea_df %>%
     dplyr::filter((.data[[matnames]] == V_matrix & (! stringr::str_detect(.data[[flow]], imports))) |
-                    (.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] < 0 & (! stringr::str_detect(.data[[flow]], imports)))) %>%
+                    (.data[[matnames]] == balancing_matrix & .data[[e_dot]] < 0 & (! stringr::str_detect(.data[[flow]], imports)))) %>%
     dplyr::mutate(
       "{flow}" := paste0("{", .data[[country]], "}_", .data[[flow]]),
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
@@ -109,12 +109,12 @@ specify_MR_V <- function(.tidy_iea_df,
 
 #' Specifies imported and domestic products
 #'
-#' This function specifies imported and domestic products in the Y, U_EIOU, U_feed, and Epsilon matrices.
+#' This function specifies imported and domestic products in the Y, U_EIOU, U_feed, and Balancing matrices.
 #' For instance, a flow of "Gasoline" will be broken down in two flows: one of imported gasoline, and one of domestic gasoline.
 #' The origin is specified in a new column. One of the two flows may be absent, in the case of a product that is not imported,
 #' or not domestically produced.
 #'
-#' Only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices are returned.
+#' Only flows belonging to the Y, U_eiou, U_feed, or Balancing matrices are returned.
 #' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` that needs being specified.
@@ -126,8 +126,8 @@ specify_MR_V <- function(.tidy_iea_df,
 #'                 Default is `IEATools::psut_cols$U_feed`.
 #' @param U_EIOU_matrix The name of the U_eiou matrix.
 #'                 Default is `IEATools::psut_cols$U_eiou`.
-#' @param Epsilon_matrix The name of the Epsilon matrix.
-#'                 Default is `IEATools::psut_cols$epsilon`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                 Default is "B".
 #' @param matnames The name of the matrix names column.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param domestic The string that indicates that the product is of domestic origin in the new origin column.
@@ -145,7 +145,7 @@ specify_MR_V <- function(.tidy_iea_df,
 #' @param Total_Consumption_By_Product The name of the temporary column that contains total consumption by product?
 #'                                     Default is "Total_Consumption_By_Product".
 #'
-#' @return A `.tidy_iea_df` that includes only flows belonging to the Y, U_eiou, U_feed, or Epsilon matrices,
+#' @return A `.tidy_iea_df` that includes only flows belonging to the Y, U_eiou, U_feed, or Balancing matrices,
 #'         and for which flows are specified in terms of flows or imported or domestic products.
 #' @export
 #'
@@ -159,7 +159,7 @@ specify_imported_products <- function(.tidy_iea_df,
                                       Y_matrix = IEATools::psut_cols$Y,
                                       U_feed_matrix = IEATools::psut_cols$U_feed,
                                       U_EIOU_matrix = IEATools::psut_cols$U_eiou,
-                                      Epsilon_matrix = IEATools::psut_cols$epsilon,
+                                      balancing_matrix = "B",
                                       matnames = IEATools::mat_meta_cols$matnames,
                                       domestic = "Domestic",
                                       imported = "Imported",
@@ -181,7 +181,7 @@ specify_imported_products <- function(.tidy_iea_df,
   defined_imported_flows <- .tidy_iea_df %>%
     dplyr::filter(
         ((.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix) & (! stringr::str_detect(.data[[flow]], exports))) |
-          ((.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0) & (! stringr::str_detect(.data[[flow]], exports)))
+          ((.data[[matnames]] == balancing_matrix & .data[[e_dot]] >= 0) & (! stringr::str_detect(.data[[flow]], exports)))
     ) %>%
     dplyr::left_join(
       calc_share_imports_by_products(.tidy_iea_df,
@@ -205,14 +205,14 @@ specify_imported_products <- function(.tidy_iea_df,
 
 #' Specifies Multi-Regional final demand (Y) and use (U) matrices with Global Market Assumption
 #'
-#' This function specifies flows belonging to the Y, U_feed, U_eiou, and Epsilon (only for those flows akin to final demand) matrices,
+#' This function specifies flows belonging to the Y, U_feed, U_eiou, and B (only for those flows akin to final demand) matrices,
 #' according to the Global Market Assumption. See details for more explanations.
 #'
 #' First, each flow is separated into a flow of domestic product and imported product, using the `specify_imported_products()` function.
 #' Then, the `calc_share_exports_by_product()` function is used to calculate the share of global exports, for each product, by country.
 #' These shares is used to specify the importations of each country, for each product, hence the assumption of a global market.
 #'
-#' Only flows belonging to the Y, U_feed, U_eiou, and Epsilon matrices are returned.
+#' Only flows belonging to the Y, U_feed, U_eiou, and B matrices are returned.
 #' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional Y and U matrices needs to be created.
@@ -234,7 +234,7 @@ specify_imported_products <- function(.tidy_iea_df,
 #' @param Producing_Country The name of the temporary column containing the country of origin of a given flow, i.e. the exporting country.
 #'                          Default is "Producing_Country".
 #'
-#' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
+#' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and B matrices are specified.
 #' @export
 #'
 #' @examples
@@ -457,6 +457,8 @@ calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
 #'             Default is `year = IEATools::iea_cols$year`.
 #' @param product The name of the product column.
 #'                Default is `IEATools::iea_cols$product`.
+#' @param e_dot The name of the E.dot column.
+#'               Default is `IEATools::iea_cols$e_dot`.
 #' @param share_exports_by_product The name of the share of exports by product column.
 #'                                 Default is "Share_Exports_By_Product".
 #' @param .sum_share_exports The name of the temporary sum shares of exports by product column.
@@ -514,13 +516,13 @@ check_bilateral_trade_df <- function(.bilateral_trade_df,
 
 #' Specifies Multi-Regional final demand (Y) and use (U) matrices with Bilateral Trade Assumption
 #'
-#' This function specifies flows belonging to the Y, U_feed, U_eiou, and Epsilon (only for those flows akin to final demand) matrices,
+#' This function specifies flows belonging to the Y, U_feed, U_eiou, and B (only for those flows akin to final demand) matrices,
 #' according to the Bilateral Trade Assumption. See details for more explanations.
 #'
 #' First, each flow is separated into a flow of domestic product and imported product, using the `specify_imported_products()` function.
 #' Then, the bilateral trade data passed as `bilateral_trade_df` argument, is used to specify the flows that are imported.
 #'
-#' Only flows belonging to the Y, U_feed, U_eiou, and Epsilon matrices are returned.
+#' Only flows belonging to the Y, U_feed, U_eiou, and B matrices are returned.
 #' Note that matrices names need to be added first, most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` from which the Multi-Regional Y and U matrices needs to be created.
@@ -545,7 +547,7 @@ check_bilateral_trade_df <- function(.bilateral_trade_df,
 #'                                           Default is "Share_Global_Production_By_Product".
 #'
 #'
-#' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and Epsilon matrices are specified.
+#' @return A `.tidy_iea_df` with flows corresponding to the Y, U_feed, U_eiou, and B matrices are specified.
 #' @export
 #'
 #' @examples
@@ -854,8 +856,8 @@ find_list_dta_observations <- function(.tidy_iea_df,
 #'                Defaut is `IEATools::interface_industries$imports`.
 #' @param matnames The column name for matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
-#' @param epsilon The name of the Epsilon matrix.
-#'                Default is `IEATools::psut_cols$epsilon`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                Default is `IEATools::psut_cols$balancing_matrix`.
 #'
 #' @return A `.tidy_iea_df` that describes the Energy Conversion Chain from a Domestic Technology Assumption perspective.
 #' @export
@@ -879,7 +881,7 @@ transform_to_dta <- function(.tidy_iea_df,
                              e_dot = IEATools::iea_cols$e_dot,
                              imports = IEATools::interface_industries$imports,
                              matnames = IEATools::mat_meta_cols$matnames,
-                             epsilon = "Epsilon"){
+                             balancing_matrix = "B"){
 
   if (select_dta_observations == TRUE){
     list_dta_observations <- .tidy_iea_df %>%
@@ -890,7 +892,7 @@ transform_to_dta <- function(.tidy_iea_df,
       dplyr::filter(stringr::str_c(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], sep = "_") %in% list_dta_observations) %>%
       dplyr::mutate(
         "{matnames}" := dplyr::case_when(
-          stringr::str_detect(.data[[flow]], imports) ~ epsilon,
+          stringr::str_detect(.data[[flow]], imports) ~ balancing_matrix,
           TRUE ~ .data[[matnames]]
         ),
         "{e_dot}" := dplyr::case_when(
@@ -906,7 +908,7 @@ transform_to_dta <- function(.tidy_iea_df,
     tidy_iea_dta_df <- .tidy_iea_df %>%
       dplyr::mutate(
         "{matnames}" := dplyr::case_when(
-          stringr::str_detect(.data[[flow]], imports) ~ epsilon,
+          stringr::str_detect(.data[[flow]], imports) ~ balancing_matrix,
           TRUE ~ .data[[matnames]]
         ),
         "{e_dot}" := dplyr::case_when(

@@ -1,8 +1,8 @@
 
-#' Adds a balancing vector to the Epsilon matrix
+#' Adds a balancing vector to the Balancing matrix
 #'
 #' This function adds a balancing vector to the `.tidy_iea_df`
-#' in the Epsilon matrix when the data frame is not balanced.
+#' in the Balancing matrix when the data frame is not balanced.
 #'
 #' The balancing flow is added by adding a single flow for each product
 #' for which consumption and supply are not balanced. So, a single vector is added,
@@ -32,8 +32,8 @@
 #'                   Default is "balance_OK".
 #' @param err The numerical error observed when calculating the balance. Balanced flows will return 0
 #'            Default is "err".
-#' @param epsilon The name of the Epsilon matrix.
-#'                Default is "Epsilon".
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                Default is "B".
 #'
 #' @return The `.tidy_iea_df` with balancing flows added when needed.
 #' @export
@@ -55,12 +55,12 @@
 #'  IEATools::calc_tidy_iea_df_balances() %>%
 #'  dplyr::filter(balance_OK == FALSE) %>%
 #'  print()
-#' # Let's have a look to balancing flows, which are all ascribed to the Epsilon matrix:
+#' # Let's have a look to balancing flows, which are all ascribed to the Balancing matrix:
 #' tidy_AB_data %>%
 #' IEATools::add_psut_matnames() %>%
 #'  transform_to_gma() %>%
 #'  add_balancing_vector() %>%
-#'  dplyr::filter(matnames == "Epsilon") %>%
+#'  dplyr::filter(matnames == "B") %>%
 #'  print()
 add_balancing_vector <- function(.tidy_iea_df,
                                  # Input column names
@@ -85,7 +85,7 @@ add_balancing_vector <- function(.tidy_iea_df,
                                  supply_minus_consumption = "supply_minus_consumption",
                                  balance_OK = "balance_OK",
                                  err = "err",
-                                 epsilon = "Epsilon"){
+                                 balancing_matrix = "B"){
 
   # Check for which products the flows are unbalanced
   balances <- .tidy_iea_df %>%
@@ -98,7 +98,7 @@ add_balancing_vector <- function(.tidy_iea_df,
       "{ledger_side}" := balancing,
       "{flow_aggregation_point}" := balancing,
       "{flow}" := balancing,
-      "{matnames}" := epsilon
+      "{matnames}" := balancing_matrix
     ) %>%
     dplyr::rename(
       "{e_dot}" := .data[[err]]

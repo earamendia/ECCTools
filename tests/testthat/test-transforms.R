@@ -83,10 +83,10 @@ test_that("transform_to_dta works", {
   testing_dta <- testing %>%
     transform_to_dta()
 
-  # Checking that there are no imports when Epsilon is not in ledger_side
+  # Checking that there are no imports when Balancing is not in ledger_side
   n <- testing_dta %>%
     dplyr::filter(stringr::str_detect(.data[["Flow"]], "Imports")) %>%
-    dplyr::filter(matnames == "Epsilon") %>%
+    dplyr::filter(matnames == "B") %>%
     dplyr::summarise(
       n = dplyr::n()
     ) %>%
@@ -184,7 +184,7 @@ test_that("specify_MR_V works", {
 
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
-  # We wheck what happens when we add an epsilon flow to the supply side.
+  # We wheck what happens when we add an balancing flow to the supply side.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all() %>%
@@ -217,7 +217,7 @@ test_that("specify_MR_V works", {
 
   AB_supply_MR <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    stock_changes_to_epsilon() %>%
+    stock_changes_to_balancing() %>%
     specify_MR_V()
 
 
@@ -502,7 +502,7 @@ test_that("specify_imported_products works", {
                -150)
 
 
-  # We add a stock changes flow that will go to the Epsilon matrix for a more comprehensive test.
+  # We add a stock changes flow that will go to the Balancing matrix for a more comprehensive test.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all() %>%
@@ -535,19 +535,19 @@ test_that("specify_imported_products works", {
 
   defined_imported_products <- AB_data %>%
     IEATools::add_psut_matnames() %>%
-    stock_changes_to_epsilon() %>%
+    stock_changes_to_balancing() %>%
     specify_imported_products()
 
   # Checks.
   expect_equal(defined_imported_products %>%
-                 dplyr::filter(matnames == "Epsilon") %>%
+                 dplyr::filter(matnames == "B") %>%
                  dplyr::select(Country) %>%
                  dplyr::pull() %>%
                  length(),
                2)
 
   expect_equal(defined_imported_products %>%
-                 dplyr::filter(matnames == "Epsilon",
+                 dplyr::filter(matnames == "B",
                                Product == "Coke oven coke",
                                Origin == "Domestic") %>%
                  dplyr::select(E.dot) %>%
@@ -556,7 +556,7 @@ test_that("specify_imported_products works", {
                tolerance = 0.0001)
 
   expect_equal(defined_imported_products %>%
-                 dplyr::filter(matnames == "Epsilon",
+                 dplyr::filter(matnames == "B",
                                Product == "Coke oven coke",
                                Origin == "Imported") %>%
                  dplyr::select(E.dot) %>%
@@ -875,7 +875,7 @@ test_that("specify_MR_Y_U_gma works", {
                  dplyr::pull(),
                180)
 
-  # We add a stock changes flow that will go to the Epsilon matrix for a more comprehensive test.
+  # We add a stock changes flow that will go to the Balancing matrix for a more comprehensive test.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all() %>%
@@ -913,14 +913,14 @@ test_that("specify_MR_Y_U_gma works", {
 
   # Checks.
   expect_equal(AB_MR_Y_U_gma %>%
-                 dplyr::filter(matnames == "Epsilon") %>%
+                 dplyr::filter(matnames == "B") %>%
                  dplyr::select(Country) %>%
                  dplyr::pull() %>%
                  length(),
                2)
 
   expect_equal(AB_MR_Y_U_gma %>%
-                 dplyr::filter(matnames == "Epsilon",
+                 dplyr::filter(matnames == "B",
                                Flow == "{A}_Stock changes [of Coke oven coke]",
                                Product == "{A}_Coke oven coke") %>%
                  dplyr::select(E.dot) %>%
@@ -929,7 +929,7 @@ test_that("specify_MR_Y_U_gma works", {
                tolerance = 0.0001)
 
   expect_equal(AB_MR_Y_U_gma %>%
-                 dplyr::filter(matnames == "Epsilon",
+                 dplyr::filter(matnames == "B",
                                Flow == "{A}_Stock changes [of Coke oven coke]",
                                Product == "{B}_Coke oven coke") %>%
                  dplyr::select(E.dot) %>%
@@ -1102,7 +1102,7 @@ test_that("transform_to_gma works", {
                180)
 
 
-  # Then just check with stock changes and Epsilon matrix too.
+  # Then just check with stock changes and Balancing matrix too.
   AB_data <- A_B_path %>%
     IEATools::load_tidy_iea_df() %>%
     IEATools::specify_all() %>%
@@ -1145,7 +1145,7 @@ test_that("transform_to_gma works", {
 
   # Testing a couple of values
   expect_equal(AB_MR_PSUT_gma %>%
-                 dplyr::filter(matnames == "Epsilon") %>%
+                 dplyr::filter(matnames == "B") %>%
                  dplyr::select(Country) %>%
                  dplyr::pull() %>%
                  length(),
@@ -1155,14 +1155,14 @@ test_that("transform_to_gma works", {
                  dplyr::filter(
                    Flow == "{A}_Stock changes [of a very odd product]",
                    Product == "{A}_a very odd product",
-                   matnames == "Epsilon"
+                   matnames == "B"
                  ) %>%
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -100)
 
   expect_equal(AB_MR_PSUT_gma %>%
-                 dplyr::filter(matnames == "Epsilon",
+                 dplyr::filter(matnames == "B",
                                Flow == "{A}_Stock changes [of Coke oven coke]",
                                Product == "{A}_Coke oven coke") %>%
                  dplyr::select(E.dot) %>%
@@ -1171,7 +1171,7 @@ test_that("transform_to_gma works", {
                tolerance = 0.0001)
 
   expect_equal(AB_MR_PSUT_gma %>%
-                 dplyr::filter(matnames == "Epsilon",
+                 dplyr::filter(matnames == "B",
                                Flow == "{A}_Stock changes [of Coke oven coke]",
                                Product == "{B}_Coke oven coke") %>%
                  dplyr::select(E.dot) %>%

@@ -5,7 +5,7 @@
 #'
 #' Flows included in the calculation of the total consumption by product are flows belonging to either the Y,
 #' U_feed, or U_eiou matrices. Flows belonging to the Y matrix but representing exports, are excluded.
-#' In addition, flows belonging to the Epsilon matrix and akin to a final demand (i.e. E.dot > 0) are also included, provided they do not represent exports.
+#' In addition, flows belonging to the Balancing matrix and akin to a final demand (i.e. E.dot > 0) are also included, provided they do not represent exports.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` to which the function should be applied.
 #' @param flow,country,method,energy_type,last_stage,year,product,unit,e_dot See `IEATools::iea_cols`.
@@ -19,8 +19,8 @@
 #'                      Default is `IEATools::psut_cols$U_feed`.
 #' @param U_EIOU_matrix The name of the U_eiou matrix.
 #'                      Default is `IEATools::psut_cols$U_eiou`.
-#' @param Epsilon_matrix The name of the Epsilon matrix.
-#'                      Default is `IEATools::psut_cols$epsilon`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                      Default is "B".
 #' @param Total_Consumption_By_Product The name of the new column reporting total consumption by product.
 #'
 #' @return A data frame with total consumption by product, for each country and year.
@@ -46,13 +46,13 @@ calc_total_consumption_by_product <- function(.tidy_iea_df,
                                               Y_matrix = "Y",
                                               U_feed_matrix = "U_feed",
                                               U_EIOU_matrix = "U_EIOU",
-                                              Epsilon_matrix = "Epsilon",
+                                              Epsilon_matrix = "B",
                                               Total_Consumption_By_Product = "Total_Consumption_By_Product"){
 
   tidy_total_consumption_by_product <- .tidy_iea_df %>%
     dplyr::filter(
       ((.data[[matnames]] == Y_matrix | .data[[matnames]] == U_feed_matrix | .data[[matnames]] == U_EIOU_matrix) & (! stringr::str_detect(.data[[flow]], exports))) |
-        (.data[[matnames]] == Epsilon_matrix & .data[[e_dot]] >= 0 & (! stringr::str_detect(.data[[flow]], exports)))
+        (.data[[matnames]] == balancing_matrix & .data[[e_dot]] >= 0 & (! stringr::str_detect(.data[[flow]], exports)))
     ) %>% # There shouldn't be anymore exports where there are imports, now.
     dplyr::mutate(
       "{e_dot}" := dplyr::case_when(

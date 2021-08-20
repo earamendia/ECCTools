@@ -9,10 +9,8 @@ international_bunkers_to_epsilon(
   flow = IEATools::iea_cols$flow,
   matnames = IEATools::mat_meta_cols$matnames,
   e_dot = IEATools::iea_cols$e_dot,
- 
-    international_marine_bunkers = IEATools::interface_industries$international_marine_bunkers,
- 
-    international_aviation_bunkers = IEATools::interface_industries$international_aviation_bunkers,
+  international_marine_bunkers = "International marine bunkers",
+  international_aviation_bunkers = "International aviation bunkers",
   epsilon = IEATools::psut_cols$epsilon
 )
 }
@@ -34,7 +32,7 @@ Default is \code{IEATools::interface_industries$international_aviation_bunkers}.
 Default is "Epsilon".}
 }
 \value{
-
+The new \code{.tidy_iea_df} with international bunkers ascribed to the Epsilon matrix.
 }
 \description{
 This function moves international bunkers flows to the Epsilon matrix.

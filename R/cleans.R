@@ -94,27 +94,27 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 
 
-#' Moving statistical differences flows to Epsilon matrix
+#' Moving statistical differences flows to Balancing matrix
 #'
-#' This function sends statistical differences flows to a balancing matrix Epsilon.
-#' The Epsilon balancing matrix is akin to an additional final demand matrix,
+#' This function sends statistical differences flows to a balancing matrix Balancing.
+#' The Balancing matrix is akin to an additional final demand matrix,
 #' meaning that flows akin to final demand will be positive,
 #' while flows akin to supply will be negative.
 #'
-#' See the Epsilon balacing matrix vignette for more information.
+#' See the Balacing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Epsilon matrix.
+#' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Balancingmatrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param stat_diffs The name of the statistical differences flows.
 #'                   Default is "Statistical differences".
-#' @param epsilon The name of the Epsilon matrix.
-#'                Default is "Epsilon".
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                Default is "B".
 #'
-#' @return A `.tidy_iea_df` for which statistical differences flows have been send to the Epsilon matrix.
+#' @return A `.tidy_iea_df` for which statistical differences flows have been send to the Balancing matrix.
 #' @export
 #'
 #' @examples
@@ -133,19 +133,19 @@ convert_to_net_trade <- function(.tidy_iea_df,
 #' E.dot = 10
 #' ) %>%
 #' IEATools::add_psut_matnames() %>%
-#' stat_diffs_to_epsilon() %>%
+#' stat_diffs_to_balancing_mat() %>%
 #' dplyr::filter(stringr::str_detect(Flow, "Statistical differences")) %>%
 #' print()
-stat_diffs_to_epsilon <- function(.tidy_iea_df,
+stat_diffs_to_balancing <- function(.tidy_iea_df,
                               flow = IEATools::iea_cols$flow,
                               matnames = IEATools::mat_meta_cols$matnames,
                               e_dot = IEATools::iea_cols$e_dot,
                               stat_diffs = "Statistical differences",
-                              epsilon = IEATools::psut_cols$epsilon){
+                              balancing_matrix = "B"){
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
-        .data[[flow]] == stat_diffs ~ epsilon,
+        .data[[flow]] == stat_diffs ~ balancing_matrix,
         TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(
@@ -158,27 +158,27 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 
 
 
-#' Moving stock changes flows to Epsilon matrix
+#' Moving stock changes flows to Balancing matrix
 #'
-#' This function sends stock changes flows to a balancing matrix Epsilon.
-#' The Epsilon balancing matrix is akin to an additional final demand matrix,
+#' This function sends stock changes flows to a balancing matrix B.
+#' The Balancing matrix is akin to an additional final demand matrix,
 #' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
 #' while flows akin to supply (i.e. where stocks decrease) will be negative.
 #'
-#' See the Epsilon balacing matrix vignette for more information.
+#' See the Balacing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Epsilon matrix.
+#' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Balancing matrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param stock_changes The name of the Stock changes flows.
 #'                      Default is "Stock changes".
-#' @param epsilon The name of the Epsilon matrix.
-#'                Default is "Epsilon".
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                Default is "B".
 #'
-#' @return A `.tidy_iea_df` with Stock changes flows sent to the Epsilon matrix.
+#' @return A `.tidy_iea_df` with Stock changes flows sent to the Balancing matrix.
 #' @export
 #'
 #' @examples
@@ -197,19 +197,19 @@ stat_diffs_to_epsilon <- function(.tidy_iea_df,
 #' E.dot = 10
 #' ) %>%
 #' IEATools::add_psut_matnames() %>%
-#' stock_changes_to_epsilon() %>%
+#' stock_changes_to_balancing() %>%
 #' dplyr::filter(stringr::str_detect(Flow, "Statistical differences")) %>%
 #' print()
-stock_changes_to_epsilon <- function(.tidy_iea_df,
+stock_changes_to_balancing <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
                                  matnames = IEATools::mat_meta_cols$matnames,
                                  e_dot = IEATools::iea_cols$e_dot,
                                  stock_changes = IEATools::interface_industries$stock_changes,
-                                 epsilon = IEATools::psut_cols$epsilon){
+                                 balancing_matrix = "B"){
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
-        stringr::str_detect(.data[[flow]], stock_changes) ~ epsilon,
+        stringr::str_detect(.data[[flow]], stock_changes) ~ balancng_matrix,
         TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(
@@ -221,18 +221,18 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 
 
 
-#' Moves international bunkers flows to the Epsilon matrix
+#' Moves international bunkers flows to the Balancing matrix
 #'
-#' This function moves international bunkers flows to the Epsilon matrix.
-#' The Epsilon balancing matrix is akin to an additional final demand matrix,
+#' This function moves international bunkers flows to the Balancing matrix.
+#' The Balancing matrix is akin to an additional final demand matrix,
 #' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
 #' while flows akin to supply (i.e. where stocks decrease) will be negative.
 #'
-#' See the Epsilon balacing matrix vignette for more information.
+#' See the Balacing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Epsilon matrix.
+#' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Balancing matrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
@@ -240,23 +240,23 @@ stock_changes_to_epsilon <- function(.tidy_iea_df,
 #'                                     Default is `IEATools::interface_industries$international_marine_bunkers`.
 #' @param international_aviation_bunkers The name of the international aviation bunkers flows in the `.tidy_iea_df`.
 #'                                     Default is `IEATools::interface_industries$international_aviation_bunkers`.
-#' @param epsilon The name of the Epsilon matrix.
-#'                Default is "Epsilon".
+#' @param epsilon The name of the Balancing matrix.
+#'                Default is "B".
 #'
-#' @return
+#' @return The new `.tidy_iea_df` with international bunkers ascribed to the Balancing matrix.
 #' @export
-international_bunkers_to_epsilon <- function(.tidy_iea_df,
+international_bunkers_to_balancing <- function(.tidy_iea_df,
                                              flow = IEATools::iea_cols$flow,
                                              matnames = IEATools::mat_meta_cols$matnames,
                                              e_dot = IEATools::iea_cols$e_dot,
-                                             international_marine_bunkers = IEATools::interface_industries$international_marine_bunkers,
-                                             international_aviation_bunkers = IEATools::interface_industries$international_aviation_bunkers,
-                                             epsilon = IEATools::psut_cols$epsilon){
+                                             international_marine_bunkers = "International marine bunkers",
+                                             international_aviation_bunkers = "International aviation bunkers",
+                                             balancing_matrix = "B"){
 
   .tidy_iea_df %>%
     dplyr::mutate(
       "{matnames}" := dplyr::case_when(
-        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ epsilon,
+        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ balancing_matrix,
         TRUE ~ .data[[matnames]]
       ),
       "{e_dot}" := dplyr::case_when(

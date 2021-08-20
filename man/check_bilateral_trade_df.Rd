@@ -42,6 +42,9 @@ Default is \code{year = IEATools::iea_cols$year}.}
 \item{product}{The name of the product column.
 Default is \code{IEATools::iea_cols$product}.}
 
+\item{e_dot}{The name of the E.dot column.
+Default is \code{IEATools::iea_cols$e_dot}.}
+
 \item{share_exports_by_product}{The name of the share of exports by product column.
 Default is "Share_Exports_By_Product".}
 
