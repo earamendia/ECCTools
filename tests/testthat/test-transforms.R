@@ -442,7 +442,7 @@ test_that("specify_imported_products works", {
   # Checking length of data frame
   expect_equal(defined_imported_products %>%
                  dim(),
-               c(73, 13))
+               c(76, 13))
 
   # Check specific values
   expect_equal(defined_imported_products %>%
@@ -817,7 +817,7 @@ test_that("specify_MR_Y_U_gma works", {
   # Checking length of data frame
   expect_equal(AB_MR_Y_U_gma %>%
                  dim(),
-               c(73, 12))
+               c(76, 12))
 
   # Check specific values
   expect_equal(AB_MR_Y_U_gma %>%
@@ -964,7 +964,7 @@ test_that("transform_to_gma works", {
 
 
   expect_equal(dim(AB_MR_PSUT_gma),
-                   c(94, 12))
+                   c(97, 12))
 
 
   # Checking R matrix flows
@@ -1140,7 +1140,7 @@ test_that("transform_to_gma works", {
 
   # Length should be now 97.
   expect_equal(dim(AB_MR_PSUT_gma),
-               c(97, 12))
+               c(100, 12))
 
 
   # Testing a couple of values
