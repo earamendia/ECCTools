@@ -16,7 +16,9 @@ RoxygenNote: 7.1.1
 Suggests: 
     testthat,
     spelling,
-    covr
+    covr,
+    knitr,
+    rmarkdown
 Language: en-US
 Imports: 
     magrittr,
@@ -33,3 +35,4 @@ Imports:
     assertthat
 Depends: 
     R (>= 2.10)
+VignetteBuilder: knitr
