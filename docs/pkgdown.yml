@@ -1,0 +1,11 @@
+pandoc: 2.11.2
+pkgdown: 1.6.1
+pkgdown_sha: ~
+articles:
+  ECCTools: ECCTools.html
+  balancing_matrix: balancing_matrix.html
+  transform_to_bta: transform_to_bta.html
+  transform_to_dta: transform_to_dta.html
+  transform_to_gma: transform_to_gma.html
+last_built: 2021-08-22T09:11Z
+
