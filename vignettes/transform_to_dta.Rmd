@@ -8,13 +8,21 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+In this vignette we explain how the Domestic Technology Assumption can be formulated from a `.tidy_iea_df`.
 
-```{r setup}
-library(ECCTools)
-```
+
+# The Domestic Technology Assumption
+
+The Domestic Technology Assumption 
+
+
+# Formulating the Domestic Technology Assumption
+
+
+## Necessary conditions
+
+
+
+## Relaxing conditions
+
+Need to know well the consequences!

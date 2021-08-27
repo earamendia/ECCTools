@@ -8,13 +8,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+In this vignette we explain how the Global Market Assumption can be formulated from a `.tidy_iea_df`.
 
-```{r setup}
-library(ECCTools)
-```
+
+# The Global Market Assumption
+
+describe
+show how to execute it
+any condition?

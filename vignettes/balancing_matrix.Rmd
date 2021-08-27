@@ -7,13 +7,40 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+In this vignette we show how to use the balancing matrix **B** to modify the Energy Conversion Chain (ECC).
 
-```{r setup}
-library(ECCTools)
-```
+
+# Introduction and use of the balancing matrix B
+
+## The balancing matrix B
+
+The balancing matrix is an extension of the original PSUT framework introduced in ... . Figure ... shows the expanded PSUT framework with the balancing **B** matrix. 
+
+The matrix enables analysts to:
+
+* modify the supply mix without loosing energy balance;
+* modify the final demand without loosing energy balance.
+
+To scale up or down the supply of a given industry *i* by a factor *\lambda*, one can proceed according to Table ... . To modify the final demand without loosing energy balance, one can simply redirect energy flows belonging to the final demand (**Y** matrix) to the balancing matrix **B**.
+
+ADD TABLE.
+
+## Use
+
+### Initialising data
+
+Let us use the AB world example introduced in ... , but let us add flows, so that:
+
+1. Statistical differences provide 100 ktoe of crude oil in country A. To keep balance between supply and use, we assume that these 100 ktoe are consumed by a submarine race organised by country A.
+2. Stock changes provide 400 ktoe of coke oven coke in country B. To keep balance between supply and use, we assume that these 400 ktoe are consumed by a large passion for bonfires in country B population, and that coke oven coke is an excellent fuel for bonfires.
+3. Stock changes consume 200 ktoe of coke oven coke in country A, which importations are actually 800 ktoe and not 600 ktoe! Hence that final demand contributes to the build-up of country A stocks, and will be used in another year!
+
+INSERT CODE TO DESCRIBE THAT NEW DATA.
+
+### Relocating flows to balancing matrix
+
+Now, we want to modify the given ECC. Because:
+
+1. 
+2. *
+3. 

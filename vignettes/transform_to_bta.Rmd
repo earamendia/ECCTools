@@ -8,13 +8,4 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
-
-```{r setup}
-library(ECCTools)
-```
+In this vignette we explain how the Bilateral Trade Assumption can be formulated from a `.tidy_iea_df`.
