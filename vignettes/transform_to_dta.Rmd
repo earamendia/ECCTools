@@ -17,11 +17,38 @@ The Domestic Technology Assumption
 
 # Formulating the Domestic Technology Assumption
 
+The formulation of the Domestic Technology Assumption can be using the following functions:
+
+*`find_list_dta_observations()`: the function identifies which observations (i.e.\ sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA;
+* `transform_to_dta()`: the function transforms those observations that fulfil the required conditions in DTA data frame.
+
 
 ## Necessary conditions
 
+To be able to formulate the Domestic Technology Assumption, all products that are consumed in a given country, in a given year, need to be produced (even in a lower quantity) in the given country. Let us have a look with the AB world example.
 
 
-## Relaxing conditions
+```{r}
+tidy_AB_data %>% 
+  find_list_dta_observations()
+```
 
-Need to know well the consequences!
+The country A (year 2018) is found to fulfil the requirements. Indeed, country A imports coke oven coke, but country A also produces locally coke oven coke; we can then simulate that all its coke oven coke consumption comes from domestic production!
+
+Conversely, country B is not found to fulfil the requirements. Indeed, country B imports and consumes coal, natural gas, and crude oil, but does not produce them locally. Hence, we cannot simulate that these products come from domestic production.
+
+Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption:
+
+```{r}
+tidy_AB_data_dta <- tidy_AB_data %>% 
+  transform_to_dta() %>% 
+  dplyr::glimpse()
+```
+
+Only flows corresponding to country A are returned, and imports have been removed:
+
+```{r}
+tidy_AB_data_dta %>% 
+  dplyr::filter(Flow, stringr::str_detect("Imports")) %>% 
+  dplyr::glimpse()
+```
