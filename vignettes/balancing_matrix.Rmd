@@ -17,6 +17,8 @@ The balancing matrix is an extension of the original PSUT framework (see ) and h
 
 ![](figs/psut_expanded.pdf)
 
+**Warning**: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the `Recca` package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the **B** matrix may prove helpful, it is recommended to use it in subsequent Input-Output analysis only if the implications of the given use are fully understood. We recommend taking a look to the paper presently under review.
+
 The **B** matrix enables analysts to:
 
 -   modify the supply mix while conserving energy balance;
@@ -126,9 +128,6 @@ tidy_AB_data_relocated_flows %>%
   IEATools::tidy_iea_df_balanced()
 ```
 
-
 *Note regarding the sign convention in the balancing matrix*: Flow appearing as positive in the **B** matrix are akin to final demand flows. For instance, final demand flows relocated to **B** will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in **B**: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.
-
-CAVEAT: SUBSEQUENT ANALYSIS WITH RECCA!!!
 
 In conclusion, the analyst may use directly some functions directly available, such as `stat_diffs_to_balancing()` and `stock_changes_to_balancing()`. Alternatively, the analyst may directly relocate a flow to **B** by modifying the matrix name column of the flow that needs to be modified. Be careful of the sign convention!
