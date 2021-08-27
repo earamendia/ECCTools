@@ -1,7 +1,6 @@
 ---
 title: "Domestic Technology Assumption"
 output: rmarkdown::html_vignette
-bibliography: vignettes/References.bib
 vignette: >
   %\VignetteIndexEntry{Domestic Technology Assumption}
   %\VignetteEngine{knitr::rmarkdown}

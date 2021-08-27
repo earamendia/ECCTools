@@ -1,6 +1,5 @@
 ---
 output: github_document
-bibliography: vignettes/References.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file. -->

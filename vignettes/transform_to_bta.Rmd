@@ -1,7 +1,6 @@
 ---
 title: "Bilateral Trade Assumption"
 output: rmarkdown::html_vignette
-bibliography: vignettes/References.bib
 vignette: >
   %\VignetteIndexEntry{Bilateral Trade Assumption}
   %\VignetteEngine{knitr::rmarkdown}

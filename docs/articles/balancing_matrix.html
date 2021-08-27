@@ -97,13 +97,58 @@
 
     
     
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">ECCTools</span><span class="op">)</span></code></pre></div>
+<p>In this vignette we show how to use the balancing matrix <strong>B</strong> to modify the Energy Conversion Chain (ECC).</p>
+<div id="introduction-and-use-of-the-balancing-matrix-b" class="section level1">
+<h1 class="hasAnchor">
+<a href="#introduction-and-use-of-the-balancing-matrix-b" class="anchor"></a>Introduction and use of the balancing matrix B</h1>
+<div id="the-balancing-matrix-b" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-balancing-matrix-b" class="anchor"></a>The balancing matrix B</h2>
+<p>The balancing matrix is an extension of the original PSUT framework (see ) and has been introduced in a work presently under review. The figure below shows the expanded PSUT framework with the balancing <strong>B</strong> matrix.</p>
+<p><img src="figs/psut_expanded.png"></p>
+<p>The <strong>B</strong> matrix enables analysts to:</p>
+<ul>
+<li>modify the supply mix while conserving energy balance;</li>
+<li>modify the final demand while conserving energy balance.</li>
+</ul>
+<p>To scale up or down the supply of a given industry <em>i</em> by a factor <span class="math inline">\(\lambda\)</span>, one can proceed according to the table below, extracted from the work under review.</p>
+<p>To modify the final demand without loosing energy balance, one can simply redirect energy flows belonging to the final demand (<strong>Y</strong> matrix) to the balancing matrix <strong>B</strong>.</p>
+</div>
+<div id="use" class="section level2">
+<h2 class="hasAnchor">
+<a href="#use" class="anchor"></a>Use</h2>
+<div id="initialising-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#initialising-data" class="anchor"></a>Initialising data</h3>
+<p>Let us use the AB world example introduced in … , but let us add flows, so that:</p>
+<ol style="list-style-type: decimal">
+<li>Statistical differences provide 100 ktoe of crude oil in country A. To keep balance between supply and use, we assume that these 100 ktoe are consumed by a submarine race organised by country A.</li>
+<li>Stock changes provide 400 ktoe of coke oven coke in country B. To keep balance between supply and use, we assume that these 400 ktoe are consumed by a large passion for bonfires in country B population, and that coke oven coke is an excellent fuel for bonfires.</li>
+<li>Stock changes consume 200 ktoe of coke oven coke in country A, which importations are actually 800 ktoe and not 600 ktoe! Hence that final demand contributes to the build-up of country A stocks, and will be used in another year!</li>
+</ol>
+<p>INSERT CODE TO DESCRIBE THAT NEW DATA.</p>
+</div>
+<div id="relocating-flows-to-balancing-matrix" class="section level3">
+<h3 class="hasAnchor">
+<a href="#relocating-flows-to-balancing-matrix" class="anchor"></a>Relocating flows to balancing matrix</h3>
+<p>Now, we want to modify the given ECC. Because:</p>
+<ol style="list-style-type: decimal">
+<li>
+<li><ul>
+<li>
+</ul></li>
+<li>
+</ol>
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
