@@ -1,5 +1,6 @@
 ---
 output: github_document
+bibliography: vignettes/References.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file. -->
@@ -26,10 +27,12 @@ knitr::opts_chunk$set(
 
 # ECCTools
 
-The `R` package `ECCTools` provides tools to modify and Energy Conversion Chain (ECC) 
-that has been previously loaded using the `R` package `IEATools`. 
-Particularly, it helps to prepare the formulation of Multi-Regional Physical Supply Use Tables (MR-PSUT)
-representing the ECC, as well as to formulate Domestic Technology Assumption (DTA) formulations of national ECC.
+The `R` package `ECCTools` provides tools to modify and Energy Conversion Chain (ECC) that has been previously loaded using the `R` package `IEATools`. The `IEATools` package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table (see @Heun:2018). However, the `IEATools` package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, no environmental burden and embodied energy).
+
+The `ECCTools` package enables analysts to overcome this limitation through two different options:
+
+1. To formulate a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the ECC. In this case, imports are treated as supply coming from an industry located in a different region. This option is the closest representation of physical flows.
+2. To a formulate a PSUT framework following the Domestic Technology Assumption (DTA). The DTA assumes that imports are produced within the region that imports them. Although not a realistic assumption, it may prove to be a helpful simulation.
 
 
 ## Installation
@@ -47,6 +50,7 @@ devtools::install_github("earamendia/ECCTools", build_vignettes = TRUE)
 
 ## History
 
+This package builds upon the previous `R` package `IEATools`, as well as upon the paper 
 The paper that demonstrates uses of this package is currently under review.
 
 

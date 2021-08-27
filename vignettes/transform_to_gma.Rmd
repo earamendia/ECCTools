@@ -1,6 +1,7 @@
 ---
 title: "Global Market Assumption"
 output: rmarkdown::html_vignette
+bibliography: vignettes/References.bib
 vignette: >
   %\VignetteIndexEntry{Global Market Assumption}
   %\VignetteEngine{knitr::rmarkdown}
