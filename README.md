@@ -29,14 +29,16 @@ and embodied energy).
 The `ECCTools` package enables analysts to overcome this limitation
 through two different options:
 
-1.  To formulate a Multi-Regional Physical Supply Use Table (MR-PSUT)
-    framework representing the ECC. In this case, imports are treated as
-    supply coming from an industry located in a different region. This
-    option is the closest representation of physical flows.
-2.  To a formulate a PSUT framework following the Domestic Technology
-    Assumption (DTA). The DTA assumes that imports are produced within
-    the region that imports them. Although not a realistic assumption,
-    it may prove to be a helpful simulation.
+1.  The formulation of a Multi-Regional Physical Supply Use Table
+    (MR-PSUT) framework representing the Energy Conversion Chain. In
+    this case, imports are treated as supply coming from an industry
+    located in a different region. This option is the most realistic
+    one.
+2.  The formulation of a PSUT framework following the Domestic
+    Technology Assumption (DTA). The DTA assumes that imports are
+    produced within the region that imports them. Although the DTA is
+    not a realistic assumption, it enables analysts to conduct useful
+    simulations.
 
 ## Installation
 
@@ -52,9 +54,8 @@ devtools::install_github("earamendia/ECCTools", build_vignettes = TRUE)
 
 ## History
 
-This package builds upon the previous `R` package `IEATools`, as well as
-upon the paper The paper that demonstrates uses of this package is
-currently under review.
+This package builds upon the previous `R` package `IEATools`, and has
+been first demonstrated in the paper @mr\_psut\_paper .
 
 ## More Information
 
