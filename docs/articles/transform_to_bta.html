@@ -117,13 +117,66 @@
 <div id="preparing-bilateral-trade-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#preparing-bilateral-trade-data" class="anchor"></a>Preparing bilateral trade data</h3>
+<p>The bilateral trade data needs to be provided as input to the <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> function in the following format:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 8 × 8
+##   Provenience Country Method Energy.type Last.stage  Year Product       
+##   &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;         
+## 1 A           A       PCM    E           Final       2018 Coking coal   
+## 2 A           B       PCM    E           Final       2018 Coking coal   
+## 3 A           A       PCM    E           Final       2018 Crude oil     
+## 4 A           B       PCM    E           Final       2018 Crude oil     
+## 5 A           A       PCM    E           Final       2018 Natural gas   
+## 6 A           B       PCM    E           Final       2018 Natural gas   
+## 7 B           A       PCM    E           Final       2018 Coke oven coke
+## 8 B           B       PCM    E           Final       2018 Coke oven coke
+## # … with 1 more variable: Share_Exports_By_Product &lt;dbl&gt;</code></pre>
+<p>Here we have used the <code><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma()</a></code> function to pull the share of exports that would correspond to the Global Market Assumption, but the analyst can proceed in any way to turn the bilateral trade data in a data frame of the dimensions and features shown above.</p>
+<p>Now, the bilateral trade data prepared needs to be valid. To check that the bilateral trade data that has been prepared is valid, one can use the <code><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df()</a></code> function. To be valid, both (1)~the sum of shares by product and by exporting country (“Provenience” column) should be equal to unity; and (2)~the sum of shares by product and by importing country (“Country” column) should be equal to unity.</p>
+<p>For instance, the bilateral trade data that we have obtained using the <code><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma()</a></code> function is valid:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df</a></span><span class="op">(</span><span class="va">AB_world_btd</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p>Conversely, if we filter out the second row, the bilateral trade data is not valid anymore:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span> <span class="op">(</span><span class="va">Product</span> <span class="op">==</span> <span class="st">"Coking coal"</span> <span class="op">&amp;</span> <span class="va">Share_Exports_By_Product</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Error: The sum of shares by product and exporting country is not equal to 1.</code></pre>
+<p><strong>Note</strong>: It is important to note that one doesn’t need to provide the bilateral trade data for all products. If some products are not covered in the bilateral trade data, then the Global Market Assumption will be used to do the trade linking process. But it is important that the products that are covered are fully covered (i.e. that all flows corresponding to all the regions included in the MR-PSUT are included in the bilateral trade data frame, for that given product).</p>
 </div>
 <div id="transforming-to-bilateral-trade-assumption" class="section level3">
 <h3 class="hasAnchor">
 <a href="#transforming-to-bilateral-trade-assumption" class="anchor"></a>Transforming to Bilateral Trade Assumption</h3>
-<p>does it check if the BTD provided is good??</p>
+<p>Once the bilateral trade data is prepared, and once it has been verified with the <code><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df()</a></code> function that the bilateral trade data is valid, one can call the <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> function as follows:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
+                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
+                  Flow <span class="op">=</span> <span class="st">"Imports [of A very odd product]"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/transform_to_bta.html">transform_to_bta</a></span><span class="op">(</span>bilateral_trade_df <span class="op">=</span> <span class="va">AB_world_btd</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 94 × 12
+##    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
+##    &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                
+##  1 World   PCM    E           Final       2018 Supply      Total primary energy…
+##  2 World   PCM    E           Final       2018 Supply      Total primary energy…
+##  3 World   PCM    E           Final       2018 Supply      Total primary energy…
+##  4 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  5 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  6 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  7 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  8 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  9 World   PCM    E           Final       2018 Supply      Transformation proce…
+## 10 World   PCM    E           Final       2018 Supply      Transformation proce…
+## # … with 84 more rows, and 5 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,
+## #   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;, matnames &lt;chr&gt;</code></pre>
 <p>Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the Global Market Assumption vignette.</p>
-<p>Check * why the hell it is balanced when it shouldn’t be * why the heck does it work with a very odd product * why does it work when a country both imports and exports a product?</p>
 </div>
 </div>
   </div>

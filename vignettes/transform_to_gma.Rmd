@@ -77,7 +77,7 @@ tidy_AB_data_gma %>%
 
 ### Possible issues
 
-Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing or exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption.
+Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing and exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption, and hence should be avoided prior to running the `transform_to_gma()` function.
 
 #### Imported product not produced anywhere
 
@@ -95,7 +95,7 @@ tidy_AB_data %>%
 
 As expected, the code above returns an error.
 
-**Note**: In the case where a product $p$ is imported by a given country but (1) is not exported by any other country, and (2) is produced by some other countries, we determine the global production shares, instead of exports shares. This is an approximate way to deal with IEA data inconsistencies.
+**Note**: In the case where a product $p$ is imported by a given country but (1) is not exported by any other country, and (2) is produced by some other countries, we determine and apply the global production shares, instead of exports shares. This is an approximate way to deal with IEA data inconsistencies.
 
 
 #### Country both importing and exporting a product
@@ -104,10 +104,10 @@ The `transform_to_gma()` function is not able to deal properly with a region tha
 
 The case of having a region that both imports and exports a given product may however happen for two reasons:
 
-1. The data as reported by the IEA presents this feature. This may be an appropriate description of physical flows for instance in the case of a country exporting a product at a given time, and importing the same product in another time. It makes particular sense for electricity.
-2. The analyst has aggregated countries to construct a bigger regions, for instance EU countries to obtain a EU region. In that case, as some countries import a given product $p$ while some other export it, then a region that both imports and exports product $p$ is constructed.
+1. The data as reported by the IEA presents this feature. This may be an appropriate description of physical flows for instance in the case of a country exporting a product at a given time, and importing the same product in another time. Think of electricity, which production (and imports and exports) may vary considerably depending on the weather conditions.
+2. The analyst has aggregated countries to construct bigger regions, for instance EU countries have been aggregated in a single EU region. In that case, as some countries import a given product $p$ while some other countries export product $p$, then a region that both imports and exports product $p$ is constructed.
 
-To run the `transform_to_gma()` function, one can use the `convert_to_net_trade()` function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether imports > exports or exports > imports.
+To run the `transform_to_gma()` function, one can use the `convert_to_net_trade()` function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether there are more imports than exports of product $p$ or not.
 
 
 
