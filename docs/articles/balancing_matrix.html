@@ -223,25 +223,23 @@
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Statistical differences"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Flow</span>, <span class="va">Year</span>, <span class="va">Product</span>, <span class="va">matnames</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 × 12
-##   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio… Flow 
-##   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;
-## 1 A       PCM    E           Final       2018 Supply      TFC compare      Stat…
-## # … with 4 more variables: Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;,
-## #   matnames &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 1 × 5
+##   Country Flow                     Year Product   matnames
+##   &lt;chr&gt;   &lt;chr&gt;                   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   
+## 1 A       Statistical differences  2018 Crude oil B</code></pre>
 <p>and:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Stock changes"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Flow</span>, <span class="va">Year</span>, <span class="va">Product</span>, <span class="va">matnames</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 2 × 12
-##   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio… Flow 
-##   &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;            &lt;chr&gt;
-## 1 B       PCM    E           Final       2018 Supply      Total primary e… Stoc…
-## 2 A       PCM    E           Final       2018 Supply      Total primary e… Stoc…
-## # … with 4 more variables: Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;,
-## #   matnames &lt;chr&gt;</code></pre>
+<pre><code>## # A tibble: 2 × 5
+##   Country Flow           Year Product        matnames
+##   &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;   
+## 1 B       Stock changes  2018 Coke oven coke B       
+## 2 A       Stock changes  2018 Coke oven coke B</code></pre>
 <p>Finally, let’s verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 

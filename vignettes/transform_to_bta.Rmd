@@ -8,3 +8,19 @@ vignette: >
 ---
 
 In this vignette we explain how the Bilateral Trade Assumption can be formulated from a `.tidy_iea_df`.
+
+```{r setup, include = FALSE}
+library(dplyr)
+library(ECCTools)
+```
+
+
+
+
+does it check if the BTD provided is good??
+
+
+Check
+* why the hell it is balanced when it shouldn't be
+* why the heck does it work with a very odd product
+* why does it work when a country both imports and exports a product?

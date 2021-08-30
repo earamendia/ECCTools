@@ -7,29 +7,33 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this vignette we explain how the Domestic Technology Assumption can be formulated from a `.tidy_iea_df`.
+In this vignette we explain how the Domestic Technology Assumption (DTA) can be formulated from a `.tidy_iea_df`.
 
 ```{r setup, include = FALSE}
 library(dplyr)
 library(ECCTools)
 ```
 
-# The Domestic Technology Assumption
+## The Domestic Technology Assumption
 
-The Domestic Technology Assumption 
+The Domestic Technology Assumption assumes that all imported flows occur within the importing country. So, if country A imports 200 ktoe of coke oven coke from the rest of the world, the Domestic Technology Assumption assumes that these 200 ktoe have been produced in country A, or, rather, with a technology and industrial structure equivalent to country A technology and industrial structure. Although it is not a realistic assumption, it is 
+
+* (1) a helpful approximation when no data are available regarding trade flows and other countries' technologies and industrial structures, and * (2) a useful simulation tool, which answers the question "what would have happened if the imported products were produced locally?".
 
 
-# Formulating the Domestic Technology Assumption
+## Formulating the Domestic Technology Assumption
 
-The formulation of the Domestic Technology Assumption can be using the following functions:
+The formulation of the Domestic Technology Assumption can be done using the following functions:
 
-*`find_list_dta_observations()`: the function identifies which observations (i.e.\ sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA;
+* `find_list_dta_observations()`: the function identifies which observations (i.e.\ sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA;
 * `transform_to_dta()`: the function transforms those observations that fulfil the required conditions in DTA data frame.
 
+The `find_list_dta_observations()` function is called within the `transform_to_dta()` function, and hence, does not need to be called. But calling the function may prove helpful to understand which observations fulfil required conditions for formulating the DTA.
 
-## Necessary conditions
 
-To be able to formulate the Domestic Technology Assumption, all products that are consumed in a given country, in a given year, need to be produced (even in a lower quantity) in the given country. Let us have a look with the AB world example.
+### Necessary conditions
+
+To be able to formulate the Domestic Technology Assumption, all products imported by a given country, in a given year, need to be produced in the given country. They do not need to be produced in a quantity sufficient to cover the national demand, it is sufficient that one unit of product is produced by some industry in the importing country. Let us have a look with the AB world example.
 
 
 ```{r}
@@ -42,7 +46,7 @@ The country A (year 2018) is found to fulfil the requirements. Indeed, country A
 
 Conversely, country B is not found to fulfil the requirements. Indeed, country B imports and consumes coal, natural gas, and crude oil, but does not produce them locally. Hence, we cannot simulate that these products come from domestic production.
 
-Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption:
+Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption, one can proceed as follows:
 
 ```{r}
 tidy_AB_data_dta <- tidy_AB_data %>% 
@@ -51,7 +55,7 @@ tidy_AB_data_dta <- tidy_AB_data %>%
   dplyr::glimpse()
 ```
 
-Only flows corresponding to country A are returned, and imports have been removed:
+Only flows corresponding to country A are returned, and imports have been relocated to the balancing **B** matrix (and hence will not appear in the Input-Output matrices, see @mr_psut_paper ):
 
 ```{r}
 tidy_AB_data_dta %>%

@@ -98,10 +98,117 @@
     
     
 <p>In this vignette we explain how the Global Market Assumption can be formulated from a <code>.tidy_iea_df</code>.</p>
-<div id="the-global-market-assumption" class="section level1">
-<h1 class="hasAnchor">
-<a href="#the-global-market-assumption" class="anchor"></a>The Global Market Assumption</h1>
-<p>describe show how to execute it any condition?</p>
+<div id="the-global-market-assumption" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-global-market-assumption" class="anchor"></a>The Global Market Assumption</h2>
+<p>The Global Market Assumption assumes a global market for each traded product. For each product <span class="math inline">\(p\)</span>, the exporting share of each exporting country <span class="math inline">\(s\)</span> is determined as (see <span class="citation">@mr_psut_paper</span>):</p>
+<p><span class="math display">\[c_{s,p} = \frac{x_{s,p}}{x_p}\]</span></p>
+<p>where:</p>
+<ul>
+<li>
+<span class="math inline">\(c_{s,p}\)</span> refers to the global share of exports of product <span class="math inline">\(p\)</span> by country <span class="math inline">\(s\)</span>;</li>
+<li>
+<span class="math inline">\(x_{s,p}\)</span> refers to the exports of product <span class="math inline">\(p\)</span> by country <span class="math inline">\(s\)</span>;</li>
+<li>
+<span class="math inline">\(x_p\)</span> refers to the global exports of product <span class="math inline">\(p\)</span>.</li>
+</ul>
+<p>We note that:</p>
+<p><span class="math display">\[\sum_{s \in \mathcal{S}} c_{s,p} = 1\]</span></p>
+<p>where <span class="math inline">\(\mathcal{S}\)</span> stands for the set of countries considered.</p>
+<p>Hence, each country importing a product <span class="math inline">\(p\)</span> will import the share <span class="math inline">\(c_{s,p}\)</span> of its imports of product <span class="math inline">\(p\)</span> from country <span class="math inline">\(s\)</span>.</p>
+<p>The Global Market Assumption is therefore a simplifying assumption which enables to:</p>
+<ul>
+<li>Run a quick, explorative, or demonstrative analysis, when there is no need for the precision bilateral trade data can provide;</li>
+<li>Conduct analysis when bilateral trade data are not available, or are not of sufficient quality.</li>
+</ul>
+</div>
+<div id="formulating-the-global-market-assumption" class="section level2">
+<h2 class="hasAnchor">
+<a href="#formulating-the-global-market-assumption" class="anchor"></a>Formulating the Global Market Assumption</h2>
+<p>To formulate the Global Market Assumption, one simply needs to:</p>
+<ul>
+<li>Call the <code>IEATools::add_psut_matnames')</code> to add a matrix name column.</li>
+<li>Call the <code><a href="../reference/convert_to_net_trade.html">convert_to_net_trade()</a></code>, which converts trade data to net trade. See “Possible issues” below.</li>
+<li>Call the <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code> function.</li>
+</ul>
+<p>Let’s see the example with the AB world example:</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/transform_to_gma.html">transform_to_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Year</span>, <span class="va">Flow</span>, <span class="va">Product</span>, <span class="va">E.dot</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 94 × 5
+##    Country  Year Flow                                          Product     E.dot
+##    &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;                                         &lt;chr&gt;       &lt;dbl&gt;
+##  1 World    2018 {A}_Resources [of Coking coal]                {A}_Coking…  5000
+##  2 World    2018 {A}_Resources [of Crude oil]                  {A}_Crude …  8500
+##  3 World    2018 {A}_Resources [of Natural gas]                {A}_Natura…  4000
+##  4 World    2018 {A}_Blast furnaces                            {A}_Blast …   850
+##  5 World    2018 {A}_Coal mines                                {A}_Coking…  5000
+##  6 World    2018 {A}_Coke ovens                                {A}_Coke o…   400
+##  7 World    2018 {A}_Main activity producer electricity plants {A}_Electr…  3200
+##  8 World    2018 {A}_Main activity producer electricity plants {A}_Heat      200
+##  9 World    2018 {A}_Oil and gas extraction                    {A}_Crude …  8500
+## 10 World    2018 {A}_Oil and gas extraction                    {A}_Natura…  4000
+## # … with 84 more rows</code></pre>
+<p>The locations of each flow is now noted with the prefix "{Country}_" in the “Flow” column, and so is the location of origin of a given product in the “Product” column.</p>
+<div id="unbalances" class="section level3">
+<h3 class="hasAnchor">
+<a href="#unbalances" class="anchor"></a>Unbalances</h3>
+<p>Now, unbalanced: Balanced!??</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+<div id="possible-issues" class="section level3">
+<h3 class="hasAnchor">
+<a href="#possible-issues" class="anchor"></a>Possible issues</h3>
+<p>Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing or exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption.</p>
+<div id="imported-product-not-produced-anywhere" class="section level4">
+<h4 class="hasAnchor">
+<a href="#imported-product-not-produced-anywhere" class="anchor"></a>Imported product not produced anywhere</h4>
+<p>A potential inconsistency in IEA data is the case of a country importing a product <span class="math inline">\(p\)</span> which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports “A very odd product”, but that country A does not produce it (and hence, doesn’t export it).</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
+                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
+                  Flow <span class="op">=</span> <span class="st">"Imports [of A very odd product]"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/transform_to_gma.html">transform_to_gma</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 94 × 12
+##    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
+##    &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                
+##  1 World   PCM    E           Final       2018 Supply      Total primary energy…
+##  2 World   PCM    E           Final       2018 Supply      Total primary energy…
+##  3 World   PCM    E           Final       2018 Supply      Total primary energy…
+##  4 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  5 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  6 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  7 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  8 World   PCM    E           Final       2018 Supply      Transformation proce…
+##  9 World   PCM    E           Final       2018 Supply      Transformation proce…
+## 10 World   PCM    E           Final       2018 Supply      Transformation proce…
+## # … with 84 more rows, and 5 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,
+## #   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;, matnames &lt;chr&gt;</code></pre>
+<p>As expected, the code above returns an error.</p>
+<p><strong>Note</strong>: In the case where a product <span class="math inline">\(p\)</span> is imported by a given country but (1) is not exported by any other country, and (2) is produced by some other countries, we determine the global production shares, instead of exports shares. This is an approximate way to deal with IEA data inconsistencies.</p>
+</div>
+<div id="country-both-importing-and-exporting-a-product" class="section level4">
+<h4 class="hasAnchor">
+<a href="#country-both-importing-and-exporting-a-product" class="anchor"></a>Country both importing and exporting a product</h4>
+<p>The <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code> function is not able to deal properly with a region that both imports and exports a given product. In other words, the data provided as input to the function needs to be described in net trade terms: either a product is imported, or is exported, by a given region.</p>
+<p>The case of having a region that both imports and exports a given product may however happen for two reasons:</p>
+<ol style="list-style-type: decimal">
+<li>The data as reported by the IEA presents this feature. This may be an appropriate description of physical flows for instance in the case of a country exporting a product at a given time, and importing the same product in another time. It makes particular sense for electricity.</li>
+<li>The analyst has aggregated countries to construct a bigger regions, for instance EU countries to obtain a EU region. In that case, as some countries import a given product <span class="math inline">\(p\)</span> while some other export it, then a region that both imports and exports product <span class="math inline">\(p\)</span> is constructed.</li>
+</ol>
+<p>To run the <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code> function, one can use the <code><a href="../reference/convert_to_net_trade.html">convert_to_net_trade()</a></code> function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether imports &gt; exports or exports &gt; imports.</p>
+</div>
+</div>
 </div>
   </div>
 

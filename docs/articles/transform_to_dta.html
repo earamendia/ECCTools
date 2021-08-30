@@ -97,21 +97,32 @@
 
     
     
-<p>In this vignette we explain how the Domestic Technology Assumption can be formulated from a <code>.tidy_iea_df</code>.</p>
-<div id="the-domestic-technology-assumption" class="section level1">
-<h1 class="hasAnchor">
-<a href="#the-domestic-technology-assumption" class="anchor"></a>The Domestic Technology Assumption</h1>
-<p>The Domestic Technology Assumption</p>
-</div>
-<div id="formulating-the-domestic-technology-assumption" class="section level1">
-<h1 class="hasAnchor">
-<a href="#formulating-the-domestic-technology-assumption" class="anchor"></a>Formulating the Domestic Technology Assumption</h1>
-<p>The formulation of the Domestic Technology Assumption can be using the following functions:</p>
-<p><em><code><a href="../reference/find_list_dta_observations.html">find_list_dta_observations()</a></code>: the function identifies which observations (i.e. sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA; </em> <code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code>: the function transforms those observations that fulfil the required conditions in DTA data frame.</p>
-<div id="necessary-conditions" class="section level2">
+<p>In this vignette we explain how the Domestic Technology Assumption (DTA) can be formulated from a <code>.tidy_iea_df</code>.</p>
+<div id="the-domestic-technology-assumption" class="section level2">
 <h2 class="hasAnchor">
-<a href="#necessary-conditions" class="anchor"></a>Necessary conditions</h2>
-<p>To be able to formulate the Domestic Technology Assumption, all products that are consumed in a given country, in a given year, need to be produced (even in a lower quantity) in the given country. Let us have a look with the AB world example.</p>
+<a href="#the-domestic-technology-assumption" class="anchor"></a>The Domestic Technology Assumption</h2>
+<p>The Domestic Technology Assumption assumes that all imported flows occur within the importing country. So, if country A imports 200 ktoe of coke oven coke from the rest of the world, the Domestic Technology Assumption assumes that these 200 ktoe have been produced in country A, or, rather, with a technology and industrial structure equivalent to country A technology and industrial structure. Although it is not a realistic assumption, it is</p>
+<ul>
+<li><ol style="list-style-type: decimal">
+<li>a helpful approximation when no data are available regarding trade flows and other countries’ technologies and industrial structures, and * (2) a useful simulation tool, which answers the question “what would have happened if the imported products were produced locally?”.</li>
+</ol></li>
+</ul>
+</div>
+<div id="formulating-the-domestic-technology-assumption" class="section level2">
+<h2 class="hasAnchor">
+<a href="#formulating-the-domestic-technology-assumption" class="anchor"></a>Formulating the Domestic Technology Assumption</h2>
+<p>The formulation of the Domestic Technology Assumption can be done using the following functions:</p>
+<ul>
+<li>
+<code><a href="../reference/find_list_dta_observations.html">find_list_dta_observations()</a></code>: the function identifies which observations (i.e. sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA;</li>
+<li>
+<code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code>: the function transforms those observations that fulfil the required conditions in DTA data frame.</li>
+</ul>
+<p>The <code><a href="../reference/find_list_dta_observations.html">find_list_dta_observations()</a></code> function is called within the <code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code> function, and hence, does not need to be called. But calling the function may prove helpful to understand which observations fulfil required conditions for formulating the DTA.</p>
+<div id="necessary-conditions" class="section level3">
+<h3 class="hasAnchor">
+<a href="#necessary-conditions" class="anchor"></a>Necessary conditions</h3>
+<p>To be able to formulate the Domestic Technology Assumption, all products imported by a given country, in a given year, need to be produced in the given country. They do not need to be produced in a quantity sufficient to cover the national demand, it is sufficient that one unit of product is produced by some industry in the importing country. Let us have a look with the AB world example.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -119,7 +130,7 @@
 <pre><code>## [1] "A_PCM_E_Final_2018"</code></pre>
 <p>The country A (year 2018) is found to fulfil the requirements. Indeed, country A imports coke oven coke, but country A also produces locally coke oven coke; we can then simulate that all its coke oven coke consumption comes from domestic production!</p>
 <p>Conversely, country B is not found to fulfil the requirements. Indeed, country B imports and consumes coal, natural gas, and crude oil, but does not produce them locally. Hence, we cannot simulate that these products come from domestic production.</p>
-<p>Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption:</p>
+<p>Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption, one can proceed as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -139,7 +150,7 @@
 ## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
 ## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…
 ## $ matnames               &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</code></pre>
-<p>Only flows corresponding to country A are returned, and imports have been removed:</p>
+<p>Only flows corresponding to country A are returned, and imports have been relocated to the balancing <strong>B</strong> matrix (and hence will not appear in the Input-Output matrices, see <span class="citation">@mr_psut_paper</span> ):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Imports"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
