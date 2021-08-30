@@ -68,11 +68,20 @@ The locations of each flow is now noted with the prefix "{Country}_" in the "Flo
 
 ### Unbalances
 
-Now, unbalanced:
-Balanced!?? don't understand...!
+Here we can see that unbalances appear. Indeed, that is due to the fact that imports and exports do not balance for some products (coke oven coke, crude oil).
 
 ```{r}
 tidy_AB_data_gma %>% 
+  IEATools::calc_tidy_iea_df_balances() %>%
+  IEATools::tidy_iea_df_balanced()
+```
+
+To solve this issue, we can add a balancing vector to the **B** matrix. This is an approximate fix and should be handled carefully, it is only valid in the cases where the unbalances appearing is negligible compared to most energy flows. The balancing vector can be used to estimate the uncertainty of results.
+
+```{r}
+tidy_AB_data_gma %>% 
+  add_balancing_vector() %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
   IEATools::tidy_iea_df_balanced()
 ```
 
@@ -120,5 +129,3 @@ To run the `transform_to_gma()` function, one can use the `convert_to_net_trade(
 
 ## References
 
-* why the hell it is balanced when it shouldn't be
-* why does it work when a country both imports and exports a product?

@@ -158,9 +158,17 @@
 <div id="unbalances" class="section level3">
 <h3 class="hasAnchor">
 <a href="#unbalances" class="anchor"></a>Unbalances</h3>
-<p>Now, unbalanced: Balanced!?? don’t understand…!</p>
+<p>Here we can see that unbalances appear. Indeed, that is due to the fact that imports and exports do not balance for some products (coke oven coke, crude oil).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] FALSE</code></pre>
+<p>To solve this issue, we can add a balancing vector to the <strong>B</strong> matrix. This is an approximate fix and should be handled carefully, it is only valid in the cases where the unbalances appearing is negligible compared to most energy flows. The balancing vector can be used to estimate the uncertainty of results.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/add_balancing_vector.html">add_balancing_vector</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] TRUE</code></pre>
 </div>
@@ -172,7 +180,7 @@
 <h4 class="hasAnchor">
 <a href="#imported-product-not-produced-anywhere" class="anchor"></a>Imported product not produced anywhere</h4>
 <p>A potential inconsistency in IEA data is the case of a country importing a product <span class="math inline">\(p\)</span> which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports “A very odd product,” but that country A does not produce it (and hence, doesn’t export it).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
   <span class="co"># Country B consumes "a very odd product" in its "very odd industry</span>
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
@@ -203,13 +211,9 @@
 </div>
 </div>
 </div>
-<div id="references" class="section level2">
+<div id="references" class="section level2 unnumbered">
 <h2 class="hasAnchor">
 <a href="#references" class="anchor"></a>References</h2>
-<ul>
-<li>why the hell it is balanced when it shouldn’t be</li>
-<li>why does it work when a country both imports and exports a product?</li>
-</ul>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mr_psut_paper" class="csl-entry">
 Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Under Review</em>.

@@ -50,10 +50,10 @@ Subsequent Energy Conversion Chain analysis can be conducted using the `Recca` p
 
 The vignettes available for this package detail how to conduct the following tasks:
 
-1.  **Using the balancing matrix**: Shows how to relocate flows into the newly defined balancing matrix **B** and what the downstream consequences are.
-2.  **Domestic Technology Assumption**: Shows how to formulate the Domestic Technology Assumption and which conditions need to be fulfilled to formulate such an assumption.
-3.  **Global Market Assumption**: Shows how to formulate the Global Market Assumption.
-4.  **Bilateral Trade Assumption**: Shows how to provide bilateral trade data to formulate the Bilateral Trade Assumption.
+1.  [Using the balancing matrix](balancing_matrix.html): Shows how to relocate flows into the newly defined balancing matrix **B** and what the downstream consequences are.
+2.  [Domestic Technology Assumption](transform_to_dta.html): Shows how to formulate the Domestic Technology Assumption and which conditions need to be fulfilled to formulate such an assumption.
+3.  [Global Market Assumption](transform_to_gma.html): Shows how to formulate the Global Market Assumption.
+4.  [Bilateral Trade Assumption](transform_to_bta.html): Shows how to provide bilateral trade data to formulate the Bilateral Trade Assumption.
 
 
 ## Demonstration example: the AB world

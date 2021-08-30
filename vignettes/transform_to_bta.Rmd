@@ -82,6 +82,6 @@ tidy_AB_data %>%
   dplyr::glimpse()
 ```
 
-Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the Global Market Assumption vignette.
+Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the [Global Market Assumption](transform_to_bta.html) vignette.
 
 ## References
