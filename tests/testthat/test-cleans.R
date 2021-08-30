@@ -369,3 +369,40 @@ test_that("add_balancing_vector works", {
                 all())
 })
 
+
+test_that("international_bunkers_to_balancing works",{
+
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  # Loading AB_data
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  AB_tidy_data <- AB_data %>%
+    IEATools::specify_all()
+
+  AB_tidy_data_with_international_bunkers <- AB_tidy_data %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Consumption",
+      Flow.aggregation.point = "Transport",
+      Flow = "International aviation bunkers",
+      Product = "Fuel oil",
+      Unit = "ktoe",
+      E.dot = 300
+    )
+
+  res <- AB_tidy_data_with_international_bunkers %>%
+    IEATools::add_psut_matnames() %>%
+    international_bunkers_to_balancing()
+
+  res %>%
+    dplyr::filter(stringr::str_detect(Flow, "International")) %>%
+    magrittr::extract2("matnames") %>%
+    expect_equal("B")
+})
