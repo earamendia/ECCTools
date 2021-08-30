@@ -1,10 +1,13 @@
 ---
 title: "Bilateral Trade Assumption"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Bilateral Trade Assumption}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: References.bib
 ---
 
 In this vignette we explain how the Bilateral Trade Assumption can be formulated from a `.tidy_iea_df`.
@@ -17,7 +20,7 @@ library(ECCTools)
 
 ## The Bilateral Trade Assumption
 
-The Bilateral Trade Assumption (BTA) enables the analyst to construct the Multi-Regional Physical Supply Use Table (MR-PSUT) framework by providing bilateral trade data linking regions. An excellent example of MR-PSUT constructed following a BTA for agricultural products can be found in @bruckner_fabio .
+The Bilateral Trade Assumption (BTA) enables the analyst to construct the Multi-Regional Physical Supply Use Table (MR-PSUT) framework by providing bilateral trade data linking regions. An excellent example of MR-PSUT constructed following a BTA for agricultural products can be found in @bruckner_fabioconstruction_2019.
 
 The BTA is therefore the assumption closest to reality, as it seeks to describe each bilateral energy carrier flow from one country to another. The only drawback is that it requires input data representing bilateral flows between countries or regions, which may be hard to find, or which may require significant data preparation time.
 
@@ -80,3 +83,5 @@ tidy_AB_data %>%
 ```
 
 Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the Global Market Assumption vignette.
+
+## References

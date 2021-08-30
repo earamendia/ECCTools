@@ -1,10 +1,13 @@
 ---
 title: "Domestic Technology Assumption"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Domestic Technology Assumption}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: References.bib
 ---
 
 In this vignette we explain how the Domestic Technology Assumption (DTA) can be formulated from a `.tidy_iea_df`.
@@ -62,3 +65,5 @@ tidy_AB_data_dta %>%
   dplyr::filter(stringr::str_detect(Flow, "Imports")) %>%
   dplyr::glimpse()
 ```
+
+## References

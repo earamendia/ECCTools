@@ -9,6 +9,7 @@ vignette: >
   %\VignetteIndexEntry{Get started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: References.bib
 ---
 
 ```{r, include = FALSE}
@@ -108,3 +109,6 @@ Now, some guesses about why such inconsistencies may appear in IEA data:
 * Incomplete world coverage. Some countries are not covered in IEA data. When these countries trade energy products with other countries, then that trade has to translate into a sink or source of energy products (provided the partner countries are covered in the IEA data), and hence in unbalances.
 * Inconsistencies in national reporting of energy use. Indeed, energy consumption and production may be informal in many cases, and national statistical agencies may only be able to provide the IEA with best guess estimates. Such estimates allow for national Energy Conversion Chains to be balanced, but if the traded energy figures are not accurate, the incorrect estimates will translate into an energy product sink or source at the world level.
 * Differences in energy products classification and naming between countries may also lead to discrepancies in the global figures of imported and exported figures. We note however that the IEA attempts to standardise the naming convention, but such errors remain likely, on a small scale.
+
+
+## References

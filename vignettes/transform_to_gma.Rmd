@@ -1,10 +1,13 @@
 ---
 title: "Global Market Assumption"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Global Market Assumption}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: References.bib
 ---
 
 In this vignette we explain how the Global Market Assumption can be formulated from a `.tidy_iea_df`.
@@ -110,6 +113,7 @@ The case of having a region that both imports and exports a given product may ho
 To run the `transform_to_gma()` function, one can use the `convert_to_net_trade()` function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether there are more imports than exports of product $p$ or not.
 
 
+## References
 
 
 TO CHECK

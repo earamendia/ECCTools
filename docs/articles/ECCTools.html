@@ -102,7 +102,7 @@
 <div id="introduction" class="section level1">
 <h1 class="hasAnchor">
 <a href="#introduction" class="anchor"></a>Introduction</h1>
-<p>The <code>R</code> package <code>ECCTools</code> provides tools to modify an Energy Conversion Chain (ECC) that has been previously loaded using the <code>R</code> package <code>IEATools</code>. The <code>IEATools</code> package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table framework (PSUT, see <span class="citation">@Heun:2018</span>). However, the <code>IEATools</code> package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, neither associated environmental burden nor embodied energy consumption).</p>
+<p>The <code>R</code> package <code>ECCTools</code> provides tools to modify an Energy Conversion Chain (ECC) that has been previously loaded using the <code>R</code> package <code>IEATools</code>. The <code>IEATools</code> package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table framework (PSUT, see <span class="citation">Heun, Owen, and Brockway (2018)</span>). However, the <code>IEATools</code> package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, neither associated environmental burden nor embodied energy consumption).</p>
 <p>The <code>ECCTools</code> package enables analysts to overcome this limitation through two different options:</p>
 <ol style="list-style-type: decimal">
 <li>The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.</li>
@@ -200,6 +200,15 @@
 <li>Inconsistencies in national reporting of energy use. Indeed, energy consumption and production may be informal in many cases, and national statistical agencies may only be able to provide the IEA with best guess estimates. Such estimates allow for national Energy Conversion Chains to be balanced, but if the traded energy figures are not accurate, the incorrect estimates will translate into an energy product sink or source at the world level.</li>
 <li>Differences in energy products classification and naming between countries may also lead to discrepancies in the global figures of imported and exported figures. We note however that the IEA attempts to standardise the naming convention, but such errors remain likely, on a small scale.</li>
 </ul>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-Heun:2018" class="csl-entry">
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
+</div>
 </div>
 </div>
 </div>

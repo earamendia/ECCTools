@@ -1,10 +1,13 @@
 ---
 title: "Using the balancing matrix"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Using the balancing matrix}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+bibliography: References.bib
 ---
 
 In this vignette we show how to use the balancing matrix **B** to modify the Energy Conversion Chain.
@@ -137,3 +140,6 @@ tidy_AB_data_relocated_flows %>%
 *Note regarding the sign convention in the balancing matrix*: Flow appearing as positive in the **B** matrix are akin to final demand flows. For instance, final demand flows relocated to **B** will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in **B**: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.
 
 In conclusion, the analyst may use directly some functions directly available, such as `stat_diffs_to_balancing()` and `stock_changes_to_balancing()`. Alternatively, the analyst may directly relocate a flow to **B** by modifying the matrix name column of the flow that needs to be modified. Be careful with the sign convention!
+
+
+## References

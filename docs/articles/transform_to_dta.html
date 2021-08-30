@@ -104,7 +104,7 @@
 <p>The Domestic Technology Assumption assumes that all imported flows occur within the importing country. So, if country A imports 200 ktoe of coke oven coke from the rest of the world, the Domestic Technology Assumption assumes that these 200 ktoe have been produced in country A, or, rather, with a technology and industrial structure equivalent to country A technology and industrial structure. Although it is not a realistic assumption, it is</p>
 <ul>
 <li><ol style="list-style-type: decimal">
-<li>a helpful approximation when no data are available regarding trade flows and other countries’ technologies and industrial structures, and * (2) a useful simulation tool, which answers the question “what would have happened if the imported products were produced locally?”.</li>
+<li>a helpful approximation when no data are available regarding trade flows and other countries’ technologies and industrial structures, and * (2) a useful simulation tool, which answers the question “what would have happened if the imported products were produced locally?”</li>
 </ol></li>
 </ul>
 </div>
@@ -150,7 +150,7 @@
 ## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
 ## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…
 ## $ matnames               &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</code></pre>
-<p>Only flows corresponding to country A are returned, and imports have been relocated to the balancing <strong>B</strong> matrix (and hence will not appear in the Input-Output matrices, see <span class="citation">@mr_psut_paper</span> ):</p>
+<p>Only flows corresponding to country A are returned, and imports have been relocated to the balancing <strong>B</strong> matrix (and hence will not appear in the Input-Output matrices, see <span class="citation">Aramendia et al. (2021)</span> ):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">%&gt;%</span>
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Imports"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
@@ -169,6 +169,15 @@
 ## $ Unit                   &lt;chr&gt; "ktoe"
 ## $ E.dot                  &lt;dbl&gt; -600
 ## $ matnames               &lt;chr&gt; "B"</code></pre>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-mr_psut_paper" class="csl-entry">
+Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Under Review</em>.
+</div>
 </div>
 </div>
   </div>

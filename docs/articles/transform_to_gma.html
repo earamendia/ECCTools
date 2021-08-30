@@ -101,7 +101,7 @@
 <div id="the-global-market-assumption" class="section level2">
 <h2 class="hasAnchor">
 <a href="#the-global-market-assumption" class="anchor"></a>The Global Market Assumption</h2>
-<p>The Global Market Assumption assumes a global market for each traded product. For each product <span class="math inline">\(p\)</span>, the exporting share of each exporting country <span class="math inline">\(s\)</span> is determined as (see <span class="citation">@mr_psut_paper</span>):</p>
+<p>The Global Market Assumption assumes a global market for each traded product. For each product <span class="math inline">\(p\)</span>, the exporting share of each exporting country <span class="math inline">\(s\)</span> is determined as (see <span class="citation">Aramendia et al. (2021)</span>):</p>
 <p><span class="math display">\[c_{s,p} = \frac{x_{s,p}}{x_p}\]</span></p>
 <p>where:</p>
 <ul>
@@ -169,7 +169,7 @@
 <div id="imported-product-not-produced-anywhere" class="section level4">
 <h4 class="hasAnchor">
 <a href="#imported-product-not-produced-anywhere" class="anchor"></a>Imported product not produced anywhere</h4>
-<p>A potential inconsistency in IEA data is the case of a country importing a product <span class="math inline">\(p\)</span> which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports “A very odd product”, but that country A does not produce it (and hence, doesn’t export it).</p>
+<p>A potential inconsistency in IEA data is the case of a country importing a product <span class="math inline">\(p\)</span> which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports “A very odd product,” but that country A does not produce it (and hence, doesn’t export it).</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
@@ -206,12 +206,21 @@
 <li>The analyst has aggregated countries to construct bigger regions, for instance EU countries have been aggregated in a single EU region. In that case, as some countries import a given product <span class="math inline">\(p\)</span> while some other countries export product <span class="math inline">\(p\)</span>, then a region that both imports and exports product <span class="math inline">\(p\)</span> is constructed.</li>
 </ol>
 <p>To run the <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code> function, one can use the <code><a href="../reference/convert_to_net_trade.html">convert_to_net_trade()</a></code> function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether there are more imports than exports of product <span class="math inline">\(p\)</span> or not.</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level2">
+<h2 class="hasAnchor">
+<a href="#references" class="anchor"></a>References</h2>
 <p>TO CHECK</p>
 <ul>
 <li>why the hell it is balanced when it shouldn’t be</li>
 <li>why the heck does it work with a very odd product</li>
 <li>why does it work when a country both imports and exports a product?</li>
 </ul>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-mr_psut_paper" class="csl-entry">
+Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Under Review</em>.
 </div>
 </div>
 </div>

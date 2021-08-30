@@ -91,11 +91,11 @@
 <div id="ecctools" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
 <a href="#ecctools" class="anchor"></a>ECCTools</h1></div>
-<p>The <code>R</code> package <code>ECCTools</code> provides tools to modify and Energy Conversion Chain (ECC) that has been previously loaded using the <code>R</code> package <code>IEATools</code>. The <code>IEATools</code> package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table (see @Heun:2018). However, the <code>IEATools</code> package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, no environmental burden and embodied energy).</p>
+<p>The <code>R</code> package <code>ECCTools</code> provides tools to modify and Energy Conversion Chain (ECC) that has been previously loaded using the <code>R</code> package <code>IEATools</code>. The <code>IEATools</code> package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table (see Heun, Owen, and Brockway (2018)). However, the <code>IEATools</code> package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, no environmental burden and embodied energy).</p>
 <p>The <code>ECCTools</code> package enables analysts to overcome this limitation through two different options:</p>
 <ol>
-<li>To formulate a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the ECC. In this case, imports are treated as supply coming from an industry located in a different region. This option is the closest representation of physical flows.</li>
-<li>To a formulate a PSUT framework following the Domestic Technology Assumption (DTA). The DTA assumes that imports are produced within the region that imports them. Although not a realistic assumption, it may prove to be a helpful simulation.</li>
+<li>The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.</li>
+<li>The formulation of a PSUT framework following the Domestic Technology Assumption (DTA). The DTA assumes that imports are produced within the region that imports them. Although the DTA is not a realistic assumption, it enables analysts to conduct useful simulations.</li>
 </ol>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -111,12 +111,22 @@
 <div id="history" class="section level2">
 <h2 class="hasAnchor">
 <a href="#history" class="anchor"></a>History</h2>
-<p>This package builds upon the previous <code>R</code> package <code>IEATools</code>, as well as upon the paper The paper that demonstrates uses of this package is currently under review.</p>
+<p>This package builds upon the previous <code>R</code> package <code>IEATools</code>, and has been first demonstrated in the paper Aramendia et al. (2021) .</p>
 </div>
 <div id="more-information" class="section level2">
 <h2 class="hasAnchor">
 <a href="#more-information" class="anchor"></a>More Information</h2>
 <p>Find more information, including vignettes and function documentation, at <a href="https://earamendia.github.io/ECCTools/" class="uri">https://earamendia.github.io/ECCTools/</a>.</p>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-mr_psut_paper" class="csl-entry">
+Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor.<ol>
+<li>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.” <em>Under Review</em>.</li>
+</ol>
+</div>
+<div id="ref-Heun:2018" class="csl-entry">
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.” <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="uri">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
+</div>
+</div>
 </div>
 </div>
 
