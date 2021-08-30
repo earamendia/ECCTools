@@ -98,11 +98,41 @@
     
     
 <p>In this vignette we explain how the Bilateral Trade Assumption can be formulated from a <code>.tidy_iea_df</code>.</p>
+<div id="the-bilateral-trade-assumption" class="section level2">
+<h2 class="hasAnchor">
+<a href="#the-bilateral-trade-assumption" class="anchor"></a>The Bilateral Trade Assumption</h2>
+<p>The Bilateral Trade Assumption (BTA) enables the analyst to construct the Multi-Regional Physical Supply Use Table (MR-PSUT) framework by providing bilateral trade data linking regions. An excellent example of MR-PSUT constructed following a BTA for agricultural products can be found in <span class="citation">@bruckner_fabio</span> .</p>
+<p>The BTA is therefore the assumption closest to reality, as it seeks to describe each bilateral energy carrier flow from one country to another. The only drawback is that it requires input data representing bilateral flows between countries or regions, which may be hard to find, or which may require significant data preparation time.</p>
+</div>
+<div id="formulating-the-bilateral-trade-assumption" class="section level2">
+<h2 class="hasAnchor">
+<a href="#formulating-the-bilateral-trade-assumption" class="anchor"></a>Formulating the Bilateral Trade Assumption</h2>
+<p>To formulate the BTA, one needs to:</p>
+<ul>
+<li>Prepare bilateral trade data</li>
+<li>Call the <code>IEATools::add_psut_matnames')</code> to add a matrix name column.</li>
+<li>Call the <code><a href="../reference/convert_to_net_trade.html">convert_to_net_trade()</a></code>, which converts trade data to net trade. See “Possible issues” below.</li>
+<li>Call the <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> function, and provide bilateral trade data as argument to the function.</li>
+</ul>
+<div id="preparing-bilateral-trade-data" class="section level3">
+<h3 class="hasAnchor">
+<a href="#preparing-bilateral-trade-data" class="anchor"></a>Preparing bilateral trade data</h3>
+</div>
+<div id="transforming-to-bilateral-trade-assumption" class="section level3">
+<h3 class="hasAnchor">
+<a href="#transforming-to-bilateral-trade-assumption" class="anchor"></a>Transforming to Bilateral Trade Assumption</h3>
+<p>does it check if the BTD provided is good??</p>
+<p>Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the Global Market Assumption vignette.</p>
+<p>Check * why the hell it is balanced when it shouldn’t be * why the heck does it work with a very odd product * why does it work when a country both imports and exports a product?</p>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

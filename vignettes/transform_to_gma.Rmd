@@ -108,3 +108,12 @@ The case of having a region that both imports and exports a given product may ho
 2. The analyst has aggregated countries to construct a bigger regions, for instance EU countries to obtain a EU region. In that case, as some countries import a given product $p$ while some other export it, then a region that both imports and exports product $p$ is constructed.
 
 To run the `transform_to_gma()` function, one can use the `convert_to_net_trade()` function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether imports > exports or exports > imports.
+
+
+
+
+TO CHECK
+
+* why the hell it is balanced when it shouldn't be
+* why the heck does it work with a very odd product
+* why does it work when a country both imports and exports a product?
