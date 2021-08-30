@@ -105,7 +105,8 @@
 <h2 class="hasAnchor">
 <a href="#the-balancing-matrix-b" class="anchor"></a>The balancing matrix B</h2>
 <p>The balancing matrix is an extension of the original PSUT framework (see ) and has been introduced in a work presently under review. The figure below shows the expanded PSUT framework with the balancing <strong>B</strong> matrix.</p>
-<p><img src="figs/psut_expanded.png"></p>
+<p><embed src="figs/psut_expanded.pdf"></embed></p>
+<p><strong>Warning</strong>: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the <code>Recca</code> package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the <strong>B</strong> matrix may prove helpful, it is recommended to use it in subsequent Input-Output analysis only if the implications of the given use are fully understood. We recommend taking a look to the paper presently under review.</p>
 <p>The <strong>B</strong> matrix enables analysts to:</p>
 <ul>
 <li>modify the supply mix while conserving energy balance;</li>
@@ -114,31 +115,119 @@
 <p>To scale up or down the supply of a given industry <em>i</em> by a factor <span class="math inline">\(\lambda\)</span>, one can proceed according to the table below, extracted from the work under review.</p>
 <p>To modify the final demand without loosing energy balance, one can simply redirect energy flows belonging to the final demand (<strong>Y</strong> matrix) to the balancing matrix <strong>B</strong>.</p>
 </div>
-<div id="use" class="section level2">
+<div id="using-the-balancing-b-matrix" class="section level2">
 <h2 class="hasAnchor">
-<a href="#use" class="anchor"></a>Use</h2>
+<a href="#using-the-balancing-b-matrix" class="anchor"></a>Using the balancing B matrix</h2>
 <div id="initialising-data" class="section level3">
 <h3 class="hasAnchor">
 <a href="#initialising-data" class="anchor"></a>Initialising data</h3>
-<p>Let us use the AB world example introduced in … , but let us add flows, so that:</p>
+<p>Let us use the AB world example introduced in the <a href="">Get started</a> vignette, but let us add flows, so that:</p>
 <ol style="list-style-type: decimal">
-<li>Statistical differences provide 100 ktoe of crude oil in country A. To keep balance between supply and use, we assume that these 100 ktoe are consumed by a submarine race organised by country A.</li>
-<li>Stock changes provide 400 ktoe of coke oven coke in country B. To keep balance between supply and use, we assume that these 400 ktoe are consumed by a large passion for bonfires in country B population, and that coke oven coke is an excellent fuel for bonfires.</li>
-<li>Stock changes consume 200 ktoe of coke oven coke in country A, which importations are actually 800 ktoe and not 600 ktoe! Hence that final demand contributes to the build-up of country A stocks, and will be used in another year!</li>
+<li>Statistical differences provide 100 ktoe of crude oil in country A. To keep balance between supply and use, we assume that these 100 ktoe are consumed by a submarine race organised in country A.</li>
+<li>Stock changes provide 400 ktoe of coke oven coke in country B. To keep balance between supply and use, we assume that these 400 ktoe are consumed by the organisation of large bonfires in country B, and that coke oven coke is an excellent fuel for bonfires.</li>
+<li>Stock changes consume 200 ktoe of coke oven coke in country A, which importations are actually 800 ktoe and not 600 ktoe! Hence that final demand contributes to the build-up of country A stocks, and will be used later on, when country A lacks coke oven coke.</li>
 </ol>
-<p>INSERT CODE TO DESCRIBE THAT NEW DATA.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
+<span class="va">tidy_AB_data_added_flows</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="co"># First, adding statistical differences providing 100 ktoe of crude oil in country A:</span>
+  <span class="co">#tibble::add_row() %&gt;% </span>
+  <span class="co"># Second, adding the submarine race organised in country A:</span>
+  <span class="co">#tibble::add_row() %&gt;% </span>
+  <span class="co"># Third, adding the stock changes supplying 400 ktoe of coke oven coke in country B:</span>
+  <span class="co">#tibble::add_row() %&gt;% </span>
+  <span class="co"># Fourth, adding the bonfire sessions in country B:</span>
+  <span class="co">#tibble::add_row() %&gt;% </span>
+  <span class="co"># Fifth, adding stock build-up of 200 ktoe of coke oven coke in country A</span>
+  <span class="co">#tibble::add_row() %&gt;% </span>
+  <span class="co"># Sixth, adding imports of 200 ktoe of coke oven coke by country A</span>
+  <span class="co">#tibble::add_row() %&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 99
+## Columns: 11
+## $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…
+## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
+## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
+## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
+## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
+## $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…
+## $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…
+## $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…
+## $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…
+## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
+## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</code></pre>
+<p>We can now verify that the adjusted ECC remains balanced:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
+<span class="va">tidy_AB_data_added_flows</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
 </div>
 <div id="relocating-flows-to-balancing-matrix" class="section level3">
 <h3 class="hasAnchor">
 <a href="#relocating-flows-to-balancing-matrix" class="anchor"></a>Relocating flows to balancing matrix</h3>
-<p>Now, we want to modify the given ECC. Because:</p>
+<p>Now, let’s assume that we want to modify the given ECC as follows:</p>
 <ol style="list-style-type: decimal">
-<li>
-<li><ul>
-<li>
-</ul></li>
-<li>
+<li>Statistical differences do not contribute to the supply mix in reality. The fact that some energy products are provided by statistical differences hides the upstream conversion processes associated to these energy products. Hence, we want to <em>remove statistical differences from the supply mix</em>.</li>
+<li>Stock changes may contribute to the supply mix in reality, in a given year. However, stock changes have been built (so, products have been produced) in previous years. Here we want to <em>remove stock changes from the supply mix</em> in order to simulate that the products drawn from stocks have been produced by the rest of the supply mix of the same year.</li>
+<li>Stock changes appearing as final consumption (200 ktoe of coke oven coke in country A) are not really part of the final energy consumption in the given year, rather, they will be consumed in later years. Hence, we want to <em>remove stock changes from the final consumption</em>.</li>
 </ol>
+<p><strong>Note</strong>: Shat statistical differences and stock changes will not necessarily need to be relocated to the balancing <strong>B</strong> matrix. This is an option available to the analyst, which may prove appropriate in some situations and for some purposes.</p>
+<p>Then we will make use of the following functions:</p>
+<ul>
+<li>
+<code><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">IEATools::add_psut_matnames()</a></code> will add a column stating the matrix to which each flow belongs (function belonging to the <code>IEATools</code> package);</li>
+<li>
+<code><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing()</a></code> will move statistical difference flows, whether they are supply or use flows, to the balancing <strong>B</strong> matrix;</li>
+<li>
+<code><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing()</a></code> will move stock changes flows, whether they are supply or use flows, to the balancing <strong>B</strong> matrix.</li>
+</ul>
+<p>The code is as follows:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data_added_flows</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 99
+## Columns: 12
+## $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…
+## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
+## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
+## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
+## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
+## $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…
+## $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…
+## $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…
+## $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…
+## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
+## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…
+## $ matnames               &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</code></pre>
+<p>Now, we can see that the Statistical differences and Stock changes flows belong to the balancing <strong>B</strong> matrix:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Statistical differences"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 0 × 12
+## # … with 12 variables: Country &lt;chr&gt;, Method &lt;chr&gt;, Energy.type &lt;chr&gt;,
+## #   Last.stage &lt;chr&gt;, Year &lt;dbl&gt;, Ledger.side &lt;chr&gt;,
+## #   Flow.aggregation.point &lt;chr&gt;, Flow &lt;chr&gt;, Product &lt;chr&gt;, Unit &lt;chr&gt;,
+## #   E.dot &lt;dbl&gt;, matnames &lt;chr&gt;</code></pre>
+<p>and:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Stock changes"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 0 × 12
+## # … with 12 variables: Country &lt;chr&gt;, Method &lt;chr&gt;, Energy.type &lt;chr&gt;,
+## #   Last.stage &lt;chr&gt;, Year &lt;dbl&gt;, Ledger.side &lt;chr&gt;,
+## #   Flow.aggregation.point &lt;chr&gt;, Flow &lt;chr&gt;, Product &lt;chr&gt;, Unit &lt;chr&gt;,
+## #   E.dot &lt;dbl&gt;, matnames &lt;chr&gt;</code></pre>
+<p>Finally, let’s verify that the ECC remains balanced once flows are relocated to the balancing <strong>B</strong> matrix:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<p><em>Note regarding the sign convention in the balancing matrix</em>: Flow appearing as positive in the <strong>B</strong> matrix are akin to final demand flows. For instance, final demand flows relocated to <strong>B</strong> will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in <strong>B</strong>: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.</p>
+<p>In conclusion, the analyst may use directly some functions directly available, such as <code><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing()</a></code> and <code><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing()</a></code>. Alternatively, the analyst may directly relocate a flow to <strong>B</strong> by modifying the matrix name column of the flow that needs to be modified. Be careful of the sign convention!</p>
 </div>
 </div>
 </div>

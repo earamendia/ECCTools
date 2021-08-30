@@ -9,6 +9,11 @@ vignette: >
 
 In this vignette we show how to use the balancing matrix **B** to modify the Energy Conversion Chain (ECC).
 
+```{r setup, include = FALSE}
+library(dplyr)
+library(ECCTools)
+```
+
 # Introduction and use of the balancing matrix B
 
 ## The balancing matrix B

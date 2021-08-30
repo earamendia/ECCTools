@@ -106,14 +106,58 @@
 <div id="formulating-the-domestic-technology-assumption" class="section level1">
 <h1 class="hasAnchor">
 <a href="#formulating-the-domestic-technology-assumption" class="anchor"></a>Formulating the Domestic Technology Assumption</h1>
+<p>The formulation of the Domestic Technology Assumption can be using the following functions:</p>
+<p><em><code><a href="../reference/find_list_dta_observations.html">find_list_dta_observations()</a></code>: the function identifies which observations (i.e. sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA; </em> <code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code>: the function transforms those observations that fulfil the required conditions in DTA data frame.</p>
 <div id="necessary-conditions" class="section level2">
 <h2 class="hasAnchor">
 <a href="#necessary-conditions" class="anchor"></a>Necessary conditions</h2>
-</div>
-<div id="relaxing-conditions" class="section level2">
-<h2 class="hasAnchor">
-<a href="#relaxing-conditions" class="anchor"></a>Relaxing conditions</h2>
-<p>Need to know well the consequences!</p>
+<p>To be able to formulate the Domestic Technology Assumption, all products that are consumed in a given country, in a given year, need to be produced (even in a lower quantity) in the given country. Let us have a look with the AB world example.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/find_list_dta_observations.html">find_list_dta_observations</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] "A_PCM_E_Final_2018"</code></pre>
+<p>The country A (year 2018) is found to fulfil the requirements. Indeed, country A imports coke oven coke, but country A also produces locally coke oven coke; we can then simulate that all its coke oven coke consumption comes from domestic production!</p>
+<p>Conversely, country B is not found to fulfil the requirements. Indeed, country B imports and consumes coal, natural gas, and crude oil, but does not produce them locally. Hence, we cannot simulate that these products come from domestic production.</p>
+<p>Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="../reference/transform_to_dta.html">transform_to_dta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 54
+## Columns: 12
+## $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…
+## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
+## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
+## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
+## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
+## $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…
+## $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…
+## $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…
+## $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…
+## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
+## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…
+## $ matnames               &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</code></pre>
+<p>Only flows corresponding to country A are returned, and imports have been removed:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Imports"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 1
+## Columns: 12
+## $ Country                &lt;chr&gt; "A"
+## $ Method                 &lt;chr&gt; "PCM"
+## $ Energy.type            &lt;chr&gt; "E"
+## $ Last.stage             &lt;chr&gt; "Final"
+## $ Year                   &lt;dbl&gt; 2018
+## $ Ledger.side            &lt;chr&gt; "Supply"
+## $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply"
+## $ Flow                   &lt;chr&gt; "Imports [of Coke oven coke]"
+## $ Product                &lt;chr&gt; "Coke oven coke"
+## $ Unit                   &lt;chr&gt; "ktoe"
+## $ E.dot                  &lt;dbl&gt; -600
+## $ matnames               &lt;chr&gt; "B"</code></pre>
 </div>
 </div>
   </div>

@@ -9,6 +9,10 @@ vignette: >
 
 In this vignette we explain how the Domestic Technology Assumption can be formulated from a `.tidy_iea_df`.
 
+```{r setup, include = FALSE}
+library(dplyr)
+library(ECCTools)
+```
 
 # The Domestic Technology Assumption
 
@@ -30,6 +34,7 @@ To be able to formulate the Domestic Technology Assumption, all products that ar
 
 ```{r}
 tidy_AB_data %>% 
+  IEATools::add_psut_matnames() %>% 
   find_list_dta_observations()
 ```
 
@@ -41,6 +46,7 @@ Now, to modify the data frame so that it is in accordance with the Domestic Tech
 
 ```{r}
 tidy_AB_data_dta <- tidy_AB_data %>% 
+  IEATools::add_psut_matnames() %>% 
   transform_to_dta() %>% 
   dplyr::glimpse()
 ```
@@ -48,7 +54,7 @@ tidy_AB_data_dta <- tidy_AB_data %>%
 Only flows corresponding to country A are returned, and imports have been removed:
 
 ```{r}
-tidy_AB_data_dta %>% 
-  dplyr::filter(Flow, stringr::str_detect("Imports")) %>% 
+tidy_AB_data_dta %>%
+  dplyr::filter(stringr::str_detect(Flow, "Imports")) %>%
   dplyr::glimpse()
 ```
