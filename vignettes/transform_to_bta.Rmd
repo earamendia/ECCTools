@@ -15,9 +15,37 @@ library(ECCTools)
 ```
 
 
+## The Bilateral Trade Assumption
+
+The Bilateral Trade Assumption (BTA) enables the analyst to construct the Multi-Regional Physical Supply Use Table (MR-PSUT) framework by providing bilateral trade data linking regions. An excellent example of MR-PSUT constructed following a BTA for agricultural products can be found in @bruckner_fabio .
+
+The BTA is therefore the assumption closest to reality, as it seeks to describe each bilateral energy carrier flow from one country to another. The only drawback is that it requires input data representing bilateral flows between countries or regions, which may be hard to find, or which may require significant data preparation time.
+
+
+## Formulating the Bilateral Trade Assumption
+
+To formulate the BTA, one needs to:
+
+* Prepare bilateral trade data
+* Call the `IEATools::add_psut_matnames')` to add a matrix name column.
+* Call the `convert_to_net_trade()`, which converts trade data to net trade. See "Possible issues" below.
+* Call the `transform_to_bta()` function, and provide bilateral trade data as argument to the function.
+
+
+### Preparing bilateral trade data
+
+
+
+
+### Transforming to Bilateral Trade Assumption
+
+
 
 
 does it check if the BTD provided is good??
+
+
+Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the Global Market Assumption vignette.
 
 
 Check
