@@ -72,7 +72,7 @@ tidy_AB_data_added_flows <- tidy_AB_data %>%
   tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
                   Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
                   Flow = "Imports [of Coke oven coke]", Product = "Coke oven coke", Unit = "ktoe", E.dot = 200) %>%
-  print()
+  dplyr::glimpse()
 ```
 
 We can now verify that the adjusted ECC remains balanced:
@@ -107,7 +107,7 @@ tidy_AB_data_relocated_flows <- tidy_AB_data_added_flows %>%
   IEATools::add_psut_matnames() %>% 
   stat_diffs_to_balancing() %>% 
   stock_changes_to_balancing() %>% 
-  print()
+  dplyr::glimpse()
 ```
 
 
@@ -116,8 +116,7 @@ Now, we can see that the Statistical differences and Stock changes flows belong 
 ```{r}
 tidy_AB_data_relocated_flows %>% 
   dplyr::filter(stringr::str_detect(Flow, "Statistical differences")) %>% 
-  dplyr::select(Country, Flow, Year, Product, matnames) %>% 
-  print()
+  dplyr::glimpse()
 ```
 
 and:
@@ -125,8 +124,7 @@ and:
 ```{r}
 tidy_AB_data_relocated_flows %>% 
   dplyr::filter(stringr::str_detect(Flow, "Stock changes")) %>% 
-  dplyr::select(Country, Flow, Year, Product, matnames) %>% 
-  print()
+  dplyr::glimpse()
 ```
 
 Finally, let's verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing **B** matrix:

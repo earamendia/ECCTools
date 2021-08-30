@@ -170,22 +170,20 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
 <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; # A tibble: 99 × 11</span>
-<span class="co">#&gt;    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…</span>
-<span class="co">#&gt;    &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                </span>
-<span class="co">#&gt;  1 A       PCM    E           Final       2018 Consumption Industry             </span>
-<span class="co">#&gt;  2 A       PCM    E           Final       2018 Consumption Industry             </span>
-<span class="co">#&gt;  3 A       PCM    E           Final       2018 Consumption Industry             </span>
-<span class="co">#&gt;  4 A       PCM    E           Final       2018 Consumption Industry             </span>
-<span class="co">#&gt;  5 A       PCM    E           Final       2018 Consumption Industry             </span>
-<span class="co">#&gt;  6 A       PCM    E           Final       2018 Consumption Industry             </span>
-<span class="co">#&gt;  7 A       PCM    E           Final       2018 Consumption Other                </span>
-<span class="co">#&gt;  8 A       PCM    E           Final       2018 Consumption Other                </span>
-<span class="co">#&gt;  9 A       PCM    E           Final       2018 Consumption Other                </span>
-<span class="co">#&gt; 10 A       PCM    E           Final       2018 Consumption Other                </span>
-<span class="co">#&gt; # … with 89 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span>
-<span class="co">#&gt; #   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span></code></pre></div>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Rows: 99</span>
+<span class="co">#&gt; Columns: 11</span>
+<span class="co">#&gt; $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span>
+<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">#&gt; $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
+<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…</span>
+<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…</span>
+<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…</span>
+<span class="co">#&gt; $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…</span>
+<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span></code></pre></div>
 </div>
 <div id="global-unbalances" class="section level3">
 <h3 class="hasAnchor">

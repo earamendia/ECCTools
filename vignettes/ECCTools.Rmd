@@ -90,7 +90,7 @@ Let's now have a look to the AB data organised in a `.tidy_iea_df` as provided b
 ```{r}
 # Fix product-level balances within each country
 tidy_AB_data %>% 
-  print()
+  dplyr::glimpse()
 ```
 
 

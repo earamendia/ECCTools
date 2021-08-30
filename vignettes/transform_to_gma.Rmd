@@ -57,8 +57,7 @@ tidy_AB_data_gma <- tidy_AB_data %>%
   IEATools::add_psut_matnames() %>% 
   convert_to_net_trade() %>% 
   transform_to_gma() %>% 
-  dplyr::select(Country, Year, Flow, Product, E.dot) %>% 
-  print()
+  dplyr::glimpse()
 ```
 
 The locations of each flow is now noted with the prefix "{Country}_" in the "Flow" column, and so is the location of origin of a given product in the "Product" column.
@@ -90,7 +89,8 @@ tidy_AB_data %>%
                   Flow = "Imports [of A very odd product]", Product = "A very odd product", Unit = "ktoe", E.dot = 100) %>% 
   IEATools::add_psut_matnames() %>% 
   convert_to_net_trade() %>% 
-  transform_to_gma()
+  transform_to_gma() %>% 
+  dplyr::glimpse()
 ```
 
 As expected, the code above returns an error.

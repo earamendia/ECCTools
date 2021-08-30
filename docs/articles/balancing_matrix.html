@@ -155,22 +155,20 @@
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
                   Flow <span class="op">=</span> <span class="st">"Imports [of Coke oven coke]"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 105 × 11
-##    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
-##    &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                
-##  1 A       PCM    E           Final       2018 Consumption Industry             
-##  2 A       PCM    E           Final       2018 Consumption Industry             
-##  3 A       PCM    E           Final       2018 Consumption Industry             
-##  4 A       PCM    E           Final       2018 Consumption Industry             
-##  5 A       PCM    E           Final       2018 Consumption Industry             
-##  6 A       PCM    E           Final       2018 Consumption Industry             
-##  7 A       PCM    E           Final       2018 Consumption Other                
-##  8 A       PCM    E           Final       2018 Consumption Other                
-##  9 A       PCM    E           Final       2018 Consumption Other                
-## 10 A       PCM    E           Final       2018 Consumption Other                
-## # … with 95 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,
-## #   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</code></pre>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 105
+## Columns: 11
+## $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…
+## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
+## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
+## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
+## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
+## $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…
+## $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…
+## $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…
+## $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…
+## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
+## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</code></pre>
 <p>We can now verify that the adjusted ECC remains balanced:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
@@ -203,43 +201,59 @@
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 105 × 12
-##    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…
-##    &lt;chr&gt;   &lt;chr&gt;  &lt;chr&gt;       &lt;chr&gt;      &lt;dbl&gt; &lt;chr&gt;       &lt;chr&gt;                
-##  1 A       PCM    E           Final       2018 Consumption Industry             
-##  2 A       PCM    E           Final       2018 Consumption Industry             
-##  3 A       PCM    E           Final       2018 Consumption Industry             
-##  4 A       PCM    E           Final       2018 Consumption Industry             
-##  5 A       PCM    E           Final       2018 Consumption Industry             
-##  6 A       PCM    E           Final       2018 Consumption Industry             
-##  7 A       PCM    E           Final       2018 Consumption Other                
-##  8 A       PCM    E           Final       2018 Consumption Other                
-##  9 A       PCM    E           Final       2018 Consumption Other                
-## 10 A       PCM    E           Final       2018 Consumption Other                
-## # … with 95 more rows, and 5 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,
-## #   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;, matnames &lt;chr&gt;</code></pre>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 105
+## Columns: 12
+## $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…
+## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
+## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
+## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
+## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
+## $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…
+## $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…
+## $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…
+## $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…
+## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
+## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…
+## $ matnames               &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</code></pre>
 <p>Now, we can see that the Statistical differences and Stock changes flows belong to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Statistical differences"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Flow</span>, <span class="va">Year</span>, <span class="va">Product</span>, <span class="va">matnames</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 1 × 5
-##   Country Flow                     Year Product   matnames
-##   &lt;chr&gt;   &lt;chr&gt;                   &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;   
-## 1 A       Statistical differences  2018 Crude oil B</code></pre>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 1
+## Columns: 12
+## $ Country                &lt;chr&gt; "A"
+## $ Method                 &lt;chr&gt; "PCM"
+## $ Energy.type            &lt;chr&gt; "E"
+## $ Last.stage             &lt;chr&gt; "Final"
+## $ Year                   &lt;dbl&gt; 2018
+## $ Ledger.side            &lt;chr&gt; "Supply"
+## $ Flow.aggregation.point &lt;chr&gt; "TFC compare"
+## $ Flow                   &lt;chr&gt; "Statistical differences"
+## $ Product                &lt;chr&gt; "Crude oil"
+## $ Unit                   &lt;chr&gt; "ktoe"
+## $ E.dot                  &lt;dbl&gt; -100
+## $ matnames               &lt;chr&gt; "B"</code></pre>
 <p>and:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 
   <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Stock changes"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">Country</span>, <span class="va">Flow</span>, <span class="va">Year</span>, <span class="va">Product</span>, <span class="va">matnames</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## # A tibble: 2 × 5
-##   Country Flow           Year Product        matnames
-##   &lt;chr&gt;   &lt;chr&gt;         &lt;dbl&gt; &lt;chr&gt;          &lt;chr&gt;   
-## 1 B       Stock changes  2018 Coke oven coke B       
-## 2 A       Stock changes  2018 Coke oven coke B</code></pre>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 2
+## Columns: 12
+## $ Country                &lt;chr&gt; "B", "A"
+## $ Method                 &lt;chr&gt; "PCM", "PCM"
+## $ Energy.type            &lt;chr&gt; "E", "E"
+## $ Last.stage             &lt;chr&gt; "Final", "Final"
+## $ Year                   &lt;dbl&gt; 2018, 2018
+## $ Ledger.side            &lt;chr&gt; "Supply", "Supply"
+## $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…
+## $ Flow                   &lt;chr&gt; "Stock changes", "Stock changes"
+## $ Product                &lt;chr&gt; "Coke oven coke", "Coke oven coke"
+## $ Unit                   &lt;chr&gt; "ktoe", "ktoe"
+## $ E.dot                  &lt;dbl&gt; 400, -200
+## $ matnames               &lt;chr&gt; "B", "B"</code></pre>
 <p>Finally, let’s verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">%&gt;%</span> 

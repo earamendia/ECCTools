@@ -1,8 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit the .Rmd file. -->
-
-# ECCTools
-
 <!-- badges: start -->
 
 [![CRAN
@@ -17,53 +14,49 @@ developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.re
 coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master)
 <!-- badges: end -->
 
-The goal of ECCTools is to …
+# ECCTools
+
+The `R` package `ECCTools` provides tools to modify and Energy
+Conversion Chain (ECC) that has been previously loaded using the `R`
+package `IEATools`. The `IEATools` package helps to load IEA data as
+well as to sort and prepare IEA data to formulate a Physical Supply Use
+Table (see @Heun:2018). However, the `IEATools` package treats imports
+as a supplying industry, and to this extent, adopts what we refer here
+to as the Free Imports Assumption: imports come for free, with no
+upstream associated conversion chain (and hence, no environmental burden
+and embodied energy).
+
+The `ECCTools` package enables analysts to overcome this limitation
+through two different options:
+
+1.  To formulate a Multi-Regional Physical Supply Use Table (MR-PSUT)
+    framework representing the ECC. In this case, imports are treated as
+    supply coming from an industry located in a different region. This
+    option is the closest representation of physical flows.
+2.  To a formulate a PSUT framework following the Domestic Technology
+    Assumption (DTA). The DTA assumes that imports are produced within
+    the region that imports them. Although not a realistic assumption,
+    it may prove to be a helpful simulation.
 
 ## Installation
 
-You can install the released version of ECCTools from
-[CRAN](https://CRAN.R-project.org) with:
+You can install `ECCTools` from github with:
 
 ``` r
-install.packages("ECCTools")
-```
-
-And the development version from [GitHub](https://github.com/) with:
-
-``` r
+# install devtools if not already installed
 # install.packages("devtools")
 devtools::install_github("earamendia/ECCTools")
+# To build vignettes locally, use
+devtools::install_github("earamendia/ECCTools", build_vignettes = TRUE)
 ```
 
-## Example
+## History
 
-This is a basic example which shows you how to solve a common problem:
+This package builds upon the previous `R` package `IEATools`, as well as
+upon the paper The paper that demonstrates uses of this package is
+currently under review.
 
-``` r
-library(ECCTools)
-## basic example code
-```
+## More Information
 
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub!
+Find more information, including vignettes and function documentation,
+at <https://earamendia.github.io/ECCTools/>.
