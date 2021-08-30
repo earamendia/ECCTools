@@ -20,11 +20,11 @@ The `R` package `ECCTools` provides tools to modify and Energy
 Conversion Chain (ECC) that has been previously loaded using the `R`
 package `IEATools`. The `IEATools` package helps to load IEA data as
 well as to sort and prepare IEA data to formulate a Physical Supply Use
-Table (see @Heun:2018). However, the `IEATools` package treats imports
-as a supplying industry, and to this extent, adopts what we refer here
-to as the Free Imports Assumption: imports come for free, with no
-upstream associated conversion chain (and hence, no environmental burden
-and embodied energy).
+Table (see Heun, Owen, and Brockway (2018)). However, the `IEATools`
+package treats imports as a supplying industry, and to this extent,
+adopts what we refer here to as the Free Imports Assumption: imports
+come for free, with no upstream associated conversion chain (and hence,
+no environmental burden and embodied energy).
 
 The `ECCTools` package enables analysts to overcome this limitation
 through two different options:
@@ -55,9 +55,31 @@ devtools::install_github("earamendia/ECCTools", build_vignettes = TRUE)
 ## History
 
 This package builds upon the previous `R` package `IEATools`, and has
-been first demonstrated in the paper @mr\_psut\_paper .
+been first demonstrated in the paper Aramendia et al. (2021) .
 
 ## More Information
 
 Find more information, including vignettes and function documentation,
 at <https://earamendia.github.io/ECCTools/>.
+
+<div id="refs" class="references csl-bib-body hanging-indent">
+
+<div id="ref-mr_psut_paper" class="csl-entry">
+
+Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor.
+2021. “Developing a Multi-Regional Physical Supply Use Table Framework
+to Improve the Accuracy and Reliability of Energy Analysis.” *Under
+Review*.
+
+</div>
+
+<div id="ref-Heun:2018" class="csl-entry">
+
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. “A
+Physical Supply-Use Table Framework for Energy Analysis on the Energy
+Conversion Chain.” *Applied Energy* 226 (September): 1134–62.
+<https://doi.org/10.1016/j.apenergy.2018.05.109>.
+
+</div>
+
+</div>
