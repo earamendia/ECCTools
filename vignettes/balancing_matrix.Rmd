@@ -7,44 +7,31 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-In this vignette we show how to use the balancing matrix **B** to modify the Energy Conversion Chain (ECC).
+In this vignette we show how to use the balancing matrix **B** to modify the Energy Conversion Chain.
 
 ```{r setup, include = FALSE}
 library(dplyr)
 library(ECCTools)
 ```
 
-# Introduction and use of the balancing matrix B
+# Introduction and use of the balancing matrix
 
-## The balancing matrix B
+## The balancing matrix
 
-The balancing matrix is an extension of the original PSUT framework (see ) and has been introduced in a work presently under review. The figure below shows the expanded PSUT framework with the balancing **B** matrix.
+The balancing matrix is an extension of the original Physical Supply Use Table (PSUT) framework (see @Heun:2018) and has been introduced in a work presently under review. The figure below shows the expanded PSUT framework with the balancing **B** matrix.
 
-![](figs/psut_expanded.pdf)
+![](figs/psut_expanded.png)
 
-**Warning**: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the `Recca` package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the **B** matrix may prove helpful, it is recommended to use it in subsequent Input-Output analysis only if the implications of the given use are fully understood. We recommend taking a look to the paper presently under review.
+**Warning**: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the `Recca` package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the **B** matrix may prove helpful, we recommend its use only if the implications of the given use are fully understood. We also recommend reading the paper that introduces the **B** matrix @mr_psut_paper.
 
 The **B** matrix enables analysts to:
 
 -   modify the supply mix while conserving energy balance;
 -   modify the final demand while conserving energy balance.
 
-To scale up or down the supply of a given industry *i* by a factor $\lambda$, one can proceed according to the table below, extracted from the work under review.
+To scale up or down the supply of a given industry *i* by a factor $\lambda$, one can proceed according to the table below, extracted from @mr_psut_paper .
 
-```{=latex}
-\begin{table*}[h!]
-    \caption{Changes to operate on matrices, **V**,  **U**, and **B** when the supply mix needs to be altered so that the output of an industry $i$ is upscaled (case where $\lambda > 1$), or downscaled (case with $0 \leq \lambda <1$), by a factor $\lambda$. Note that the process is valid with $\lambda = 0$, i.e.\ when industry $i$ is altogether removed from the supply mix.}
-    \footnotesize
-    \centering
-    \begin{tabular}{c m{3.7cm} m{3.7cm} m{5.6cm}}
-        \hline  
-        Value of $\lambda$ & Changes to matrix **V** & Changes to matrix **U** & Changes to matrix **B** \\ \hline
-        $0 \leq \lambda < 1$ & Row corresponding to industry $i$ is multiplied by $\lambda$. & Column corresponding to industry $i$ is multiplied by $\lambda$. & First, the column of **U** corresponding to industry $i$ needs to be multiplied by $(1-\lambda)$ and then to be added to matrix **B**. Second, the row of **V** corresponding to matrix **V** needs to be transposed, multiplied by $(\lambda-1)$, and added to the matrix **B**. \\ \hline
-        $\lambda > 1$ & Row corresponding to industry $i$ is multiplied by $\lambda$. & Column corresponding to industry $i$ is multiplied by $\lambda$. & First, the column of **U** corresponding to industry $i$ needs to be multiplied by $(\lambda-1)$ and added to the **B** matrix. Second, the column of **V** corresponding to industry $i$ needs to be transposed, multiplied by $(1-\lambda)$, and added to matrix **B**. \\  \hline
-        $\lambda = 1$ & The case is trivial and no change needs to be made. & The case is trivial and no change needs to be made. & The case is trivial and no change is needed. \\ \hline
-    \end{tabular}
-\end{table*}
-```
+![](figs/table_2.png)
 
 To modify the final demand without loosing energy balance, one can simply redirect energy flows belonging to the final demand (**Y** matrix) to the balancing matrix **B**.
 
@@ -62,18 +49,30 @@ Let us use the AB world example introduced in the [Get started]() vignette, but 
 # Fix product-level balances within each country
 tidy_AB_data_added_flows <- tidy_AB_data %>% 
   # First, adding statistical differences providing 100 ktoe of crude oil in country A:
-  #tibble::add_row() %>% 
+  tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Supply", Flow.aggregation.point = "TFC compare", 
+                  Flow = "Statistical differences", Product = "Crude oil", Unit = "ktoe", E.dot = 100) %>% 
   # Second, adding the submarine race organised in country A:
-  #tibble::add_row() %>% 
+  tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Consumption", Flow.aggregation.point = "Industry", 
+                  Flow = "Submarine race", Product = "Crude oil", Unit = "ktoe", E.dot = 100) %>% 
   # Third, adding the stock changes supplying 400 ktoe of coke oven coke in country B:
-  #tibble::add_row() %>% 
+  tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
+                  Flow = "Stock changes", Product = "Coke oven coke", Unit = "ktoe", E.dot = -400) %>% 
   # Fourth, adding the bonfire sessions in country B:
-  #tibble::add_row() %>% 
+  tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Consumption", Flow.aggregation.point = "Industry", 
+                  Flow = "Bonfires", Product = "Coke oven coke", Unit = "ktoe", E.dot = 400) %>% 
   # Fifth, adding stock build-up of 200 ktoe of coke oven coke in country A
-  #tibble::add_row() %>% 
+  tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
+                  Flow = "Stock changes", Product = "Coke oven coke", Unit = "ktoe", E.dot = 200) %>% 
   # Sixth, adding imports of 200 ktoe of coke oven coke by country A
-  #tibble::add_row() %>%
-  dplyr::glimpse()
+  tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
+                  Flow = "Imports [of Coke oven coke]", Product = "Coke oven coke", Unit = "ktoe", E.dot = 200) %>%
+  print()
 ```
 
 We can now verify that the adjusted ECC remains balanced:
@@ -93,9 +92,9 @@ Now, let's assume that we want to modify the given ECC as follows:
 2.  Stock changes may contribute to the supply mix in reality, in a given year. However, stock changes have been built (so, products have been produced) in previous years. Here we want to *remove stock changes from the supply mix* in order to simulate that the products drawn from stocks have been produced by the rest of the supply mix of the same year.
 3.  Stock changes appearing as final consumption (200 ktoe of coke oven coke in country A) are not really part of the final energy consumption in the given year, rather, they will be consumed in later years. Hence, we want to *remove stock changes from the final consumption*.
 
-**Note**: Shat statistical differences and stock changes will not necessarily need to be relocated to the balancing **B** matrix. This is an option available to the analyst, which may prove appropriate in some situations and for some purposes.
+**Note**: Statistical differences and stock changes will not necessarily need to be relocated to the balancing **B** matrix. This is an option available to the analyst that we use here as example, which may prove appropriate in some situations and for some purposes.
 
-Then we will make use of the following functions:
+We will make use of the following functions:
 
 * `IEATools::add_psut_matnames()` will add a column stating the matrix to which each flow belongs (function belonging to the `IEATools` package);
 * `stat_diffs_to_balancing()` will move statistical difference flows, whether they are supply or use flows, to the balancing **B** matrix;
@@ -108,7 +107,7 @@ tidy_AB_data_relocated_flows <- tidy_AB_data_added_flows %>%
   IEATools::add_psut_matnames() %>% 
   stat_diffs_to_balancing() %>% 
   stock_changes_to_balancing() %>% 
-  dplyr::glimpse()
+  print()
 ```
 
 
@@ -116,17 +115,21 @@ Now, we can see that the Statistical differences and Stock changes flows belong 
 
 ```{r}
 tidy_AB_data_relocated_flows %>% 
-  dplyr::filter(stringr::str_detect(Flow, "Statistical differences"))
+  dplyr::filter(stringr::str_detect(Flow, "Statistical differences")) %>% 
+  dplyr::select(Country, Flow, Year, Product, matnames) %>% 
+  print()
 ```
 
 and:
 
 ```{r}
 tidy_AB_data_relocated_flows %>% 
-  dplyr::filter(stringr::str_detect(Flow, "Stock changes"))
+  dplyr::filter(stringr::str_detect(Flow, "Stock changes")) %>% 
+  dplyr::select(Country, Flow, Year, Product, matnames) %>% 
+  print()
 ```
 
-Finally, let's verify that the ECC remains balanced once flows are relocated to the balancing **B** matrix:
+Finally, let's verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing **B** matrix:
 
 ```{r}
 tidy_AB_data_relocated_flows %>% 
@@ -135,4 +138,4 @@ tidy_AB_data_relocated_flows %>%
 
 *Note regarding the sign convention in the balancing matrix*: Flow appearing as positive in the **B** matrix are akin to final demand flows. For instance, final demand flows relocated to **B** will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in **B**: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.
 
-In conclusion, the analyst may use directly some functions directly available, such as `stat_diffs_to_balancing()` and `stock_changes_to_balancing()`. Alternatively, the analyst may directly relocate a flow to **B** by modifying the matrix name column of the flow that needs to be modified. Be careful of the sign convention!
+In conclusion, the analyst may use directly some functions directly available, such as `stat_diffs_to_balancing()` and `stock_changes_to_balancing()`. Alternatively, the analyst may directly relocate a flow to **B** by modifying the matrix name column of the flow that needs to be modified. Be careful with the sign convention!
