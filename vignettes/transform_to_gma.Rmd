@@ -69,7 +69,7 @@ The locations of each flow is now noted with the prefix "{Country}_" in the "Flo
 ### Unbalances
 
 Now, unbalanced:
-Balanced!??
+Balanced!?? don't understand...!
 
 ```{r}
 tidy_AB_data_gma %>% 
@@ -85,8 +85,13 @@ Two possible issues are worth noting here; first, the issue of an imported produ
 
 A potential inconsistency in IEA data is the case of a country importing a product $p$ which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports "A very odd product", but that country A does not produce it (and hence, doesn't export it).
 
-```{r}
+```{r, error = TRUE}
 tidy_AB_data %>% 
+  # Country B consumes "a very odd product" in its "very odd industry
+  tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Consumption", Flow.aggregation.point = "Industry", 
+                  Flow = "Very odd industry", Product = "A very odd product", Unit = "ktoe", E.dot = 100) %>% 
+  # Country B imports "a very odd product" from somewhere
   tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
                   Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
                   Flow = "Imports [of A very odd product]", Product = "A very odd product", Unit = "ktoe", E.dot = 100) %>% 
@@ -115,9 +120,5 @@ To run the `transform_to_gma()` function, one can use the `convert_to_net_trade(
 
 ## References
 
-
-TO CHECK
-
 * why the hell it is balanced when it shouldn't be
-* why the heck does it work with a very odd product
 * why does it work when a country both imports and exports a product?
