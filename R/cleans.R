@@ -524,8 +524,9 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
   # Storing the names
   names_intermediary_modified_flows <- names(intermediary_modified_flows)
 
+
   # Modifying output and input flows:
-  modified_flows <- intermediary_modified_flows %>%
+  modified_flows_inputs_outputs <- intermediary_modified_flows %>%
     # Making sure all products in products_tibble exist as columns prior to manipulating the tibble:
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     # Putting zeros where we have NAs
@@ -587,14 +588,77 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       )
     )
 
+  # Determining share of output due to renewables versus other energy products
+  share_output_renewables <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes &
+        ((.data[[flow]] %in% elect_heat_producer_industries & .data[[product]] %in% products_list))
+    ) %>%
+    tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    dplyr::select(-tidyselect::any_of({e_dot})) %>%
+    tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
+    # Putting zeros where we have NAs
+    dplyr::mutate(
+      "{hydro}" := tidyr::replace_na(.data[[hydro]], 0),
+      "{geothermal}" := tidyr::replace_na(.data[[geothermal]], 0),
+      "{solar_pv}" := tidyr::replace_na(.data[[solar_pv]], 0),
+      "{solar_th}" := tidyr::replace_na(.data[[solar_th]], 0),
+      "{tide_wave_ocean}" := tidyr::replace_na(.data[[tide_wave_ocean]], 0),
+      "{wind}" := tidyr::replace_na(.data[[wind]], 0),
+      "{electricity}" := tidyr::replace_na(.data[[electricity]], 0),
+      "{heat}" := tidyr::replace_na(.data[[heat]], 0)
+    ) %>%
+    dplyr::mutate(
+      "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
+      Share_Renewables = dplyr::case_when(
+        (.data[[flow]] == main_act_prod_elect | .data[[flow]] == autoprod_elect) ~ - (.data[[hydro]] * ratio_hydro_to_input + .data[[geothermal]] * ratio_geothermal_elect_to_input +
+                                                                                        .data[[solar_pv]] * ratio_solar_PV_to_input + .data[[solar_th]] * ratio_solar_thermal_elect_to_input +
+                                                                                        .data[[tide_wave_ocean]] * ratio_tidal_wave_to_input + .data[[wind]] * ratio_wind_to_input) / .data[[electricity]] ,
+        (.data[[flow]] == main_act_prod_chp | .data[[flow]] == autoprod_chp) ~ - (.data[[geothermal]] * ratio_geothermal_elect_to_input * .data[[share_elect_output_From_Func]] +
+                                                                                    .data[[geothermal]] * ratio_geothermal_heat_to_input * (1 - .data[[share_elect_output_From_Func]])) / (.data[[electricity]] + .data[[heat]])
+        (.data[[flow]] == main_act_prod_heat | .data[[flow]] == autoprod_heat) ~ - (.data[[geothermal]] * ratio_geothermal_heat_to_input +
+                                                                                      .data[[solar_th]] * ratio_solar_thermal_heat_to_input) / .data[[heat]]
+      )
+    ) %>%
+    dplyr::select(-tidyselect::any_of({hydro}, {geothermal}, {solar_pv}, {solar_th}, {tide_wave_ocean}, {wind}, {electricity}, {heat}))
+
 
   # Modifying EIOU flows
+  modified_eiou_flows <- .tidy_iea_df %>%
+    dplyr::filter((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[flow]] %in% elect_heat_producer_industries)) %>%
+    dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type})) %>%
+    dplyr::mutate(
+      "{e_dot_renewables}" := .data[[e_dot]] * Share_Renewables,
+      "{e_dot_rest}" := .data[[e_dot]] * (1 - Share_Renewables)
+    )
 
 
+  to_return <- .tidy_iea_df %>%
+    # FILTER OUT FIRST
+    # TO DO
 
 
-
-  to_return <- .tidy_iea_df
+    # THEN BIND ROWS
+    dplyr::bind_rows(modified_flows_inputs_outputs) %>%
+    dplyr::bind_rows(modified_eiou_flows) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
 
   # Returning modified data frame
   return(to_return)
