@@ -448,3 +448,53 @@ add_balancing_vector <- function(.tidy_iea_df,
     return()
 }
 
+
+
+# NEW WORK HERE:
+
+# First, specifying elec/heat flows from renewables:
+
+specify_elect_heat_renewables <- function(.tidy_iea_df){
+
+}
+
+
+# Second, specifying elec/heat flows from oil products, natural gas, and coal products
+
+specify_elect_heat_fossil_fuels <- function(.tidy_iea_df){
+
+}
+
+
+# Third, specifying elect/heat flows from all other products
+
+specify_elect_heat_other_products <- function(.tidy_iea_df){
+
+}
+
+
+# Last, specifying all elect/heat flows:
+
+
+specify_elec_heat_chp_plants <- function(.tidy_iea_df){
+
+  .tidy_iea_df %>%
+  # First, specifying PV, wind, and ...
+    specify_elect_heat_renewables() %>%
+  # Second, specifying elec, heat and CHP from oil products, natural gas, and coal products
+    specify_elect_heat_fossil_fuels() %>%
+  # Third, specifying elec, heat, and CHP from all other products
+    specify_elect_heat_other_products() %>%
+    # Returning modified data frame
+    return()
+}
+
+
+
+
+
+
+
+
+
+
