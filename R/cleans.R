@@ -454,8 +454,53 @@ add_balancing_vector <- function(.tidy_iea_df,
 
 # First, specifying elec/heat flows from renewables:
 
-specify_elect_heat_renewables <- function(.tidy_iea_df){
+specify_elect_heat_renewables <- function(.tidy_iea_df,
+                                          country = IEATools::iea_cols$country,
+                                          method = IEATools::iea_cols$method,
+                                          energy_type = IEATools::iea_cols$energy_type,
+                                          last_stage = IEATools::iea_cols$last_stage,
+                                          year = IEATools::iea_cols$year,
+                                          ledger_side = IEATools::iea_cols$ledger_side,
+                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                          flow = IEATools::iea_cols$flow,
+                                          product = IEATools::iea_cols$product,
+                                          e_dot = IEATools::iea_cols$e_dot,
+                                          unit = IEATools::iea_cols$unit,
+                                          # Energy product names
+                                          hydro = "Hydro",
+                                          geothermal = "Geothermal",
+                                          solar_pv = "Solar photovoltaics",
+                                          solar_th = "Solar thermal",
+                                          tide_wave_ocean = "Tide, wave and ocean",
+                                          wind = "Wind",
+                                          # Constants - see WEEB documentation
+                                          ratio_solar_PV_to_input = 1,
+                                          ratio_solar_thermal_elect_to_input = 0.33,
+                                          ratio_solar_thermal_heat_to_input = 1,
+                                          ratio_wind_to_input = 1,
+                                          ratio_geothermal_elect_to_input = 0.1,
+                                          ratio_geothermal_heat_to_input = 0.5,
+                                          ratio_tidal_wave_to_input = 1){
 
+  # Empty tibble with energy product names:
+  products_tibble <- tibble::tibble("{hydro}" := NA,
+                                    "{geothermal}" := NA,
+                                    "{solar_pv}" := NA,
+                                    "{solar_th}" := NA,
+                                    "{tide_wave_ocean}" := NA,
+                                    "{wind}" := NA,
+                                    "{electricity}" := NA,
+                                    "{heat}" := NA)
+
+
+
+
+
+
+  to_return <- .tidy_iea_df
+
+  # Returning modified data frame
+  return(to_return)
 }
 
 
@@ -466,14 +511,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df){
 }
 
 
-# Third, specifying elect/heat flows from all other products
-
-specify_elect_heat_other_products <- function(.tidy_iea_df){
-
-}
-
-
-# Last, specifying all elect/heat flows:
+# Third, specifying all elect/heat flows:
 
 
 specify_elec_heat_chp_plants <- function(.tidy_iea_df){
