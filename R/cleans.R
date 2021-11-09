@@ -630,7 +630,17 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     dplyr::mutate(
       "{e_dot_renewables}" := .data[[e_dot]] * Share_Renewables,
       "{e_dot_rest}" := .data[[e_dot]] * (1 - Share_Renewables)
-    )
+    ) %>%
+    dplyr::select(-tidyselect::any_of({e_dot})) %>%
+    dplyr::select(-Share_Renewables) %>%
+    tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
+    dplyr::mutate(
+      .data[[flow]] = dplyr::case_when(
+        .data[["Renewables"]] == {e_dot_renewables} ~ "Renewable energy plant",
+        TRUE ~ .data[[flow]]
+      )
+    ) %>%
+    dplyr::select(-Renewables)
 
 
   to_return <- .tidy_iea_df %>%
