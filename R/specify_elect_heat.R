@@ -47,7 +47,8 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
                                           share_elect_output_From_Func = "Share_Output_Elect_From_Func",
                                           share_renewables_From_Func = "Share_Renewables_From_Func",
                                           e_dot_renewables = "E_dot_Renewables",
-                                          e_dot_rest = "E_dot_Rest"){
+                                          e_dot_rest = "E_dot_Rest",
+                                          negzeropos = ".netzeropos"){
 
   # Empty tibble with energy product names:
   products_tibble <- tibble::tibble("{hydro}" := NA,
@@ -175,7 +176,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       )
     ) %>%
     dplyr::select(-.data[[hydro]], -.data[[geothermal]], -.data[[solar_pv]], -.data[[solar_th]], -.data[[tide_wave_ocean]], -.data[[wind]],
-                  -.data[[electricity]], -.data[[heat]], -.data[[flow_aggregation_point]])
+                  -.data[[electricity]], -.data[[heat]], -.data[[flow_aggregation_point]], -.data[[share_elect_output_From_Func]])
 
 
   # Modifying EIOU flows
@@ -210,6 +211,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     # THEN BIND ROWS
     dplyr::bind_rows(modified_flows_inputs_outputs) %>%
     dplyr::bind_rows(modified_eiou_flows) %>%
+    dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
         .data[[e_dot]] < 0 ~ "neg",
