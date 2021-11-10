@@ -137,10 +137,13 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        stringr::str_detect(.data[[product]], "Renewables") ~ "Renewable energy plant",
-        .data[[product]] %in% renewable_product_list ~ "Renewable energy plant",
+        stringr::str_detect(.data[[product]], "Renewables") ~ "Renewable energy plants",
+        .data[[product]] %in% renewable_product_list ~ "Renewable energy plants",
         TRUE ~ .data[[flow]]
       )
+    ) %>%
+    dplyr::mutate(
+      "{product}" := stringr::str_remove(.data[[product]], "_Renewables")
     )
 
   # Determining share of output due to renewables versus other energy products
@@ -191,7 +194,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[["Renewables"]] == e_dot_renewables ~ "Renewable energy plant",
+        .data[["Renewables"]] == e_dot_renewables ~ "Renewable energy plants",
         TRUE ~ .data[[flow]]
       )
     ) %>%
