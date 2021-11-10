@@ -268,7 +268,8 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
                                             natural_gas = "Natural gas",
                                             other_products = "Other products",
                                             # Helper column names
-                                            product_type = "Product type"){
+                                            product_type = "Product type",
+                                            share_inputs_from_Func = "Share_inputs_from_Func"){
 
   # Defining list of industries
   elect_heat_producer_industries <- c(main_act_prod_elect, main_act_prod_chp, main_act_prod_heat, autoprod_elect, autoprod_chp, autoprod_heat)
@@ -293,20 +294,81 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[year]], .data[[last_stage]], .data[[energy_type]], .data[[method]], .data[[flow]]) %>%
     dplyr::mutate(
-      "{e_dot}" := .data[[e_dot]] / sum(.data[[e_dot]])
+      "{share_inputs_from_Func}" := .data[[e_dot]] / sum(.data[[e_dot]])
     )
 
   # Second step, changing input flows so they now flow to the appropriate industry
+  input_flows_modified <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_producer_industries
+    ) %>%
+    dplyr::filter(.data[[e_dot]] < 0) %>%
+    dplyr::mutate(
+      "{flow}" := dplyr::case_when(
+        .data[[product]] %in% IEATools::oil_and_oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
+        .data[[product]] %in% IEATools::coal_and_coal_products ~ stringr::str_c(.data[[flow]], " [from Coal products]"),
+        .data[[product]] == natural_gas ~ stringr::str_c(.data[[flow]], " [from Natural gas]"),
+        TRUE ~ .data[[flow]]
+      )
+    )
 
   # Third step, changing output flows as function of input shares
+  output_flows_modified <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_producer_industries
+    ) %>%
+    dplyr::filter(.data[[e_dot]] > 0) %>%
+    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type})) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
+      "{flow}" := dplyr::case_when(
+        .data[[product_type]] == oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
+        .data[[product_type]] == coal_products ~ stringr::str_c(.data[[flow]], " [from Coal products]"),
+        .data[[product_type]] == natural_gas ~ stringr::str_c(.data[[flow]], " [from Natural gas]"),
+        TRUE ~ .data[[flow]]
+      ),
+      "{product}" := dplyr::case_when(
+        .data[[product_type]] == oil_products ~ stringr::str_c(.data[[product]], " [from Oil products]"),
+        .data[[product_type]] == coal_products ~ stringr::str_c(.data[[product]], " [from Coal products]"),
+        .data[[product_type]] == natural_gas ~ stringr::str_c(.data[[product]], " [from Natural gas]"),
+        TRUE ~ .data[[product]]
+      )
+    ) %>%
+    dplyr::select(-.data[[share_inputs_from_Func]])
+
 
   # Fourth step, changing EIOU flows as function of input shares
+  eiou_flows_modified <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == eiou_flows & .data[[flow]] %in% elect_heat_producer_industries
+    ) %>%
+    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type})) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
+      "{flow}" := dplyr::case_when(
+        .data[[product_type]] == oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
+        .data[[product_type]] == coal_products ~ stringr::str_c(.data[[flow]], " [from Coal products]"),
+        .data[[product_type]] == natural_gas ~ stringr::str_c(.data[[flow]], " [from Natural gas]"),
+        TRUE ~ .data[[flow]]
+      )
+    ) %>%
+    dplyr::select(-.data[[share_inputs_from_Func]])
+
 
   # Fifth, filtering out, binding, and returning modified data frame
   .tidy_iea_df %>%
-    # FILTER OUT FIRST
-    # BIND SECOND
-    # RETURN THIRD
+    # Taking out input and output flows from relevant TPs
+    dplyr::filter(
+      ! (.data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_producer_industries)
+    ) %>%
+    # Taking out eiou flows from relevant TPs
+    dplyr::filter(
+      ! (.data[[flow_aggregation_point]] == eiou_flows & .data[[flow]] %in% elect_heat_producer_industries)
+    ) %>%
+    # Then binding modified rows
+    dplyr::bind_rows(input_flows_modified) %>%
+    dplyr::bind_rows(output_flows_modified) %>%
+    dplyr::bind_rows(eiou_flows_modified) %>%
     return()
 }
 
