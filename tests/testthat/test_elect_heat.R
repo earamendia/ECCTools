@@ -50,7 +50,54 @@ test_that("specify_elect_heat_renewables works",{
     tibble::add_row(
       Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
       Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer electricity plants", Product = "Tide, wave and ocean", E.dot = -2
+    ) %>%
+    # Now, electricity plants:
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Natural gas", E.dot = -200
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Heat", E.dot = 150
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Solar thermal", E.dot = -10
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Geothermal", E.dot = -15
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Energy industry own use", Flow = "Main activity producer heat plants", Product = "Electricity", E.dot = -50
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Energy industry own use", Flow = "Main activity producer heat plants", Product = "Natural gas", E.dot = -20
+    ) %>%
+    # Now, CHP plants:
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Natural gas", E.dot = -200
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Electricity", E.dot = 100
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Heat", E.dot = 75
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Geothermal", E.dot = -50
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Energy industry own use", Flow = "Main activity producer CHP plants", Product = "Blast furnace gas", E.dot = -150
     )
+
 
   res2 <- tidy_AB_data_with_adjusted_flows %>%
     specify_elect_heat_renewables()
@@ -63,21 +110,6 @@ test_that("specify_elect_heat_renewables works",{
     expect_equal(3156.75)
 
   res2 %>%
-    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Electricity") %>%
-    magrittr::extract2("E.dot") %>%
-    expect_equal(43.25)
-
-  res2 %>%
-    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Renewable energy plants", Product == "Electricity") %>%
-    magrittr::extract2("E.dot") %>%
-    expect_equal(-0.8109375)
-
-  res2 %>%
-    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Renewable energy plants", Product == "Natural gas") %>%
-    magrittr::extract2("E.dot") %>%
-    expect_equal(-2.703125)
-
-  res2 %>%
     dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants", Product == "Electricity") %>%
     magrittr::extract2("E.dot") %>%
     expect_equal(-60+0.8109375)
@@ -86,6 +118,62 @@ test_that("specify_elect_heat_renewables works",{
     dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants", Product == "Natural gas") %>%
     magrittr::extract2("E.dot") %>%
     expect_equal(-200+2.703125)
+
+
+  # Second, main activity producer CHP plants flows
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(100-2.857143)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(75-10.71429, tolerance = 1e-5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer CHP plants", Product == "Blast furnace gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-150+11.63266, tol = 1e-5)
+
+
+  # Third, main activity producer heat plants flows
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer heat plants", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(150-17.5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer heat plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-50+5.83333, tol = 1e-5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer heat plants", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-20+2.3333, tol = 1e-5)
+
+
+  # Last, doing these new Renewable energy plants flows:
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(43.25+2.857143)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Renewable energy plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-0.8109375-5.83333, tol = 1e-5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Renewable energy plants", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-2.703125-2.33333, tol = 1e-5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Renewable energy plants", Product == "Blast furnace gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-11.63266, tol = 1e-5)
 
   res2 %>%
     dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Hydro") %>%
@@ -100,12 +188,12 @@ test_that("specify_elect_heat_renewables works",{
   res2 %>%
     dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Solar thermal") %>%
     magrittr::extract2("E.dot") %>%
-    expect_equal(-25)
+    expect_equal(-35)
 
   res2 %>%
     dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Geothermal") %>%
     magrittr::extract2("E.dot") %>%
-    expect_equal(-30)
+    expect_equal(-95)
 
   res2 %>%
     dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Wind") %>%
@@ -116,11 +204,6 @@ test_that("specify_elect_heat_renewables works",{
     dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Tide, wave and ocean") %>%
     magrittr::extract2("E.dot") %>%
     expect_equal(-2)
-
-  # Second, main activity producer CHP plants flows
-
-  # Third, main activity producer heat plants flows
-
 })
 
 
