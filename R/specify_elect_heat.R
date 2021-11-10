@@ -295,7 +295,8 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::group_by(.data[[country]], .data[[year]], .data[[last_stage]], .data[[energy_type]], .data[[method]], .data[[flow]]) %>%
     dplyr::mutate(
       "{share_inputs_from_Func}" := .data[[e_dot]] / sum(.data[[e_dot]])
-    )
+    ) %>%
+    dplyr::select(-.data[[e_dot]])
 
   # Second step, changing input flows so they now flow to the appropriate industry
   input_flows_modified <- .tidy_iea_df %>%
@@ -318,7 +319,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_producer_industries
     ) %>%
     dplyr::filter(.data[[e_dot]] > 0) %>%
-    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type})) %>%
+    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
       "{flow}" := dplyr::case_when(
@@ -342,7 +343,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou_flows & .data[[flow]] %in% elect_heat_producer_industries
     ) %>%
-    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type})) %>%
+    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
       "{flow}" := dplyr::case_when(
