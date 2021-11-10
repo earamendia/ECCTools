@@ -15,6 +15,8 @@ test_that("specify_elect_heat_renewables works",{
   tidy_AB_data <- AB_data %>%
     IEATools::specify_all()
 
+  a <- tidy_AB_data %>%
+    specify_elect_heat_renewables()
 
 
 })

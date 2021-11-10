@@ -42,7 +42,10 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
                                           ratio_wind_to_input = 1,
                                           ratio_geothermal_elect_to_input = 0.1,
                                           ratio_geothermal_heat_to_input = 0.5,
-                                          ratio_tidal_wave_to_input = 1){
+                                          ratio_tidal_wave_to_input = 1,
+                                          # Helper column names - removed at the end
+                                          share_elect_output_From_Func = "Share_Output_Elect_From_Func",
+                                          share_renewables_From_Func = "Share_Renewables_From_Func"){
 
   # Empty tibble with energy product names:
   products_tibble <- tibble::tibble("{hydro}" := NA,
@@ -159,17 +162,18 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     ) %>%
     dplyr::mutate(
       "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
-      Share_Renewables = dplyr::case_when(
+      "{share_renewables_From_Func}" := dplyr::case_when(
         (.data[[flow]] == main_act_prod_elect | .data[[flow]] == autoprod_elect) ~ - (.data[[hydro]] * ratio_hydro_to_input + .data[[geothermal]] * ratio_geothermal_elect_to_input +
                                                                                         .data[[solar_pv]] * ratio_solar_PV_to_input + .data[[solar_th]] * ratio_solar_thermal_elect_to_input +
                                                                                         .data[[tide_wave_ocean]] * ratio_tidal_wave_to_input + .data[[wind]] * ratio_wind_to_input) / .data[[electricity]] ,
         (.data[[flow]] == main_act_prod_chp | .data[[flow]] == autoprod_chp) ~ - (.data[[geothermal]] * ratio_geothermal_elect_to_input * .data[[share_elect_output_From_Func]] +
-                                                                                    .data[[geothermal]] * ratio_geothermal_heat_to_input * (1 - .data[[share_elect_output_From_Func]])) / (.data[[electricity]] + .data[[heat]])
+                                                                                    .data[[geothermal]] * ratio_geothermal_heat_to_input * (1 - .data[[share_elect_output_From_Func]])) / (.data[[electricity]] + .data[[heat]]),
         (.data[[flow]] == main_act_prod_heat | .data[[flow]] == autoprod_heat) ~ - (.data[[geothermal]] * ratio_geothermal_heat_to_input +
-                                                                                      .data[[solar_th]] * ratio_solar_thermal_heat_to_input) / .data[[heat]]
+                                                                                      .data[[solar_th]] * ratio_solar_thermal_heat_to_input) / .data[[heat]],
       )
     ) %>%
-    dplyr::select(-tidyselect::any_of({hydro}, {geothermal}, {solar_pv}, {solar_th}, {tide_wave_ocean}, {wind}, {electricity}, {heat}))
+    dplyr::select(-.data[[hydro]], -.data[[geothermal]], -.data[[solar_pv]], -.data[[solar_th]], -.data[[tide_wave_ocean]], -.data[[wind]],
+                  -.data[[electricity]], -.data[[heat]])
 
 
   # Modifying EIOU flows
@@ -177,11 +181,10 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     dplyr::filter((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[flow]] %in% elect_heat_producer_industries)) %>%
     dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type})) %>%
     dplyr::mutate(
-      "{e_dot_renewables}" := .data[[e_dot]] * Share_Renewables,
-      "{e_dot_rest}" := .data[[e_dot]] * (1 - Share_Renewables)
+      "{e_dot_renewables}" := .data[[e_dot]] * .data[[share_renewables_From_Func]],
+      "{e_dot_rest}" := .data[[e_dot]] * (1 - .data[[share_renewables_From_Func]])
     ) %>%
-    dplyr::select(-tidyselect::any_of({e_dot})) %>%
-    dplyr::select(-Share_Renewables) %>%
+    dplyr::select(-tidyselect::any_of({e_dot}, {share_renewables_From_Func})) %>%
     tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
@@ -189,7 +192,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
         TRUE ~ .data[[flow]]
       )
     ) %>%
-    dplyr::select(-Renewables)
+    dplyr::select(-.data[["Renewables"]])
 
 
   to_return <- .tidy_iea_df %>%
