@@ -184,7 +184,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     dplyr::select(-Share_Renewables) %>%
     tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
     dplyr::mutate(
-      .data[[flow]] = dplyr::case_when(
+      "{flow}" := dplyr::case_when(
         .data[["Renewables"]] == {e_dot_renewables} ~ "Renewable energy plant",
         TRUE ~ .data[[flow]]
       )
@@ -194,9 +194,13 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 
   to_return <- .tidy_iea_df %>%
     # FILTER OUT FIRST
-    # TO DO
-
-
+    dplyr::filter(
+      ! (.data[[flow_aggregation_point]] == transformation_processes &
+        ((.data[[flow]] %in% elect_heat_producer_industries & .data[[product]] %in% products_list)))
+    ) %>%
+    dplyr::filter(
+      ! ((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[flow]] %in% elect_heat_producer_industries))
+    ) %>%
     # THEN BIND ROWS
     dplyr::bind_rows(modified_flows_inputs_outputs) %>%
     dplyr::bind_rows(modified_eiou_flows) %>%
@@ -228,26 +232,26 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 
 # Second, specifying elec/heat flows from oil products, natural gas, and coal products
 
-specify_elect_heat_fossil_fuels <- function(.tidy_iea_df){
-
-}
+# specify_elect_heat_fossil_fuels <- function(.tidy_iea_df){
+#
+# }
 
 
 # Third, specifying all elect/heat flows:
 
 
-specify_elec_heat_chp_plants <- function(.tidy_iea_df){
-
-  .tidy_iea_df %>%
-    # First, specifying PV, wind, and ...
-    specify_elect_heat_renewables() %>%
-    # Second, specifying elec, heat and CHP from oil products, natural gas, and coal products
-    specify_elect_heat_fossil_fuels() %>%
-    # Third, specifying elec, heat, and CHP from all other products
-    specify_elect_heat_other_products() %>%
-    # Returning modified data frame
-    return()
-}
+# specify_elec_heat_chp_plants <- function(.tidy_iea_df){
+#
+#   .tidy_iea_df %>%
+#     # First, specifying PV, wind, and ...
+#     specify_elect_heat_renewables() %>%
+#     # Second, specifying elec, heat and CHP from oil products, natural gas, and coal products
+#     specify_elect_heat_fossil_fuels() %>%
+#     # Third, specifying elec, heat, and CHP from all other products
+#     specify_elect_heat_other_products() %>%
+#     # Returning modified data frame
+#     return()
+# }
 
 
 
