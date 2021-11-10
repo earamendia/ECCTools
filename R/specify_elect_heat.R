@@ -45,7 +45,9 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
                                           ratio_tidal_wave_to_input = 1,
                                           # Helper column names - removed at the end
                                           share_elect_output_From_Func = "Share_Output_Elect_From_Func",
-                                          share_renewables_From_Func = "Share_Renewables_From_Func"){
+                                          share_renewables_From_Func = "Share_Renewables_From_Func",
+                                          e_dot_renewables = "E_dot_Renewables",
+                                          e_dot_rest = "E_dot_Rest"){
 
   # Empty tibble with energy product names:
   products_tibble <- tibble::tibble("{hydro}" := NA,
@@ -173,26 +175,27 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       )
     ) %>%
     dplyr::select(-.data[[hydro]], -.data[[geothermal]], -.data[[solar_pv]], -.data[[solar_th]], -.data[[tide_wave_ocean]], -.data[[wind]],
-                  -.data[[electricity]], -.data[[heat]])
+                  -.data[[electricity]], -.data[[heat]], -.data[[flow_aggregation_point]])
 
 
   # Modifying EIOU flows
   modified_eiou_flows <- .tidy_iea_df %>%
     dplyr::filter((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[flow]] %in% elect_heat_producer_industries)) %>%
-    dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type})) %>%
+    dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type}, {method}, {unit}, {ledger_side}, {flow})) %>%
     dplyr::mutate(
       "{e_dot_renewables}" := .data[[e_dot]] * .data[[share_renewables_From_Func]],
       "{e_dot_rest}" := .data[[e_dot]] * (1 - .data[[share_renewables_From_Func]])
     ) %>%
-    dplyr::select(-tidyselect::any_of({e_dot}, {share_renewables_From_Func})) %>%
+    dplyr::select(-.data[[e_dot]], -.data[[share_renewables_From_Func]]) %>%
     tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        .data[["Renewables"]] == {e_dot_renewables} ~ "Renewable energy plant",
+        .data[["Renewables"]] == e_dot_renewables ~ "Renewable energy plant",
         TRUE ~ .data[[flow]]
       )
     ) %>%
     dplyr::select(-.data[["Renewables"]])
+
 
 
   to_return <- .tidy_iea_df %>%
