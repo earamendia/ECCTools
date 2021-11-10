@@ -117,7 +117,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
           .data[[solar_th]] * ratio_solar_thermal_heat_to_input
       ),
       # Modifying output flows:
-      Electricity_Renewables = dplyr::case_when(
+      `Electricity [from Renewables]` = dplyr::case_when(
         (.data[[flow]] == main_act_prod_elect | .data[[flow]] == autoprod_elect) ~ - (.data[[hydro]] * ratio_hydro_to_input +
                                                                                         .data[[geothermal]] * ratio_geothermal_elect_to_input + .data[[solar_pv]] * ratio_solar_PV_to_input + .data[[solar_th]] * ratio_solar_thermal_elect_to_input +
                                                                                         .data[[tide_wave_ocean]] * ratio_tidal_wave_to_input + .data[[wind]] * ratio_wind_to_input),
@@ -125,25 +125,22 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 
         (.data[[flow]] == main_act_prod_heat | .data[[flow]] == autoprod_heat) ~ 0
       ),
-      Heat_Renewables = dplyr::case_when(
+      `Heat [from Renewables]` = dplyr::case_when(
         (.data[[flow]] == main_act_prod_elect | .data[[flow]] == autoprod_elect) ~ 0,
         (.data[[flow]] == main_act_prod_chp | .data[[flow]] == autoprod_chp) ~ - .data[[geothermal]] * ratio_geothermal_heat_to_input * (1 - .data[[share_elect_output_From_Func]]),
         (.data[[flow]] == main_act_prod_heat | .data[[flow]] == autoprod_heat) ~ - (.data[[geothermal]] * ratio_geothermal_heat_to_input + .data[[solar_th]] * ratio_solar_thermal_heat_to_input)
       ),
     ) %>%
     dplyr::select(-.data[[share_elect_output_From_Func]]) %>%
-    tidyr::pivot_longer(cols = c({electricity}, {heat}, {hydro}, {geothermal}, {solar_pv}, {solar_th}, {tide_wave_ocean}, {wind}, "Electricity_Renewables", "Heat_Renewables")
+    tidyr::pivot_longer(cols = c({electricity}, {heat}, {hydro}, {geothermal}, {solar_pv}, {solar_th}, {tide_wave_ocean}, {wind}, "Electricity [from Renewables]", "Heat [from Renewables]")
                         , values_to = {e_dot}, names_to = {product}) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
-        stringr::str_detect(.data[[product]], "Renewables") ~ "Renewable energy plants",
+        stringr::str_detect(.data[[product]], "from Renewables") ~ "Renewable energy plants",
         .data[[product]] %in% renewable_product_list ~ "Renewable energy plants",
         TRUE ~ .data[[flow]]
       )
-    ) %>%
-    dplyr::mutate(
-      "{product}" := stringr::str_remove(.data[[product]], "_Renewables")
     )
 
   # Determining share of output due to renewables versus other energy products

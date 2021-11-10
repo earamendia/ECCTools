@@ -156,9 +156,14 @@ test_that("specify_elect_heat_renewables works",{
 
   # Last, doing these new Renewable energy plants flows:
   res2 %>%
-    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Electricity") %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Electricity [from Renewables]") %>%
     magrittr::extract2("E.dot") %>%
     expect_equal(43.25+2.857143)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Renewable energy plants", Product == "Heat [from Renewables]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(17.5+10.71429, tol = 1e-5)
 
   res2 %>%
     dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Renewable energy plants", Product == "Electricity") %>%
