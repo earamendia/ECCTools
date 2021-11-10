@@ -240,9 +240,75 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 
 # Second, specifying elec/heat flows from oil products, natural gas, and coal products
 
-# specify_elect_heat_fossil_fuels <- function(.tidy_iea_df){
-#
-# }
+specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
+                                            country = IEATools::iea_cols$country,
+                                            method = IEATools::iea_cols$method,
+                                            energy_type = IEATools::iea_cols$energy_type,
+                                            last_stage = IEATools::iea_cols$last_stage,
+                                            year = IEATools::iea_cols$year,
+                                            ledger_side = IEATools::iea_cols$ledger_side,
+                                            flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                            flow = IEATools::iea_cols$flow,
+                                            product = IEATools::iea_cols$product,
+                                            e_dot = IEATools::iea_cols$e_dot,
+                                            unit = IEATools::iea_cols$unit,
+                                            # Flow aggregation points
+                                            transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                            eiou_flows = IEATools::aggregation_flows$energy_industry_own_use,
+                                            # Elec and heat producing industries
+                                            main_act_prod_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+                                            main_act_prod_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+                                            main_act_prod_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
+                                            autoprod_elect = "Autoproducer electricity plants",
+                                            autoprod_chp = "Autoproducer CHP plants",
+                                            autoprod_heat = "Autoproducer heat plants",
+                                            # Helper product type names
+                                            oil_products = "Oil products",
+                                            coal_products = "Coal products",
+                                            natural_gas = "Natural gas",
+                                            other_products = "Other products",
+                                            # Helper column names
+                                            product_type = "Product type"){
+
+  # Defining list of industries
+  elect_heat_producer_industries <- c(main_act_prod_elect, main_act_prod_chp, main_act_prod_heat, autoprod_elect, autoprod_chp, autoprod_heat)
+
+  # First step; figuring out input shares for each elect, heat, and CHP plants, by product type:
+  share_inputs_intermediary_data <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & (.data[[flow]] %in% elect_heat_producer_industries)
+    ) %>%
+    dplyr::filter(.data[[e_dot]] < 0) %>%
+    dplyr::mutate(
+      "{product_type}" := dplyr::case_when(
+        .data[[product]] %in% IEATools::oil_and_oil_products ~ oil_products,
+        .data[[product]] %in% IEATools::coal_and_coal_products ~ coal_products,
+        .data[[product]] == natural_gas ~ natural_gas,
+        TRUE ~ other_products
+      )
+    ) %>%
+    dplyr::group_by(.data[[country]], .data[[year]], .data[[last_stage]], .data[[energy_type]], .data[[method]], .data[[flow]], .data[[product_type]]) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::group_by(.data[[country]], .data[[year]], .data[[last_stage]], .data[[energy_type]], .data[[method]], .data[[flow]]) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] / sum(.data[[e_dot]])
+    )
+
+  # Second step, changing input flows so they now flow to the appropriate industry
+
+  # Third step, changing output flows as function of input shares
+
+  # Fourth step, changing EIOU flows as function of input shares
+
+  # Fifth, filtering out, binding, and returning modified data frame
+  .tidy_iea_df %>%
+    # FILTER OUT FIRST
+    # BIND SECOND
+    # RETURN THIRD
+    return()
+}
 
 
 # Third, specifying all elect/heat flows:
