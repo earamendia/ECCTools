@@ -391,9 +391,64 @@ test_that("specify_elect_heat_fossil_fuels function works", {
     magrittr::extract2("E.dot") %>%
     expect_equal(-58.25243, tol = 1e-5)
 
-
-
   # Then doing Main activity producer CHP plants:
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants", Product == "Industrial waste") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-15)
 
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(29.12621, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(14.56311, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer CHP plants", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-2.912621, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants [from Natural gas]", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-200)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants [from Natural gas]", Product == "Heat [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(388.3495, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants [from Natural gas]", Product == "Electricity [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(194.1748, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer CHP plants [from Natural gas]", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-38.83495, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants [from Oil products]", Product == "Fuel oil") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-300)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants [from Oil products]", Product == "Heat [from Oil products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(582.5243, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer CHP plants [from Oil products]", Product == "Electricity [from Oil products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(291.2621, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer CHP plants [from Oil products]", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-58.25243, tol = 1e-5)
 })
-
