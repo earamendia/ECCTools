@@ -452,3 +452,24 @@ test_that("specify_elect_heat_fossil_fuels function works", {
     magrittr::extract2("E.dot") %>%
     expect_equal(-58.25243, tol = 1e-5)
 })
+
+
+test_that("specify_elect_heat_eiou_flows works", {
+
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  # Loading AB_data
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  # Specifying AB data
+  tidy_AB_data <- AB_data %>%
+    IEATools::specify_all()
+
+  tidy_AB_data_specified <- tidy_AB_data %>%
+    specify_elect_heat_eiou_flows()
+
+  # SHould be equal:
+  expect_equal(tidy_AB_data, tidy_AB_data_specified)
+})

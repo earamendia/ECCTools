@@ -63,6 +63,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
   # Defining product list:
   renewable_product_list <- c(hydro, geothermal, solar_pv, solar_th, tide_wave_ocean, wind)
   products_list <- c(hydro, geothermal, solar_pv, solar_th, tide_wave_ocean, wind, electricity, heat)
+  elect_heat_list <- c(electricity, heat)
 
   # Defining list of elect and heat producer activities:
   elect_heat_producer_industries <- c(main_act_prod_elect, main_act_prod_chp, main_act_prod_heat, autoprod_elect, autoprod_chp, autoprod_heat)
@@ -179,7 +180,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
                   -.data[[electricity]], -.data[[heat]], -.data[[flow_aggregation_point]], -.data[[share_elect_output_From_Func]])
 
 
-  # Modifying EIOU flows
+  # Modifying EIOU flows to change the industry consuming (-> "Renewable energy plants")
   modified_eiou_flows <- .tidy_iea_df %>%
     dplyr::filter((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[flow]] %in% elect_heat_producer_industries)) %>%
     dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type}, {method}, {unit}, {ledger_side}, {flow})) %>%
@@ -196,7 +197,6 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       )
     ) %>%
     dplyr::select(-.data[["Renewables"]])
-
 
 
   to_return <- .tidy_iea_df %>%
@@ -394,7 +394,101 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 }
 
 
-# Third, specifying all elect/heat flows:
+# Third, specifying  elect and heat EIOU flows
+
+specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
+                                          country = IEATools::iea_cols$country,
+                                          method = IEATools::iea_cols$method,
+                                          energy_type = IEATools::iea_cols$energy_type,
+                                          last_stage = IEATools::iea_cols$last_stage,
+                                          year = IEATools::iea_cols$year,
+                                          ledger_side = IEATools::iea_cols$ledger_side,
+                                          flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                          flow = IEATools::iea_cols$flow,
+                                          product = IEATools::iea_cols$product,
+                                          e_dot = IEATools::iea_cols$e_dot,
+                                          unit = IEATools::iea_cols$unit,
+                                          # Flow aggregation points
+                                          transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                          eiou_flows = IEATools::aggregation_flows$energy_industry_own_use,
+                                          # Elect and heat producing industries
+                                          main_act_prod_elect = IEATools::main_act_plants$main_act_prod_elect_plants,
+                                          main_act_prod_chp = IEATools::main_act_plants$main_act_prod_chp_plants,
+                                          main_act_prod_heat = IEATools::main_act_plants$main_act_prod_heat_plants,
+                                          autoprod_elect = "Autoproducer electricity plants",
+                                          autoprod_chp = "Autoproducer CHP plants",
+                                          autoprod_heat = "Autoproducer heat plants",
+                                          # Helper column names, removed after:
+                                          product_origin = "Product_origin",
+                                          share_electricity_by_origin = "Share_electricity_by_origin",
+                                          share_heat_by_origin = "Share_heat_by_origin"){
+
+  # Defining industries lists:
+  electricity_prod_industries <- c(main_act_prod_elect, autoprod_elect, main_act_prod_chp, autoprod_chp)
+  heat_prod_industries <- c(main_act_prod_chp, autoprod_chp, main_act_prod_heat, autoprod_heat)
+
+  # Figuring out share of each energy source type electricity output
+  share_electricity_output <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% electricity_prod_industries
+    ) %>%
+    dplyr::filter(
+      stringr::str_detect(.data[[product]], "Electricity")
+    ) %>%
+    dplyr::filter(.data[[e_dot]] > 0) %>%
+    dplyr::mutate(
+      "{product_origin}" := dplyr::case_when(
+        .data[[product]] == "Electricity [from Oil products]" ~ "Oil products",
+        .data[[product]] == "Electricity [from Coal products]" ~ "Coal products",
+        .data[[product]] == "Electricity [from Natural gas]" ~ "Natural gas",
+        .data[[product]] == "Electricity [from Renewables]" ~ "Renewables",
+        TRUE ~ .data[[product]]
+      )
+    ) %>%
+    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}, {product_origin}) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}) %>%
+    dplyr::mutate(
+      "{share_electricity_by_origin}" := .data[[e_dot]] / sum(.data[[e_dot]])
+    ) %>%
+    dplyr::select(-.data[[e_dot]])
+
+
+  # Figuring out share of each energy source type heat output
+  share_heat_output <- .tidy_iea_df %>%
+    dplyr::filter(
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% heat_prod_industries
+    ) %>%
+    dplyr::filter(
+      stringr::str_detect(.data[[product]], "Heat")
+    ) %>%
+    dplyr::filter(.data[[e_dot]] > 0) %>%
+    dplyr::mutate(
+      "{product_origin}" := dplyr::case_when(
+        .data[[product]] == "Heat [from Oil products]" ~ "Oil products",
+        .data[[product]] == "Heat [from Coal products]" ~ "Coal products",
+        .data[[product]] == "Heat [from Natural gas]" ~ "Natural gas",
+        .data[[product]] == "Heat [from Renewables]" ~ "Renewables",
+        TRUE ~ .data[[product]]
+      )
+    ) %>%
+    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}, {product_origin}) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}) %>%
+    dplyr::mutate(
+      "{share_heat_by_origin}" := .data[[e_dot]] / sum(.data[[e_dot]])
+    ) %>%
+    dplyr::select(-.data[[e_dot]])
+
+  return(.tidy_iea_df)
+}
+
+
+# Fourth, specifying all elect/heat flows:
 
 
 # specify_elec_heat_chp_plants <- function(.tidy_iea_df){
