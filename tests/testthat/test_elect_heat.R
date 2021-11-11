@@ -229,7 +229,45 @@ test_that("specify_elect_heat_fossil_fuels function works", {
     tibble::add_row(
       Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
       Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer electricity plants", Product = "Industrial waste", E.dot = -1000
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Heat", E.dot = 1000
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Natural gas", E.dot = -200
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer heat plants", Product = "Fuel oil", E.dot = -300
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Energy industry own use", Flow = "Main activity producer heat plants", Product = "Natural gas", E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Heat", E.dot = 1000
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Electricity", E.dot = 500
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Natural gas", E.dot = -200
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer CHP plants", Product = "Fuel oil", E.dot = -300
+    ) %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Energy industry own use", Flow = "Main activity producer CHP plants", Product = "Natural gas", E.dot = -100
     )
+
+
 
   # does it run?
   res <- tidy_AB_data_specified %>%
