@@ -269,7 +269,8 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
                                             other_products = "Other products",
                                             # Helper column names
                                             product_type = "Product type",
-                                            share_inputs_from_Func = "Share_inputs_from_Func"){
+                                            share_inputs_from_Func = "Share_inputs_from_Func",
+                                            negzeropos = ".negzeropos"){
 
   # Defining list of industries
   elect_heat_producer_industries <- c(main_act_prod_elect, main_act_prod_chp, main_act_prod_heat, autoprod_elect, autoprod_chp, autoprod_heat)
@@ -370,6 +371,25 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::bind_rows(input_flows_modified) %>%
     dplyr::bind_rows(output_flows_modified) %>%
     dplyr::bind_rows(eiou_flows_modified) %>%
+    dplyr::select(-.data[[product_type]]) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup() %>%
     return()
 }
 

@@ -225,8 +225,83 @@ test_that("specify_elect_heat_fossil_fuels function works", {
   tidy_AB_data <- AB_data %>%
     IEATools::specify_all()
 
+  tidy_AB_data_specified <- tidy_AB_data %>%
+    tibble::add_row(
+      Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+      Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer electricity plants", Product = "Industrial waste", E.dot = -1000
+    )
+
   # does it run?
-  res <- tidy_AB_data %>%
+  res <- tidy_AB_data_specified %>%
     specify_elect_heat_fossil_fuels()
+
+
+  # Checking flows are doing what they should do:
+  # Doing Main activity producer electricity plants:
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants", Product == "Industrial waste") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-1000)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(744.1859, tol = 1e-3)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(46.51162, tol = 1e-3)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-13.95349, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants [from Coal products]", Product == "Coking coal") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-2600)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants [from Coal products]", Product == "Electricity [from Coal products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(2009.302, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants [from Coal products]", Product == "Heat [from Coal products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(125.5814, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants [from Coal products]", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-37.67442, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants [from Natural gas]", Product == "Natural gas") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-600)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants [from Natural gas]", Product == "Electricity [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(446.5117, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Main activity producer electricity plants [from Natural gas]", Product == "Heat [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(27.90698, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants [from Natural gas]", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-8.372094, tol = 1e-5)
+
+
+  # Then doing Main activity producer heat plants:
+
+  # Then doing Main activity producer CHP plants:
+
 })
 
