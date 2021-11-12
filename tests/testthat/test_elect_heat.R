@@ -479,9 +479,56 @@ test_that("specify_elect_heat_markets works",{
     specify_elect_heat_fossil_fuels() %>%
     specify_elect_heat_markets()
 
+  # Checking electricity market flows:
   res %>%
-    dplyr::filter(Country == "A")
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(3200)
 
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity [from Coal products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-2618.18182, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-581.81818, tol = 1e-5)
+
+  # Checking heat market flows:
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(200)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat [from Coal products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-163.63636, tol = 1e-5)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-36.36364, tol = 1e-5)
+
+  # Checking EIOU flows for electricity and heat:
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Oil and gas extraction", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-200)
+
+  res %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Oil refineries", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-100)
 })
 
 
