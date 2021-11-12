@@ -454,28 +454,46 @@ test_that("specify_elect_heat_fossil_fuels function works", {
 })
 
 
-test_that("specify_elect_heat_eiou_flows works", {
-
-  # Path to dummy AB data
-  A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
-
-  # Loading AB_data
-  AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
-
-  # Specifying AB data
-  tidy_AB_data <- AB_data %>%
-    IEATools::specify_all()
-
-  tidy_AB_data_specified <- tidy_AB_data %>%
-    specify_elect_heat_eiou_flows()
-
-  # Should be equal, and it is!!
-  expect_equal(tidy_AB_data, tidy_AB_data_specified)
-
-
-  # Now, more complex tests
-
-
-
-})
+# test_that("specify_elect_heat_eiou_flows works", {
+#
+#   # Path to dummy AB data
+#   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#
+#   # Loading AB_data
+#   AB_data <- A_B_path %>%
+#     IEATools::load_tidy_iea_df()
+#
+#   # Specifying AB data
+#   tidy_AB_data <- AB_data %>%
+#     IEATools::specify_all()
+#
+#   tidy_AB_data_1 <- tidy_AB_data %>%
+#     specify_elect_heat_eiou_flows()
+#
+#   # Should be equal, and it is!!
+#   expect_equal(tidy_AB_data, tidy_AB_data_1)
+#
+#   # Now, more complex tests
+#   res <- AB_data %>%
+#     IEATools::specify_all() %>%
+#     tibble::add_row(
+#       Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+#       Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer electricity plants", Product = "Industrial waste", E.dot = -100
+#     ) %>%
+#     tibble::add_row(
+#       Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+#       Flow.aggregation.point = "Transformation processes", Flow = "Main activity producer electricity plants", Product = "Solar photovoltaics", E.dot = -10
+#     ) %>%
+#     specify_elect_heat_renewables() %>%
+#     specify_elect_heat_fossil_fuels() %>%
+#     specify_elect_heat_eiou_flows()
+#
+#   # Testing values:
+#   res %>%
+#     dplyr::filter(
+#       Country == "A", Flow.aggregation.point == "Energy industry own use", Flow == "Main activity producer electricity plants",
+#       Product == ""
+#     ) %>%
+#     magrittr::extract2("E.dot") %>%
+#     expect_equal()
+# })
