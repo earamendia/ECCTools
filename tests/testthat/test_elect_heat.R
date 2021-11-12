@@ -470,6 +470,12 @@ test_that("specify_elect_heat_eiou_flows works", {
   tidy_AB_data_specified <- tidy_AB_data %>%
     specify_elect_heat_eiou_flows()
 
-  # SHould be equal:
+  # Should be equal, and it is!!
   expect_equal(tidy_AB_data, tidy_AB_data_specified)
+
+
+  # Now, more complex tests
+
+
+
 })

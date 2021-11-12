@@ -425,13 +425,14 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
                                           negzeropos = ".negzeropos"){
 
   # Defining industries lists:
+  elect_heat_prod_industries <- c(main_act_prod_elect, main_act_prod_chp, main_act_prod_heat, autoprod_elect, autoprod_chp, autoprod_heat)
   electricity_prod_industries <- c(main_act_prod_elect, autoprod_elect, main_act_prod_chp, autoprod_chp)
   heat_prod_industries <- c(main_act_prod_chp, autoprod_chp, main_act_prod_heat, autoprod_heat)
 
   # Figuring out share of each energy source type electricity output
   share_electricity_output <- .tidy_iea_df %>%
     dplyr::filter(
-      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% electricity_prod_industries
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_prod_industries
     ) %>%
     dplyr::filter(
       stringr::str_detect(.data[[product]], "Electricity")
@@ -446,11 +447,11 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
         TRUE ~ .data[[product]]
       )
     ) %>%
-    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}, {product_origin}) %>%
+    dplyr::group_by(.data[[country]], .data[[year]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[product_origin]]) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
-    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}) %>%
+    dplyr::group_by(.data[[country]], .data[[year]], .data[[method]], .data[[energy_type]], .data[[last_stage]]) %>%
     dplyr::mutate(
       "{share_electricity_by_origin}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
@@ -460,7 +461,7 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
   # Figuring out share of each energy source type heat output
   share_heat_output <- .tidy_iea_df %>%
     dplyr::filter(
-      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% heat_prod_industries
+      .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_prod_industries
     ) %>%
     dplyr::filter(
       stringr::str_detect(.data[[product]], "Heat")
@@ -475,11 +476,11 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
         TRUE ~ .data[[product]]
       )
     ) %>%
-    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}, {product_origin}) %>%
+    dplyr::group_by(.data[[country]], .data[[year]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[product_origin]]) %>%
     dplyr::summarise(
       "{e_dot}" := sum(.data[[e_dot]])
     ) %>%
-    dplyr::group_by({country}, {year}, {method}, {energy_type}, {last_stage}) %>%
+    dplyr::group_by(.data[[country]], .data[[year]], .data[[method]], .data[[energy_type]], .data[[last_stage]]) %>%
     dplyr::mutate(
       "{share_heat_by_origin}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
@@ -488,7 +489,7 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
   # Modifying electricity EIOU flows:
   modified_elec_eiou_flows <- .tidy_iea_df %>%
     dplyr::filter(
-      (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Electricity")
+      (.data[[flow_aggregation_point]] == eiou_flows) & (.data[[product]] == "Electricity")
     ) %>%
     dplyr::left_join(
       share_electricity_output, by = c({country}, {year}, {method}, {last_stage}, {energy_type})
@@ -503,12 +504,12 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
         TRUE ~ .data[[product]]
       )
     ) %>%
-    dplyr::select(-.data[[product_origin]])
+    dplyr::select(-.data[[product_origin]], -.data[[share_electricity_by_origin]])
 
   # Modifying heat EIOU flows:
   modified_heat_eiou_flows <- .tidy_iea_df %>%
     dplyr::filter(
-      (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Heat")
+      (.data[[flow_aggregation_point]] == eiou_flows) & (.data[[product]] == "Heat")
     ) %>%
     dplyr::left_join(
       share_heat_output, by = c({country}, {year}, {method}, {last_stage}, {energy_type})
@@ -523,17 +524,17 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
         TRUE ~ .data[[product]]
       )
     ) %>%
-    dplyr::select(-.data[[product_origin]])
+    dplyr::select(-.data[[product_origin]], -.data[[share_heat_by_origin]])
 
 
   # Filter out relevant flows, binding modified flows, and doing the negzeropos trick:
   .tidy_iea_df %>%
     # FILTER OUT MODIFIED FLOWS
     dplyr::filter(
-      ! (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Electricity")
+      ! ((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[product]] == "Electricity"))
     ) %>%
     dplyr::filter(
-      ! (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Heat")
+      ! ((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[product]] == "Heat"))
     ) %>%
     # BIND NEWLY MODIFIED FLOWS
     dplyr::bind_rows(modified_elec_eiou_flows) %>%
