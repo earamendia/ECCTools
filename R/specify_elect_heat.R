@@ -310,7 +310,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
         .data[[product]] %in% IEATools::oil_and_oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
         .data[[product]] %in% IEATools::coal_and_coal_products ~ stringr::str_c(.data[[flow]], " [from Coal products]"),
         .data[[product]] == natural_gas ~ stringr::str_c(.data[[flow]], " [from Natural gas]"),
-        TRUE ~ .data[[flow]]
+        TRUE ~ stringr::str_c(.data[[flow]], " [from Other products]")
       )
     )
 
@@ -327,13 +327,13 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
         .data[[product_type]] == oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
         .data[[product_type]] == coal_products ~ stringr::str_c(.data[[flow]], " [from Coal products]"),
         .data[[product_type]] == natural_gas ~ stringr::str_c(.data[[flow]], " [from Natural gas]"),
-        TRUE ~ .data[[flow]]
+        TRUE ~ stringr::str_c(.data[[flow]], " [from Other products]")
       ),
       "{product}" := dplyr::case_when(
         .data[[product_type]] == oil_products ~ stringr::str_c(.data[[product]], " [from Oil products]"),
         .data[[product_type]] == coal_products ~ stringr::str_c(.data[[product]], " [from Coal products]"),
         .data[[product_type]] == natural_gas ~ stringr::str_c(.data[[product]], " [from Natural gas]"),
-        TRUE ~ .data[[product]]
+        TRUE ~ stringr::str_c(.data[[product]], " [from Other products]")
       )
     ) %>%
     dplyr::select(-.data[[share_inputs_from_Func]])
@@ -351,7 +351,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
         .data[[product_type]] == oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
         .data[[product_type]] == coal_products ~ stringr::str_c(.data[[flow]], " [from Coal products]"),
         .data[[product_type]] == natural_gas ~ stringr::str_c(.data[[flow]], " [from Natural gas]"),
-        TRUE ~ .data[[flow]]
+        TRUE ~ stringr::str_c(.data[[flow]], " [from Other products]")
       )
     ) %>%
     dplyr::select(-.data[[share_inputs_from_Func]])
