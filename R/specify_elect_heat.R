@@ -1,8 +1,52 @@
 
-# NEW WORK HERE:
-
-# First, specifying elec/heat flows from renewables:
-
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param country
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param year
+#' @param ledger_side
+#' @param flow_aggregation_point
+#' @param flow
+#' @param product
+#' @param e_dot
+#' @param unit
+#' @param transformation_processes
+#' @param eiou_flows
+#' @param main_act_prod_elect
+#' @param main_act_prod_chp
+#' @param main_act_prod_heat
+#' @param autoprod_elect
+#' @param autoprod_chp
+#' @param autoprod_heat
+#' @param hydro
+#' @param geothermal
+#' @param solar_pv
+#' @param solar_th
+#' @param tide_wave_ocean
+#' @param wind
+#' @param electricity
+#' @param heat
+#' @param ratio_hydro_to_input
+#' @param ratio_solar_PV_to_input
+#' @param ratio_solar_thermal_elect_to_input
+#' @param ratio_solar_thermal_heat_to_input
+#' @param ratio_wind_to_input
+#' @param ratio_geothermal_elect_to_input
+#' @param ratio_geothermal_heat_to_input
+#' @param ratio_tidal_wave_to_input
+#' @param share_elect_output_From_Func
+#' @param share_renewables_From_Func
+#' @param e_dot_renewables
+#' @param e_dot_rest
+#' @param negzeropos
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_elect_heat_renewables <- function(.tidy_iea_df,
                                           country = IEATools::iea_cols$country,
                                           method = IEATools::iea_cols$method,
@@ -238,8 +282,40 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 
 
 
-# Second, specifying elec/heat flows from oil products, natural gas, and coal products
-
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param country
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param year
+#' @param ledger_side
+#' @param flow_aggregation_point
+#' @param flow
+#' @param product
+#' @param e_dot
+#' @param unit
+#' @param transformation_processes
+#' @param eiou_flows
+#' @param main_act_prod_elect
+#' @param main_act_prod_chp
+#' @param main_act_prod_heat
+#' @param autoprod_elect
+#' @param autoprod_chp
+#' @param autoprod_heat
+#' @param oil_products
+#' @param coal_products
+#' @param natural_gas
+#' @param other_products
+#' @param product_type
+#' @param share_inputs_from_Func
+#' @param negzeropos
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
                                             country = IEATools::iea_cols$country,
                                             method = IEATools::iea_cols$method,
@@ -394,8 +470,28 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 }
 
 
-# Third, building up markets for electricity and heat
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param country
+#' @param method
+#' @param energy_type
+#' @param last_stage
+#' @param year
+#' @param ledger_side
+#' @param flow_aggregation_point
+#' @param flow
+#' @param product
+#' @param e_dot
+#' @param unit
+#' @param transformation_processes
+#' @param negzeropos
+#'
+#' @return
+#' @export
+#'
+#' @examples
 specify_elect_heat_markets <- function(.tidy_iea_df,
                                        country = IEATools::iea_cols$country,
                                        method = IEATools::iea_cols$method,
