@@ -421,7 +421,8 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
                                           # Helper column names, removed after:
                                           product_origin = "Product_origin",
                                           share_electricity_by_origin = "Share_electricity_by_origin",
-                                          share_heat_by_origin = "Share_heat_by_origin"){
+                                          share_heat_by_origin = "Share_heat_by_origin",
+                                          negzeropos = ".negzeropos"){
 
   # Defining industries lists:
   electricity_prod_industries <- c(main_act_prod_elect, autoprod_elect, main_act_prod_chp, autoprod_chp)
@@ -484,7 +485,79 @@ specify_elect_heat_eiou_flows <- function(.tidy_iea_df,
     ) %>%
     dplyr::select(-.data[[e_dot]])
 
-  return(.tidy_iea_df)
+  # Modifying electricity EIOU flows:
+  modified_elec_eiou_flows <- .tidy_iea_df %>%
+    dplyr::filter(
+      (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Electricity")
+    ) %>%
+    dplyr::left_join(
+      share_electricity_output, by = c({country}, {year}, {method}, {last_stage}, {energy_type})
+    ) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * .data[[share_electricity_by_origin]],
+      "{product}" := dplyr::case_when(
+        .data[[product_origin]] == "Oil products" ~ stringr::str_c(.data[[product]], " [from Oil products]"),
+        .data[[product_origin]] == "Coal products" ~ stringr::str_c(.data[[product]], " [from Coal products]"),
+        .data[[product_origin]] == "Natural gas" ~ stringr::str_c(.data[[product]], " [from Natural gas]"),
+        .data[[product_origin]] == "Renewables" ~ stringr::str_c(.data[[product]], " [from Renewables]"),
+        TRUE ~ .data[[product]]
+      )
+    ) %>%
+    dplyr::select(-.data[[product_origin]])
+
+  # Modifying heat EIOU flows:
+  modified_heat_eiou_flows <- .tidy_iea_df %>%
+    dplyr::filter(
+      (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Heat")
+    ) %>%
+    dplyr::left_join(
+      share_heat_output, by = c({country}, {year}, {method}, {last_stage}, {energy_type})
+    ) %>%
+    dplyr::mutate(
+      "{e_dot}" := .data[[e_dot]] * .data[[share_heat_by_origin]],
+      "{product}" := dplyr::case_when(
+        .data[[product_origin]] == "Oil products" ~ stringr::str_c(.data[[product]], " [from Oil products]"),
+        .data[[product_origin]] == "Coal products" ~ stringr::str_c(.data[[product]], " [from Coal products]"),
+        .data[[product_origin]] == "Natural gas" ~ stringr::str_c(.data[[product]], " [from Natural gas]"),
+        .data[[product_origin]] == "Renewables" ~ stringr::str_c(.data[[product]], " [from Renewables]"),
+        TRUE ~ .data[[product]]
+      )
+    ) %>%
+    dplyr::select(-.data[[product_origin]])
+
+
+  # Filter out relevant flows, binding modified flows, and doing the negzeropos trick:
+  .tidy_iea_df %>%
+    # FILTER OUT MODIFIED FLOWS
+    dplyr::filter(
+      ! (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Electricity")
+    ) %>%
+    dplyr::filter(
+      ! (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[product]] == "Heat")
+    ) %>%
+    # BIND NEWLY MODIFIED FLOWS
+    dplyr::bind_rows(modified_elec_eiou_flows) %>%
+    dplyr::bind_rows(modified_heat_eiou_flows) %>%
+    # NEGZEROPOS TRICK
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup() %>%
+    return()
 }
 
 
