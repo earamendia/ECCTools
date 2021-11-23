@@ -53,6 +53,9 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
   net_trade_flows <- .tidy_iea_df %>%
     dplyr::filter(stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) %>%
+    # this line below is added:
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_marine_bunkers) |
+                       stringr::str_detect(.data[[flow]], IEATools::tpes_flows$exports_to_world_aviation_bunkers))) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], imports) ~ imports,
@@ -82,7 +85,10 @@ convert_to_net_trade <- function(.tidy_iea_df,
 
 
   tidy_net_trade_df <- .tidy_iea_df %>%
-    dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
+    #dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports))) %>%
+    dplyr::filter(! (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], exports)) |
+                    stringr::str_detect(.data[[flow]], tpes_flows$exports_to_world_aviation_bunkers) |
+                    stringr::str_detect(.data[[flow]], tpes_flows$exports_to_world_marine_bunkers)) %>%
     dplyr::bind_rows(net_trade_flows) %>%
     dplyr::arrange({year}, {country}, dplyr::desc({ledger_side}), {flow_aggregation_point}, {flow})
 
