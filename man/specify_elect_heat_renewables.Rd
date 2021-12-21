@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify_elect_heat.R
 \name{specify_elect_heat_renewables}
 \alias{specify_elect_heat_renewables}
-\title{Title}
+\title{Specifies electricity and heat produced by renewables}
 \usage{
 specify_elect_heat_renewables(
   .tidy_iea_df,
@@ -49,11 +49,93 @@ specify_elect_heat_renewables(
 )
 }
 \arguments{
-\item{negzeropos}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which electricity and heat products need to be specified
+when they come from renewables. Default is \code{.tidy_iea_df}.}
+
+\item{country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
+
+\item{transformation_processes}{Name of transformation process flows in data frame.
+Default is IEATools::aggregation_flows$transformation_processes.}
+
+\item{eiou_flows}{Name of energy industry own use flows in data frame.
+Default is IEATools::aggregation_flows$energy_industry_own_use.}
+
+\item{main_act_prod_elect}{Name of electricity producing plants.
+Default is IEATools::main_act_plants$main_act_prod_elect_plants.}
+
+\item{main_act_prod_chp}{Name of CHP producing plants.
+Default is IEATools::main_act_plants$main_act_prod_chp_plants}
+
+\item{main_act_prod_heat}{Name of heat producing plants.
+Default is IEATools::main_act_plants$main_act_prod_heat_plants}
+
+\item{autoprod_elect}{Name of autoproducer electricity plants.
+Default is "Autoproducer electricity plants".}
+
+\item{autoprod_chp}{Name of autoproducer CHP plants.
+Default is "Autoproducer CHP plants".}
+
+\item{autoprod_heat}{Name of autoproducer heat plants.
+Default is "Autoproducer heat plants".}
+
+\item{hydro}{Temporary column name. Default is "Hydro".}
+
+\item{geothermal}{Temporary column name. Default is "Geothermal".}
+
+\item{solar_pv}{Temporary column name. Default is "Solar photovoltaics".}
+
+\item{solar_th}{Temporary column name. Default is "Solar thermal".}
+
+\item{tide_wave_ocean}{Temporary column name. Default is "Tide, wave and ocean".}
+
+\item{wind}{Temporary column name. Default is "Wind".}
+
+\item{electricity}{Temporary column name. Default is "Electricity".}
+
+\item{heat}{Temporary column name. Default is "Heat".}
+
+\item{ratio_hydro_to_input}{Ratio of input hydro to output electricity.
+Default is 1, value comes from IEA's WEEB.}
+
+\item{ratio_solar_PV_to_input}{Ratio of output electricity to input solar PV.
+Default is 1, value comes from IEA's WEEB.}
+
+\item{ratio_solar_thermal_elect_to_input}{Ratio of output electricity to input solar thermal.
+Default is 0.33, value comes from IEA's WEEB.}
+
+\item{ratio_solar_thermal_heat_to_input}{Ratio of output heat to input solar thermal.
+Default is 1, value comes from IEA's WEEB.}
+
+\item{ratio_wind_to_input}{Ratio of output electricity to input wind.
+Default is 1, value comes from IEA's WEEB.}
+
+\item{ratio_geothermal_elect_to_input}{Ratio of output electricity to input geothermal.
+Default is 0.1, value comes from IEA's WEEB.}
+
+\item{ratio_geothermal_heat_to_input}{Ratio of output heat to input geothermal.
+Default is 0.5, value comes from IEA's WEEB.}
+
+\item{ratio_tidal_wave_to_input}{Ratio of output electricity to input tide, wave, ocean.
+Default is 1, value comes from IEA's WEEB.}
+
+\item{share_elect_output_From_Func}{Temporary column name. Default is "Share_Output_Elect_From_Func".}
+
+\item{share_renewables_From_Func}{Temporary column name. Default is "Share_Renewables_From_Func".}
+
+\item{e_dot_renewables}{Temporary column name. Default is "E_dot_Renewables".}
+
+\item{e_dot_rest}{Temporary column name. Default is "E_dot_Rest".}
+
+\item{negzeropos}{Temporary column name. Default is ".netzeropos".}
 }
 \value{
-
+A \code{.tidy_iea_df} with electricity and heat products specified when they come from renewables.
 }
 \description{
-Title
+This code selects main activity autoproducer electricity, heat and CHP plants,
+and figures out which fraction of the output is due to renewables, based on the conversion factors
+of energy output to energy input provided by the IEA's WEEB.
+The energy due to renewables is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
+and the input and output flows due to renewables are directed to a new industry called "Renewable energy plants",
+which now produce "Electricity \code{[}from Renewables\verb{]}" and "Heat \code{[}from Renewables\verb{]}".
 }

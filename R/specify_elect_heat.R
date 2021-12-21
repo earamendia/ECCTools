@@ -6,7 +6,7 @@
 #' of energy output to energy input provided by the IEA's WEEB.
 #' The energy due to renewables is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
 #' and the input and output flows due to renewables are directed to a new industry called "Renewable energy plants",
-#' which now produce "Electricity [from Renewables]" and "Heat [from Renewables]".
+#' which now produce "Electricity `[`from Renewables`]`" and "Heat `[`from Renewables`]`".
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which electricity and heat products need to be specified
 #'                     when they come from renewables. Default is `.tidy_iea_df`.
@@ -62,6 +62,10 @@
 #' @export
 #'
 #' @examples
+#' A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#' IEATools::load_tidy_iea_df(A_B_path) %>%
+#' IEATools::specify_all() %>%
+#' specify_elect_heat_renewables()
 specify_elect_heat_renewables <- function(.tidy_iea_df,
                                           country = IEATools::iea_cols$country,
                                           method = IEATools::iea_cols$method,
@@ -338,6 +342,10 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#' IEATools::load_tidy_iea_df(A_B_path) %>%
+#' IEATools::specify_all() %>%
+#' specify_elect_heat_fossil_fuels()
 specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
                                             country = IEATools::iea_cols$country,
                                             method = IEATools::iea_cols$method,
@@ -496,8 +504,8 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 #' Specified electricity and heat markets
 #'
 #' This function specifies electricity and heat markets. It does so by selecting production flows (V matrix) of:
-#' "Electricity [from Oil products]", "Electricity [from Coal products]", "Electricity [from Natural gas]",
-#' "Electricity [from Other products]", and "Electricity [from Renewables]", and routing them as inputs to a new industry: "Electricity market".
+#' "Electricity `[`from Oil products`]`", "Electricity `[`from Coal products`]`", "Electricity `[`from Natural gas`]`",
+#' "Electricity `[`from Other products`]`", and "Electricity `[`from Renewables`]`", and routing them as inputs to a new industry: "Electricity market".
 #' The electricity market industry then produces "Electricity" in the same amount that it receives as input.
 #' Exactly the same process is conducted for heat.
 #'
@@ -512,6 +520,10 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#' IEATools::load_tidy_iea_df(A_B_path) %>%
+#' IEATools::specify_all() %>%
+#' specify_elect_heat_markets()
 specify_elect_heat_markets <- function(.tidy_iea_df,
                                        country = IEATools::iea_cols$country,
                                        method = IEATools::iea_cols$method,

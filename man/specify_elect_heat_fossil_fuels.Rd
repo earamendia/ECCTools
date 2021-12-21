@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify_elect_heat.R
 \name{specify_elect_heat_fossil_fuels}
 \alias{specify_elect_heat_fossil_fuels}
-\title{Title}
+\title{Specifies electricity and heat products}
 \usage{
 specify_elect_heat_fossil_fuels(
   .tidy_iea_df,
@@ -35,11 +35,57 @@ specify_elect_heat_fossil_fuels(
 )
 }
 \arguments{
-\item{negzeropos}{}
+\item{.tidy_iea_df}{Name of the \code{.tidy_iea_df} for which electricity and heat products
+need to be specified with origin product type.}
+
+\item{country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
+
+\item{transformation_processes}{Name of transformation process flows in data frame.
+Default is IEATools::aggregation_flows$transformation_processes.}
+
+\item{eiou_flows}{Name of energy industry own use flows in data frame.
+Default is IEATools::aggregation_flows$energy_industry_own_use.}
+
+\item{main_act_prod_elect}{Name of electricity producing plants.
+Default is IEATools::main_act_plants$main_act_prod_elect_plants.}
+
+\item{main_act_prod_chp}{Name of CHP producing plants.
+Default is IEATools::main_act_plants$main_act_prod_chp_plants}
+
+\item{main_act_prod_heat}{Name of heat producing plants.
+Default is IEATools::main_act_plants$main_act_prod_heat_plants}
+
+\item{autoprod_elect}{Name of autoproducer electricity plants.
+Default is "Autoproducer electricity plants".}
+
+\item{autoprod_chp}{Name of autoproducer CHP plants.
+Default is "Autoproducer CHP plants".}
+
+\item{autoprod_heat}{Name of autoproducer heat plants.
+Default is "Autoproducer heat plants".}
+
+\item{oil_products}{Name of oil products. Default is "Oil products".}
+
+\item{coal_products}{Name of coal products. Default is "Coal products".}
+
+\item{natural_gas}{Name of natural gas. Default is "Natural gas".}
+
+\item{other_products}{Name of other products. Default is "Other products".}
+
+\item{product_type}{Name of a temporary column. Default is "Product type".}
+
+\item{share_inputs_from_Func}{Name of a temporary column. Default is "Share_inputs_from_Func".}
+
+\item{negzeropos}{Temporary column name. Default is ".netzeropos".}
 }
 \value{
-
+Returns a \code{.tidy_iea_df} with electricity and heat products specified
+with origin product type.
 }
 \description{
-Title
+This function specified the electricity and heat energy products by the type of energy carrier
+that has been used to produce them, at the moment "Oil products", "Coal products", "Natural gas", and "Other products".
+To do so, the code keeps the main activity and autoproducer electricity, heat and CHP activities,
+and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat ouputs.
+New industries that are now specified as function of the product type they take as input.
 }

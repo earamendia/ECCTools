@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify_elect_heat.R
 \name{specify_elect_heat_markets}
 \alias{specify_elect_heat_markets}
-\title{Title}
+\title{Specified electricity and heat markets}
 \usage{
 specify_elect_heat_markets(
   .tidy_iea_df,
@@ -22,11 +22,22 @@ specify_elect_heat_markets(
 )
 }
 \arguments{
-\item{negzeropos}{}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which electricity and heat markets need to be specified.}
+
+\item{country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
+
+\item{transformation_processes}{The name of transformation processes in the data frame.
+Default is IEATools::aggregation_flows$transformation_processes.}
+
+\item{negzeropos}{Temporary column name. Default is ".netzeropos".}
 }
 \value{
-
+Returns a \code{.tidy_iea_df} with specified electricity and heat markets.
 }
 \description{
-Title
+This function specifies electricity and heat markets. It does so by selecting production flows (V matrix) of:
+"Electricity \code{[}from Oil products\verb{]}", "Electricity \code{[}from Coal products\verb{]}", "Electricity \code{[}from Natural gas\verb{]}",
+"Electricity \code{[}from Other products\verb{]}", and "Electricity \code{[}from Renewables\verb{]}", and routing them as inputs to a new industry: "Electricity market".
+The electricity market industry then produces "Electricity" in the same amount that it receives as input.
+Exactly the same process is conducted for heat.
 }
