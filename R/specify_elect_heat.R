@@ -1,40 +1,64 @@
 
-#' Title
+#' Specifies electricity and heat produced by renewables
 #'
-#' @param .tidy_iea_df
+#' This code selects main activity autoproducer electricity, heat and CHP plants,
+#' and figures out which fraction of the output is due to renewables, based on the conversion factors
+#' of energy output to energy input provided by the IEA's WEEB.
+#' The energy due to renewables is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
+#' and the input and output flows due to renewables are directed to a new industry called "Renewable energy plants",
+#' which now produce "Electricity [from Renewables]" and "Heat [from Renewables]".
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which electricity and heat products need to be specified
+#'                     when they come from renewables. Default is `.tidy_iea_df`.
 #' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
 #'        See `IEATools::iea_cols`.
-#' @param transformation_processes
-#' @param eiou_flows
-#' @param main_act_prod_elect
-#' @param main_act_prod_chp
-#' @param main_act_prod_heat
-#' @param autoprod_elect
-#' @param autoprod_chp
-#' @param autoprod_heat
-#' @param hydro
-#' @param geothermal
-#' @param solar_pv
-#' @param solar_th
-#' @param tide_wave_ocean
-#' @param wind
-#' @param electricity
-#' @param heat
-#' @param ratio_hydro_to_input
-#' @param ratio_solar_PV_to_input
-#' @param ratio_solar_thermal_elect_to_input
-#' @param ratio_solar_thermal_heat_to_input
-#' @param ratio_wind_to_input
-#' @param ratio_geothermal_elect_to_input
-#' @param ratio_geothermal_heat_to_input
-#' @param ratio_tidal_wave_to_input
-#' @param share_elect_output_From_Func
-#' @param share_renewables_From_Func
-#' @param e_dot_renewables
-#' @param e_dot_rest
+#' @param transformation_processes Name of transformation process flows in data frame.
+#'                                 Default is IEATools::aggregation_flows$transformation_processes.
+#' @param eiou_flows Name of energy industry own use flows in data frame.
+#'                   Default is IEATools::aggregation_flows$energy_industry_own_use.
+#' @param main_act_prod_elect Name of electricity producing plants.
+#'                            Default is IEATools::main_act_plants$main_act_prod_elect_plants.
+#' @param main_act_prod_chp Name of CHP producing plants.
+#'                            Default is IEATools::main_act_plants$main_act_prod_chp_plants
+#' @param main_act_prod_heat Name of heat producing plants.
+#'                            Default is IEATools::main_act_plants$main_act_prod_heat_plants
+#' @param autoprod_elect Name of autoproducer electricity plants.
+#'                       Default is "Autoproducer electricity plants".
+#' @param autoprod_chp Name of autoproducer CHP plants.
+#'                       Default is "Autoproducer CHP plants".
+#' @param autoprod_heat Name of autoproducer heat plants.
+#'                       Default is "Autoproducer heat plants".
+#' @param hydro Temporary column name. Default is "Hydro".
+#' @param geothermal Temporary column name. Default is "Geothermal".
+#' @param solar_pv Temporary column name. Default is "Solar photovoltaics".
+#' @param solar_th Temporary column name. Default is "Solar thermal".
+#' @param tide_wave_ocean Temporary column name. Default is "Tide, wave and ocean".
+#' @param wind Temporary column name. Default is "Wind".
+#' @param electricity Temporary column name. Default is "Electricity".
+#' @param heat Temporary column name. Default is "Heat".
+#' @param ratio_hydro_to_input Ratio of input hydro to output electricity.
+#'                             Default is 1, value comes from IEA's WEEB.
+#' @param ratio_solar_PV_to_input Ratio of output electricity to input solar PV.
+#'                             Default is 1, value comes from IEA's WEEB.
+#' @param ratio_solar_thermal_elect_to_input Ratio of output electricity to input solar thermal.
+#'                             Default is 0.33, value comes from IEA's WEEB.
+#' @param ratio_solar_thermal_heat_to_input Ratio of output heat to input solar thermal.
+#'                             Default is 1, value comes from IEA's WEEB.
+#' @param ratio_wind_to_input Ratio of output electricity to input wind.
+#'                             Default is 1, value comes from IEA's WEEB.
+#' @param ratio_geothermal_elect_to_input Ratio of output electricity to input geothermal.
+#'                             Default is 0.1, value comes from IEA's WEEB.
+#' @param ratio_geothermal_heat_to_input Ratio of output heat to input geothermal.
+#'                             Default is 0.5, value comes from IEA's WEEB.
+#' @param ratio_tidal_wave_to_input Ratio of output electricity to input tide, wave, ocean.
+#'                             Default is 1, value comes from IEA's WEEB.
+#' @param share_elect_output_From_Func Temporary column name. Default is "Share_Output_Elect_From_Func".
+#' @param share_renewables_From_Func Temporary column name. Default is "Share_Renewables_From_Func".
+#' @param e_dot_renewables Temporary column name. Default is "E_dot_Renewables".
+#' @param e_dot_rest Temporary column name. Default is "E_dot_Rest".
 #' @param negzeropos Temporary column name. Default is ".netzeropos".
 #'
-#' @return
+#' @return A `.tidy_iea_df` with electricity and heat products specified when they come from renewables.
 #' @export
 #'
 #' @examples
@@ -273,28 +297,44 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Specifies electricity and heat products
 #'
-#' @param .tidy_iea_df
+#' This function specified the electricity and heat energy products by the type of energy carrier
+#' that has been used to produce them, at the moment "Oil products", "Coal products", "Natural gas", and "Other products".
+#' To do so, the code keeps the main activity and autoproducer electricity, heat and CHP activities,
+#' and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat ouputs.
+#' New industries that are now specified as function of the product type they take as input.
+#'
+#' @param .tidy_iea_df Name of the `.tidy_iea_df` for which electricity and heat products
+#'                     need to be specified with origin product type.
 #' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
 #'        See `IEATools::iea_cols`.
-#' @param transformation_processes
-#' @param eiou_flows
-#' @param main_act_prod_elect
-#' @param main_act_prod_chp
-#' @param main_act_prod_heat
-#' @param autoprod_elect
-#' @param autoprod_chp
-#' @param autoprod_heat
-#' @param oil_products
-#' @param coal_products
-#' @param natural_gas
-#' @param other_products
-#' @param product_type
-#' @param share_inputs_from_Func
+#' @param transformation_processes Name of transformation process flows in data frame.
+#'                                 Default is IEATools::aggregation_flows$transformation_processes.
+#' @param eiou_flows Name of energy industry own use flows in data frame.
+#'                   Default is IEATools::aggregation_flows$energy_industry_own_use.
+#' @param main_act_prod_elect Name of electricity producing plants.
+#'                            Default is IEATools::main_act_plants$main_act_prod_elect_plants.
+#' @param main_act_prod_chp Name of CHP producing plants.
+#'                            Default is IEATools::main_act_plants$main_act_prod_chp_plants
+#' @param main_act_prod_heat Name of heat producing plants.
+#'                            Default is IEATools::main_act_plants$main_act_prod_heat_plants
+#' @param autoprod_elect Name of autoproducer electricity plants.
+#'                       Default is "Autoproducer electricity plants".
+#' @param autoprod_chp Name of autoproducer CHP plants.
+#'                       Default is "Autoproducer CHP plants".
+#' @param autoprod_heat Name of autoproducer heat plants.
+#'                       Default is "Autoproducer heat plants".
+#' @param oil_products Name of oil products. Default is "Oil products".
+#' @param coal_products Name of coal products. Default is "Coal products".
+#' @param natural_gas Name of natural gas. Default is "Natural gas".
+#' @param other_products Name of other products. Default is "Other products".
+#' @param product_type Name of a temporary column. Default is "Product type".
+#' @param share_inputs_from_Func Name of a temporary column. Default is "Share_inputs_from_Func".
 #' @param negzeropos Temporary column name. Default is ".netzeropos".
 #'
-#' @return
+#' @return Returns a `.tidy_iea_df` with electricity and heat products specified
+#'         with origin product type.
 #' @export
 #'
 #' @examples
@@ -460,7 +500,6 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 #' "Electricity [from Other products]", and "Electricity [from Renewables]", and routing them as inputs to a new industry: "Electricity market".
 #' The electricity market industry then produces "Electricity" in the same amount that it receives as input.
 #' Exactly the same process is conducted for heat.
-#'
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which electricity and heat markets need to be specified.
 #' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
