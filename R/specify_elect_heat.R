@@ -500,15 +500,71 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 }
 
 
-specify_elect_heat_nuclear <- function(){
+#' Specifies electricity and heat from nuclear
+#'
+#' This function selects electricity and heat produced by the nuclear industry, and specifies them, so that the new product name is
+#' respectively "Electricity `[`from Nuclear`]`" and "Heat `[`from Nuclear`]`".
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which electricity and heat products coming from the nuclear industry need to be specified.
+#' @param flow_aggregation_point,flow,e_dot,product See `IEATools::iea_cols`.
+#' @param transformation_processes The name of transformation processes in the data frame.
+#'                                 Default is `IEATools::aggregation_flows$transformation_processes`.
+#' @param nuclear_industry The name of the nuclear industry in the flow column of the data frame.
+#'                         Default is `IEATools::eiou_flows$nuclear_industry`.
+#' @param negzeropos Temporary column name. Default is ".netzeropos".
+#'
+#' @return A `.tidy_iea_df` with electricity and heat products specified when they come from the nuclear industry.
+#' @export
+#'
+#' @examples
+specify_elect_heat_nuclear <- function(.tidy_iea_df,
+                                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                       flow = IEATools::iea_cols$flow,
+                                       e_dot = IEATools::iea_cols$e_dot,
+                                       product = IEATools::iea_cols$product,
+                                       transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                       nuclear_industry = IEATools::eiou_flows$nuclear_industry,
+                                       negzeropos = ".negzeropos"){
 
+  modified_nuclear_output <- .tidy_iea_df %>%
+    dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes) %>%
+    dplyr::filter(.data[[flow]] == nuclear_industry) %>%
+    dplyr::filter(.data[[e_dot]] > 0) %>%
+    dplyr::filter(.data[[product]] == "Electricity" | .data[[product]] == "Heat") %>%
+    dplyr::mutate(
+      "{product}" := stringr::str_c(.data[[product]], " from [Nuclear]")
+    )
 
-
+  # Returning values:
+  .tidy_iea_df %>%
+    # Exclude elec and heat output flows from nuclear activities
+    dplyr::filter(! ((.data[[flow_aggregation_point]] == transformation_processes) & (.data[[flow]] == nuclear_industry) &
+                       (.data[[e_dot]] > 0) & (.data[[product]] == "Electricity" | .data[[product]] == "Heat"))) %>%
+    dplyr::bind_rows(modified_nuclear_output) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup() %>%
+    return()
 }
 
 
 
-#' Specified electricity and heat markets
+#' Specifies electricity and heat markets
 #'
 #' This function specifies electricity and heat markets. See details for more information.
 #'
