@@ -517,6 +517,10 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 #' @export
 #'
 #' @examples
+#' A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#' IEATools::load_tidy_iea_df(A_B_path) %>%
+#' IEATools::specify_all() %>%
+#' specify_elect_heat_nuclear()
 specify_elect_heat_nuclear <- function(.tidy_iea_df,
                                        flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                        flow = IEATools::iea_cols$flow,
@@ -532,7 +536,7 @@ specify_elect_heat_nuclear <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] == "Electricity" | .data[[product]] == "Heat") %>%
     dplyr::mutate(
-      "{product}" := stringr::str_c(.data[[product]], " from [Nuclear]")
+      "{product}" := stringr::str_c(.data[[product]], " [from Nuclear]")
     )
 
   # Returning values:

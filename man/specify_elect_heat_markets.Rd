@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify_elect_heat.R
 \name{specify_elect_heat_markets}
 \alias{specify_elect_heat_markets}
-\title{Specified electricity and heat markets}
+\title{Specifies electricity and heat markets}
 \usage{
 specify_elect_heat_markets(
   .tidy_iea_df,
@@ -35,10 +35,15 @@ Default is IEATools::aggregation_flows$transformation_processes.}
 Returns a \code{.tidy_iea_df} with specified electricity and heat markets.
 }
 \description{
-This function specifies electricity and heat markets. It does so by selecting production flows (V matrix) of:
+This function specifies electricity and heat markets. See details for more information.
+}
+\details{
+This function specifies electricity and heat markets by selecting production flows (V matrix) of:
 "Electricity \code{[}from Oil products\verb{]}", "Electricity \code{[}from Coal products\verb{]}", "Electricity \code{[}from Natural gas\verb{]}",
-"Electricity \code{[}from Other products\verb{]}", and "Electricity \code{[}from Renewables\verb{]}", and routing them as inputs to a new industry: "Electricity market".
-The electricity market industry then produces "Electricity" in the same amount that it receives as input.
+"Electricity \code{[}from Other products\verb{]}", "Electricity \code{[}from Renewables\verb{]}", and "Electricity \code{[}from Nuclear\verb{]}.
+and routing them as inputs to a new industry: "Electricity market". The electricity market industry then produces
+"Electricity" in the same amount that it receives as input.
+
 Exactly the same process is conducted for heat.
 }
 \examples{

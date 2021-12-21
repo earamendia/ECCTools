@@ -532,6 +532,191 @@ test_that("specify_elect_heat_markets works",{
 })
 
 
+test_that("specify_elect_heat_nuclear works", {
+
+  # Path to dummy AB data
+  A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+
+  # Loading AB_data
+  AB_data <- A_B_path %>%
+    IEATools::load_tidy_iea_df()
+
+  # Specifying AB data
+  tidy_AB_data <- AB_data %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "Nuclear industry",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = 200
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "Nuclear industry",
+      Product = "Heat",
+      Unit = "ktoe",
+      E.dot = 100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "Nuclear industry",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "Nuclear industry",
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = -100
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Transformation processes",
+      Flow = "Nuclear industry",
+      Product = "Coke oven coke",
+      Unit = "ktoe",
+      E.dot = 100
+    )
+
+  # Now, results:
+  res1 <- tidy_AB_data %>%
+    specify_elect_heat_nuclear()
+
+  res1 %>%
+    dplyr::filter(Flow == "Nuclear industry") %>%
+    dplyr::filter(Product == "Heat") %>%
+    nrow() %>%
+    expect_equal(0)
+
+  res1 %>%
+    dplyr::filter(Flow == "Nuclear industry") %>%
+    dplyr::filter(Product == "Electricity") %>%
+    nrow() %>%
+    expect_equal(1)
+
+  res1 %>%
+    dplyr::filter(Flow == "Nuclear industry") %>%
+    dplyr::filter(Product == "Electricity [from Nuclear]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(200)
+
+  res1 %>%
+    dplyr::filter(Flow == "Nuclear industry") %>%
+    dplyr::filter(Product == "Heat [from Nuclear]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(100)
+
+  res1 %>%
+    dplyr::filter(Flow == "Nuclear industry") %>%
+    nrow() %>%
+    expect_equal(5)
+
+  # Creating the market:
+  res2 <- tidy_AB_data %>%
+    specify_elect_heat_renewables() %>%
+    specify_elect_heat_fossil_fuels() %>%
+    specify_elect_heat_nuclear() %>%
+    specify_elect_heat_markets()
+
+  # Checking electricity market flows:
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(3400)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity [from Coal products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-2618.18182, tol = 1e-5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-581.81818, tol = 1e-5)
+
+  # Add tests specific to nuclear industry:
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Electricity market", Product == "Electricity [from Nuclear]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-200)
+
+  # Checking heat market flows:
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(300)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat [from Coal products]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-163.63636, tol = 1e-5)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat [from Natural gas]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-36.36364, tol = 1e-5)
+
+  # Add tests specific to nuclear industry:
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes",
+                  Flow == "Heat market", Product == "Heat [from Nuclear]") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-100)
+
+  # Checking EIOU flows for electricity and heat:
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Oil and gas extraction", Product == "Electricity") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-200)
+
+  res2 %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Energy industry own use",
+                  Flow == "Oil refineries", Product == "Heat") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(-100)
+})
+
+
+
 # test_that("specify_elect_heat_eiou_flows works", {
 #
 #   # Path to dummy AB data
