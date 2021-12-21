@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/ECCTools.html">Get started</a>
 </li>
@@ -84,13 +80,13 @@
 
       
 
-      </header><script src="transform_to_gma_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Global Market Assumption</h1>
-                        <h4 class="author">Emmanuel Aramendia</h4>
+                        <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 class="date">2021-08-30</h4>
+            <h4 data-toc-skip class="date">2021-12-21</h4>
       
       
       <div class="hidden name"><code>transform_to_gma.Rmd</code></div>
@@ -100,9 +96,9 @@
     
     
 <p>In this vignette we explain how the Global Market Assumption can be formulated from a <code>.tidy_iea_df</code>.</p>
-<div id="the-global-market-assumption" class="section level2">
-<h2 class="hasAnchor">
-<a href="#the-global-market-assumption" class="anchor"></a>The Global Market Assumption</h2>
+<div class="section level2">
+<h2 id="the-global-market-assumption">The Global Market Assumption<a class="anchor" aria-label="anchor" href="#the-global-market-assumption"></a>
+</h2>
 <p>The Global Market Assumption assumes a global market for each traded product. For each product <span class="math inline">\(p\)</span>, the exporting share of each exporting country <span class="math inline">\(s\)</span> is determined as (see <span class="citation">Aramendia et al. (2021)</span>):</p>
 <p><span class="math display">\[c_{s,p} = \frac{x_{s,p}}{x_p}\]</span></p>
 <p>where:</p>
@@ -124,9 +120,9 @@
 <li>Conduct analysis when bilateral trade data are not available, or are not of sufficient quality.</li>
 </ul>
 </div>
-<div id="formulating-the-global-market-assumption" class="section level2">
-<h2 class="hasAnchor">
-<a href="#formulating-the-global-market-assumption" class="anchor"></a>Formulating the Global Market Assumption</h2>
+<div class="section level2">
+<h2 id="formulating-the-global-market-assumption">Formulating the Global Market Assumption<a class="anchor" aria-label="anchor" href="#formulating-the-global-market-assumption"></a>
+</h2>
 <p>To formulate the Global Market Assumption, one simply needs to:</p>
 <ul>
 <li>Call the <code>IEATools::add_psut_matnames')</code> to add a matrix name column.</li>
@@ -135,72 +131,72 @@
 </ul>
 <p>Let’s see the example with the AB world example:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/transform_to_gma.html">transform_to_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 94
-## Columns: 12
-## $ Country                &lt;chr&gt; "World", "World", "World", "World", "World", "W…
-## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
-## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
-## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
-## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
-## $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…
-## $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…
-## $ Flow                   &lt;chr&gt; "{A}_Resources [of Coking coal]", "{A}_Resource…
-## $ Product                &lt;chr&gt; "{A}_Coking coal [from Resources]", "{A}_Crude …
-## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
-## $ E.dot                  &lt;dbl&gt; 5000, 8500, 4000, 850, 5000, 400, 3200, 200, 85…
-## $ matnames               &lt;chr&gt; "R", "R", "R", "V", "V", "V", "V", "V", "V", "V…</code></pre>
+<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/transform_to_gma.html">transform_to_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Rows: 94</span>
+<span class="co">## Columns: 12</span>
+<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "World", "World", "World", "World", "World", "W…</span>
+<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Supply", "Supply", "Supply", "Supply", "Supply…</span>
+<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply", "Total primary e…</span>
+<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "{A}_Resources [of Coking coal]", "{A}_Resource…</span>
+<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "{A}_Coking coal [from Resources]", "{A}_Crude …</span>
+<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 5000, 8500, 4000, 850, 5000, 400, 3200, 200, 85…</span>
+<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "R", "R", "R", "V", "V", "V", "V", "V", "V", "V…</span></code></pre>
 <p>The locations of each flow is now noted with the prefix "{Country}_" in the “Flow” column, and so is the location of origin of a given product in the “Product” column.</p>
-<div id="unbalances" class="section level3">
-<h3 class="hasAnchor">
-<a href="#unbalances" class="anchor"></a>Unbalances</h3>
+<div class="section level3">
+<h3 id="unbalances">Unbalances<a class="anchor" aria-label="anchor" href="#unbalances"></a>
+</h3>
 <p>Here we can see that unbalances appear. Indeed, that is due to the fact that imports and exports do not balance for some products (coke oven coke, crude oil).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] FALSE</code></pre>
+<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] FALSE</span></code></pre>
 <p>To solve this issue, we can add a balancing vector to the <strong>B</strong> matrix. This is an approximate fix and should be handled carefully, it is only valid in the cases where the unbalances appearing is negligible compared to most energy flows. The balancing vector can be used to estimate the uncertainty of results.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/add_balancing_vector.html">add_balancing_vector</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
+<code class="sourceCode R"><span class="va">tidy_AB_data_gma</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/add_balancing_vector.html">add_balancing_vector</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] TRUE</span></code></pre>
 </div>
-<div id="possible-issues" class="section level3">
-<h3 class="hasAnchor">
-<a href="#possible-issues" class="anchor"></a>Possible issues</h3>
+<div class="section level3">
+<h3 id="possible-issues">Possible issues<a class="anchor" aria-label="anchor" href="#possible-issues"></a>
+</h3>
 <p>Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing and exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption, and hence should be avoided prior to running the <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code> function.</p>
-<div id="imported-product-not-produced-anywhere" class="section level4">
-<h4 class="hasAnchor">
-<a href="#imported-product-not-produced-anywhere" class="anchor"></a>Imported product not produced anywhere</h4>
+<div class="section level4">
+<h4 id="imported-product-not-produced-anywhere">Imported product not produced anywhere<a class="anchor" aria-label="anchor" href="#imported-product-not-produced-anywhere"></a>
+</h4>
 <p>A potential inconsistency in IEA data is the case of a country importing a product <span class="math inline">\(p\)</span> which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports “A very odd product,” but that country A does not produce it (and hence, doesn’t export it).</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="co"># Country B consumes "a very odd product" in its "very odd industry</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
+  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Very odd industry"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+                  Flow <span class="op">=</span> <span class="st">"Very odd industry"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="co"># Country B imports "a very odd product" from somewhere</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
+  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Imports [of A very odd product]"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/transform_to_gma.html">transform_to_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Error: There an NA in the join here, do worry about it.</code></pre>
+                  Flow <span class="op">=</span> <span class="st">"Imports [of A very odd product]"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/transform_to_gma.html">transform_to_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Error: There an NA in the join here, do worry about it.</span></code></pre>
 <p>As expected, the code above returns an error.</p>
 <p><strong>Note</strong>: In the case where a product <span class="math inline">\(p\)</span> is imported by a given country but (1) is not exported by any other country, and (2) is produced by some other countries, we determine and apply the global production shares, instead of exports shares. This is an approximate way to deal with IEA data inconsistencies.</p>
 </div>
-<div id="country-both-importing-and-exporting-a-product" class="section level4">
-<h4 class="hasAnchor">
-<a href="#country-both-importing-and-exporting-a-product" class="anchor"></a>Country both importing and exporting a product</h4>
+<div class="section level4">
+<h4 id="country-both-importing-and-exporting-a-product">Country both importing and exporting a product<a class="anchor" aria-label="anchor" href="#country-both-importing-and-exporting-a-product"></a>
+</h4>
 <p>The <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code> function is not able to deal properly with a region that both imports and exports a given product. In other words, the data provided as input to the function needs to be described in net trade terms: either a product is imported, or is exported, by a given region.</p>
 <p>The case of having a region that both imports and exports a given product may however happen for two reasons:</p>
 <ol style="list-style-type: decimal">
@@ -211,9 +207,9 @@
 </div>
 </div>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mr_psut_paper" class="csl-entry">
 Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Under Review</em>.
@@ -233,11 +229,13 @@ Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>
 
 
       <footer><div class="copyright">
-  <p>Developed by Emmanuel Aramendia.</p>
+  <p></p>
+<p>Developed by Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -245,6 +243,8 @@ Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>
 
   
 
+
+  
 
   </body>
 </html>

@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/ECCTools.html">Get started</a>
 </li>
@@ -84,13 +80,13 @@
 
       
 
-      </header><script src="transform_to_bta_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Bilateral Trade Assumption</h1>
-                        <h4 class="author">Emmanuel Aramendia</h4>
+                        <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 class="date">2021-08-30</h4>
+            <h4 data-toc-skip class="date">2021-12-21</h4>
       
       
       <div class="hidden name"><code>transform_to_bta.Rmd</code></div>
@@ -100,15 +96,15 @@
     
     
 <p>In this vignette we explain how the Bilateral Trade Assumption can be formulated from a <code>.tidy_iea_df</code>.</p>
-<div id="the-bilateral-trade-assumption" class="section level2">
-<h2 class="hasAnchor">
-<a href="#the-bilateral-trade-assumption" class="anchor"></a>The Bilateral Trade Assumption</h2>
+<div class="section level2">
+<h2 id="the-bilateral-trade-assumption">The Bilateral Trade Assumption<a class="anchor" aria-label="anchor" href="#the-bilateral-trade-assumption"></a>
+</h2>
 <p>The Bilateral Trade Assumption (BTA) enables the analyst to construct the Multi-Regional Physical Supply Use Table (MR-PSUT) framework by providing bilateral trade data linking regions. An excellent example of MR-PSUT constructed following a BTA for agricultural products can be found in <span class="citation">Bruckner et al. (2019)</span>.</p>
 <p>The BTA is therefore the assumption closest to reality, as it seeks to describe each bilateral energy carrier flow from one country to another. The only drawback is that it requires input data representing bilateral flows between countries or regions, which may be hard to find, or which may require significant data preparation time.</p>
 </div>
-<div id="formulating-the-bilateral-trade-assumption" class="section level2">
-<h2 class="hasAnchor">
-<a href="#formulating-the-bilateral-trade-assumption" class="anchor"></a>Formulating the Bilateral Trade Assumption</h2>
+<div class="section level2">
+<h2 id="formulating-the-bilateral-trade-assumption">Formulating the Bilateral Trade Assumption<a class="anchor" aria-label="anchor" href="#formulating-the-bilateral-trade-assumption"></a>
+</h2>
 <p>To formulate the BTA, one needs to:</p>
 <ul>
 <li>Prepare bilateral trade data</li>
@@ -116,75 +112,75 @@
 <li>Call the <code><a href="../reference/convert_to_net_trade.html">convert_to_net_trade()</a></code>, which converts trade data to net trade. See “Possible issues” below.</li>
 <li>Call the <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> function, and provide bilateral trade data as argument to the function.</li>
 </ul>
-<div id="preparing-bilateral-trade-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#preparing-bilateral-trade-data" class="anchor"></a>Preparing bilateral trade data</h3>
+<div class="section level3">
+<h3 id="preparing-bilateral-trade-data">Preparing bilateral trade data<a class="anchor" aria-label="anchor" href="#preparing-bilateral-trade-data"></a>
+</h3>
 <p>The bilateral trade data needs to be provided as input to the <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> function in the following format:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 8
-## Columns: 8
-## $ Provenience              &lt;chr&gt; "A", "A", "A", "A", "A", "A", "B", "B"
-## $ Country                  &lt;chr&gt; "A", "B", "A", "B", "A", "B", "A", "B"
-## $ Method                   &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…
-## $ Energy.type              &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E"
-## $ Last.stage               &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", …
-## $ Year                     &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018
-## $ Product                  &lt;chr&gt; "Coking coal", "Coking coal", "Crude oil", "C…
-## $ Share_Exports_By_Product &lt;dbl&gt; 0, 1, 0, 1, 0, 1, 1, 0</code></pre>
+<code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Rows: 8</span>
+<span class="co">## Columns: 8</span>
+<span class="co">## $ Provenience              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "B", "B"</span>
+<span class="co">## $ Country                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "B", "A", "B", "A", "B", "A", "B"</span>
+<span class="co">## $ Method                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PC…</span>
+<span class="co">## $ Energy.type              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E"</span>
+<span class="co">## $ Last.stage               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", …</span>
+<span class="co">## $ Year                     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018</span>
+<span class="co">## $ Product                  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coking coal", "Coking coal", "Crude oil", "C…</span>
+<span class="co">## $ Share_Exports_By_Product <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 0, 1, 0, 1, 0, 1, 1, 0</span></code></pre>
 <p>Here we have used the <code><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma()</a></code> function to pull the share of exports that would correspond to the Global Market Assumption, but the analyst can proceed in any way to turn the bilateral trade data in a data frame of the dimensions and features shown above.</p>
 <p>Next step is to verify that the constructed bilateral trade data frame is valid. To check that the bilateral trade data that has been prepared is valid, one can use the <code><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df()</a></code> function. To be valid, both (1)~the sum of shares by product and by exporting country (“Provenience” column) should be equal to unity; and (2)~the sum of shares by product and by importing country (“Country” column) should be equal to unity.</p>
 <p>For instance, the bilateral trade data that we have obtained using the <code><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma()</a></code> function is valid:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df</a></span><span class="op">(</span><span class="va">AB_world_btd</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] TRUE</code></pre>
+<pre><code><span class="co">## [1] TRUE</span></code></pre>
 <p>Conversely, if we filter out the second row, the bilateral trade data is not valid anymore:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="op">!</span> <span class="op">(</span><span class="va">Product</span> <span class="op">==</span> <span class="st">"Coking coal"</span> <span class="op">&amp;</span> <span class="va">Share_Exports_By_Product</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span> <span class="op">(</span><span class="va">Product</span> <span class="op">==</span> <span class="st">"Coking coal"</span> <span class="op">&amp;</span> <span class="va">Share_Exports_By_Product</span> <span class="op">==</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Error: The sum of shares by product and exporting country is not equal to 1.</code></pre>
+<pre><code><span class="co">## Error: The sum of shares by product and exporting country is not equal to 1.</span></code></pre>
 <p><strong>Note</strong>: It is important to note that one doesn’t need to provide the bilateral trade data for all products. If some products are not covered in the bilateral trade data, then the Global Market Assumption will be used to do the trade linking process for missing products. But it is important that the products that are covered are fully covered (i.e. that all flows corresponding to all the regions included in the MR-PSUT are included in the bilateral trade data frame, for that given product).</p>
 </div>
-<div id="transforming-to-bilateral-trade-assumption" class="section level3">
-<h3 class="hasAnchor">
-<a href="#transforming-to-bilateral-trade-assumption" class="anchor"></a>Transforming to Bilateral Trade Assumption</h3>
+<div class="section level3">
+<h3 id="transforming-to-bilateral-trade-assumption">Transforming to Bilateral Trade Assumption<a class="anchor" aria-label="anchor" href="#transforming-to-bilateral-trade-assumption"></a>
+</h3>
 <p>Once the bilateral trade data is prepared, and once it has been verified with the <code><a href="../reference/check_bilateral_trade_df.html">check_bilateral_trade_df()</a></code> function that the bilateral trade data is valid, one can call the <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> function as follows:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
+<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Imports [of A very odd product]"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/transform_to_bta.html">transform_to_bta</a></span><span class="op">(</span>bilateral_trade_df <span class="op">=</span> <span class="va">AB_world_btd</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 94
-## Columns: 12
-## $ Country                &lt;chr&gt; "World", "World", "World", "World", "World", "W…
-## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
-## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
-## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
-## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
-## $ Ledger.side            &lt;chr&gt; "Supply", "Supply", "Supply", "Supply", "Supply…
-## $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply", "Total primary e…
-## $ Flow                   &lt;chr&gt; "{A}_Resources [of Coking coal]", "{A}_Resource…
-## $ Product                &lt;chr&gt; "{A}_Coking coal [from Resources]", "{A}_Crude …
-## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
-## $ E.dot                  &lt;dbl&gt; 5000, 8500, 4000, 850, 5000, 400, 3200, 200, 85…
-## $ matnames               &lt;chr&gt; "R", "R", "R", "V", "V", "V", "V", "V", "V", "V…</code></pre>
+                  Flow <span class="op">=</span> <span class="st">"Imports [of A very odd product]"</span>, Product <span class="op">=</span> <span class="st">"A very odd product"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/transform_to_bta.html">transform_to_bta</a></span><span class="op">(</span>bilateral_trade_df <span class="op">=</span> <span class="va">AB_world_btd</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Rows: 94</span>
+<span class="co">## Columns: 12</span>
+<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "World", "World", "World", "World", "World", "W…</span>
+<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Supply", "Supply", "Supply", "Supply", "Supply…</span>
+<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply", "Total primary e…</span>
+<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "{A}_Resources [of Coking coal]", "{A}_Resource…</span>
+<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "{A}_Coking coal [from Resources]", "{A}_Crude …</span>
+<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 5000, 8500, 4000, 850, 5000, 400, 3200, 200, 85…</span>
+<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "R", "R", "R", "V", "V", "V", "V", "V", "V", "V…</span></code></pre>
 <p>Regarding the treatment of unbalances and potential issues that may appear while formulating the Bilateral Trade Assumption, it is recommended to read first the <a href="transform_to_bta.html">Global Market Assumption</a> vignette.</p>
 </div>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-bruckner_fabioconstruction_2019" class="csl-entry">
-Bruckner, Martin, Richard Wood, Daniel Moran, Nikolas Kuschnig, Hanspeter Wieland, Victor Maus, and Jan Börner. 2019. <span>“<span>FABIO</span>—<span>The</span> <span>Construction</span> of the <span>Food</span> and <span>Agriculture</span> <span>Biomass</span> <span>Input</span>–<span>Output</span> <span>Model</span>.”</span> <em>Environmental Science &amp; Technology</em> 53 (19): 11302–12. <a href="https://doi.org/10.1021/acs.est.9b03554">https://doi.org/10.1021/acs.est.9b03554</a>.
+Bruckner, Martin, Richard Wood, Daniel Moran, Nikolas Kuschnig, Hanspeter Wieland, Victor Maus, and Jan Börner. 2019. <span>“<span>FABIO</span>—<span>The</span> <span>Construction</span> of the <span>Food</span> and <span>Agriculture</span> <span>Biomass</span> <span>Input</span>–<span>Output</span> <span>Model</span>.”</span> <em>Environmental Science &amp; Technology</em> 53 (19): 11302–12. <a href="https://doi.org/10.1021/acs.est.9b03554" class="external-link">https://doi.org/10.1021/acs.est.9b03554</a>.
 </div>
 </div>
 </div>
@@ -201,11 +197,13 @@ Bruckner, Martin, Richard Wood, Daniel Moran, Nikolas Kuschnig, Hanspeter Wielan
 
 
       <footer><div class="copyright">
-  <p>Developed by Emmanuel Aramendia.</p>
+  <p></p>
+<p>Developed by Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -213,6 +211,8 @@ Bruckner, Martin, Richard Wood, Daniel Moran, Nikolas Kuschnig, Hanspeter Wielan
 
   
 
+
+  
 
   </body>
 </html>

@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/ECCTools.html">Get started</a>
 </li>
@@ -84,13 +80,13 @@
 
       
 
-      </header><script src="ECCTools_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Get started</h1>
-                        <h4 class="author">Emmanuel Aramendia</h4>
+                        <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 class="date">2021-08-30</h4>
+            <h4 data-toc-skip class="date">2021-12-21</h4>
       
       
       <div class="hidden name"><code>ECCTools.Rmd</code></div>
@@ -99,30 +95,30 @@
 
     
     
-<div id="introduction" class="section level1">
-<h1 class="hasAnchor">
-<a href="#introduction" class="anchor"></a>Introduction</h1>
+<div class="section level1">
+<h1 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+</h1>
 <p>The <code>R</code> package <code>ECCTools</code> provides tools to modify an Energy Conversion Chain (ECC) that has been previously loaded using the <code>R</code> package <code>IEATools</code>. The <code>IEATools</code> package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table framework (PSUT, see <span class="citation">Heun, Owen, and Brockway (2018)</span>). However, the <code>IEATools</code> package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, neither associated environmental burden nor embodied energy consumption).</p>
 <p>The <code>ECCTools</code> package enables analysts to overcome this limitation through two different options:</p>
 <ol style="list-style-type: decimal">
 <li>The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.</li>
 <li>The formulation of a PSUT framework following the Domestic Technology Assumption (DTA). The DTA assumes that imports are produced within the region that imports them. Although the DTA is not a realistic assumption, it enables analysts to conduct useful simulations.</li>
 </ol>
-<div id="design-philosophy" class="section level2">
-<h2 class="hasAnchor">
-<a href="#design-philosophy" class="anchor"></a>Design philosophy</h2>
+<div class="section level2">
+<h2 id="design-philosophy">Design philosophy<a class="anchor" aria-label="anchor" href="#design-philosophy"></a>
+</h2>
 <p>The package has been designed to be used as follows.</p>
 <ol style="list-style-type: decimal">
-<li>First, the IEA data needs to be loaded as usually done with the <code>IEATools</code> package. See the <a href="https://matthewheun.github.io/IEATools/">IEATools</a> package documentation.</li>
+<li>First, the IEA data needs to be loaded as usually done with the <code>IEATools</code> package. See the <a href="https://matthewheun.github.io/IEATools/" class="external-link">IEATools</a> package documentation.</li>
 <li>Second, specific flows may be modified, for instance, to aggregate regions, to locate flows in a different PSUT matrix (in particular, to the newly introduced <em>balancing</em> matrix), or to perform any other modification.</li>
 <li>Third, the overarching assumption of the PSUT may be modified, using one of the <code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code>, <code><a href="../reference/transform_to_gma.html">transform_to_gma()</a></code>, or <code><a href="../reference/transform_to_bta.html">transform_to_bta()</a></code> functions.</li>
 <li>Fourth, the actual PSUT matrices may be formulated using the <code>prep_psut()</code> function of the <code>IEATools</code> package.</li>
 </ol>
-<p>Subsequent Energy Conversion Chain analysis can be conducted using the <code>Recca</code> package. See the <a href="https://matthewheun.github.io/Recca/">Recca</a> package documentation.</p>
+<p>Subsequent Energy Conversion Chain analysis can be conducted using the <code>Recca</code> package. See the <a href="https://matthewheun.github.io/Recca/" class="external-link">Recca</a> package documentation.</p>
 </div>
-<div id="available-vignettes" class="section level2">
-<h2 class="hasAnchor">
-<a href="#available-vignettes" class="anchor"></a>Available vignettes</h2>
+<div class="section level2">
+<h2 id="available-vignettes">Available vignettes<a class="anchor" aria-label="anchor" href="#available-vignettes"></a>
+</h2>
 <p>The vignettes available for this package detail how to conduct the following tasks:</p>
 <ol style="list-style-type: decimal">
 <li>
@@ -135,13 +131,13 @@
 <a href="transform_to_bta.html">Bilateral Trade Assumption</a>: Shows how to provide bilateral trade data to formulate the Bilateral Trade Assumption.</li>
 </ol>
 </div>
-<div id="demonstration-example-the-ab-world" class="section level2">
-<h2 class="hasAnchor">
-<a href="#demonstration-example-the-ab-world" class="anchor"></a>Demonstration example: the AB world</h2>
+<div class="section level2">
+<h2 id="demonstration-example-the-ab-world">Demonstration example: the AB world<a class="anchor" aria-label="anchor" href="#demonstration-example-the-ab-world"></a>
+</h2>
 <p>To illustrate how to use the package, we introduce a fictitious world consisting of two countries (A and B): welcome to the AB world!</p>
-<div id="country-a" class="section level3">
-<h3 class="hasAnchor">
-<a href="#country-a" class="anchor"></a>Country A</h3>
+<div class="section level3">
+<h3 id="country-a">Country A<a class="anchor" aria-label="anchor" href="#country-a"></a>
+</h3>
 <p>The Energy Conversion Chain of country A is shown in the figure below:</p>
 <p><img src="figs/Country_A_ECC.png"></p>
 <p>As can be seen, the country A:</p>
@@ -151,9 +147,9 @@
 <li>Presents a balanced Energy Conversion Chain (supply = consumption).</li>
 </ul>
 </div>
-<div id="country-b" class="section level3">
-<h3 class="hasAnchor">
-<a href="#country-b" class="anchor"></a>Country B</h3>
+<div class="section level3">
+<h3 id="country-b">Country B<a class="anchor" aria-label="anchor" href="#country-b"></a>
+</h3>
 <p>Next figure shows the Energy Conversion Chain of country B.</p>
 <p><img src="figs/Country_B_ECC.png"></p>
 <p>As can be seen, country B:</p>
@@ -163,31 +159,31 @@
 <li>Presents a balanced Energy Conversion Chain (supply = consumption).</li>
 </ul>
 </div>
-<div id="tidy-ab-data" class="section level3">
-<h3 class="hasAnchor">
-<a href="#tidy-ab-data" class="anchor"></a>Tidy AB data</h3>
+<div class="section level3">
+<h3 id="tidy-ab-data">Tidy AB data<a class="anchor" aria-label="anchor" href="#tidy-ab-data"></a>
+</h3>
 <p>Let’s now have a look to the AB data organised in a <code>.tidy_iea_df</code> as provided by the <code>IEATools</code> package.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
-<span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span>
+<span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co">#&gt; Rows: 99</span>
 <span class="co">#&gt; Columns: 11</span>
-<span class="co">#&gt; $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span>
-<span class="co">#&gt; $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">#&gt; $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">#&gt; $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">#&gt; $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
-<span class="co">#&gt; $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…</span>
-<span class="co">#&gt; $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…</span>
-<span class="co">#&gt; $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…</span>
-<span class="co">#&gt; $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…</span>
-<span class="co">#&gt; $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">#&gt; $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span></code></pre></div>
+<span class="co">#&gt; $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span>
+<span class="co">#&gt; $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">#&gt; $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">#&gt; $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">#&gt; $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
+<span class="co">#&gt; $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Consumption", "Consumption", "Consumption", "C…</span>
+<span class="co">#&gt; $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Industry", "Industry", "Industry", "Industry",…</span>
+<span class="co">#&gt; $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Iron and steel", "Iron and steel", "Iron and s…</span>
+<span class="co">#&gt; $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Blast furnace gas", "Electricity", "Heat", "Ke…</span>
+<span class="co">#&gt; $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">#&gt; $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span></code></pre></div>
 </div>
-<div id="global-unbalances" class="section level3">
-<h3 class="hasAnchor">
-<a href="#global-unbalances" class="anchor"></a>Global unbalances</h3>
+<div class="section level3">
+<h3 id="global-unbalances">Global unbalances<a class="anchor" aria-label="anchor" href="#global-unbalances"></a>
+</h3>
 <p>So far so good. However, we note that although each domestic Energy Conversion Chain is balanced (supply = consumption), the global Energy Conversion Chain resulting from the addition of both domestic Energy Conversion Chains is not. Indeed:</p>
 <ul>
 <li>Country A imports 600 ktoe of coke oven coke from the rest of the world, but country B (i.e. the rest of the world) only exports 400 ktoe! The world is in deficit of 200 ktoe. Where do they come from?</li>
@@ -202,12 +198,12 @@
 </ul>
 </div>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-Heun:2018" class="csl-entry">
-Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
+Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
 </div>
 </div>
 </div>
@@ -225,11 +221,13 @@ Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physica
 
 
       <footer><div class="copyright">
-  <p>Developed by Emmanuel Aramendia.</p>
+  <p></p>
+<p>Developed by Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -237,6 +235,8 @@ Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physica
 
   
 
+
+  
 
   </body>
 </html>

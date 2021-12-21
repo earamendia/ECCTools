@@ -19,6 +19,8 @@
 <![endif]-->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-article">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -31,18 +33,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="../index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="../articles/ECCTools.html">Get started</a>
 </li>
@@ -84,13 +80,13 @@
 
       
 
-      </header><script src="transform_to_dta_files/header-attrs-2.6/header-attrs.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Domestic Technology Assumption</h1>
-                        <h4 class="author">Emmanuel Aramendia</h4>
+                        <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 class="date">2021-08-30</h4>
+            <h4 data-toc-skip class="date">2021-12-21</h4>
       
       
       <div class="hidden name"><code>transform_to_dta.Rmd</code></div>
@@ -100,9 +96,9 @@
     
     
 <p>In this vignette we explain how the Domestic Technology Assumption (DTA) can be formulated from a <code>.tidy_iea_df</code>.</p>
-<div id="the-domestic-technology-assumption" class="section level2">
-<h2 class="hasAnchor">
-<a href="#the-domestic-technology-assumption" class="anchor"></a>The Domestic Technology Assumption</h2>
+<div class="section level2">
+<h2 id="the-domestic-technology-assumption">The Domestic Technology Assumption<a class="anchor" aria-label="anchor" href="#the-domestic-technology-assumption"></a>
+</h2>
 <p>The Domestic Technology Assumption assumes that all imported flows occur within the importing country. So, if country A imports 200 ktoe of coke oven coke from the rest of the world, the Domestic Technology Assumption assumes that these 200 ktoe have been produced in country A, or, rather, with a technology and industrial structure equivalent to country A technology and industrial structure. Although it is not a realistic assumption, it is</p>
 <ul>
 <li><ol style="list-style-type: decimal">
@@ -110,9 +106,9 @@
 </ol></li>
 </ul>
 </div>
-<div id="formulating-the-domestic-technology-assumption" class="section level2">
-<h2 class="hasAnchor">
-<a href="#formulating-the-domestic-technology-assumption" class="anchor"></a>Formulating the Domestic Technology Assumption</h2>
+<div class="section level2">
+<h2 id="formulating-the-domestic-technology-assumption">Formulating the Domestic Technology Assumption<a class="anchor" aria-label="anchor" href="#formulating-the-domestic-technology-assumption"></a>
+</h2>
 <p>The formulation of the Domestic Technology Assumption can be done using the following functions:</p>
 <ul>
 <li>
@@ -121,61 +117,61 @@
 <code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code>: the function transforms those observations that fulfil the required conditions in DTA data frame.</li>
 </ul>
 <p>The <code><a href="../reference/find_list_dta_observations.html">find_list_dta_observations()</a></code> function is called within the <code><a href="../reference/transform_to_dta.html">transform_to_dta()</a></code> function, and hence, does not need to be called. But calling the function may prove helpful to understand which observations fulfil required conditions for formulating the DTA.</p>
-<div id="necessary-conditions" class="section level3">
-<h3 class="hasAnchor">
-<a href="#necessary-conditions" class="anchor"></a>Necessary conditions</h3>
+<div class="section level3">
+<h3 id="necessary-conditions">Necessary conditions<a class="anchor" aria-label="anchor" href="#necessary-conditions"></a>
+</h3>
 <p>To be able to formulate the Domestic Technology Assumption, all products imported by a given country, in a given year, need to be produced in the given country. They do not need to be produced in a quantity sufficient to cover the national demand, it is sufficient that one unit of product is produced by some industry in the importing country. Let us have a look with the AB world example.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/find_list_dta_observations.html">find_list_dta_observations</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## [1] "A_PCM_E_Final_2018"</code></pre>
+<pre><code><span class="co">## [1] "A_PCM_E_Final_2018"</span></code></pre>
 <p>The country A (year 2018) is found to fulfil the requirements. Indeed, country A imports coke oven coke, but country A also produces locally coke oven coke; we can then simulate that all its coke oven coke consumption comes from domestic production!</p>
 <p>Conversely, country B is not found to fulfil the requirements. Indeed, country B imports and consumes coal, natural gas, and crude oil, but does not produce them locally. Hence, we cannot simulate that these products come from domestic production.</p>
 <p>Now, to modify the data frame so that it is in accordance with the Domestic Technology Assumption, one can proceed as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op">%&gt;%</span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="../reference/transform_to_dta.html">transform_to_dta</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 54
-## Columns: 12
-## $ Country                &lt;chr&gt; "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…
-## $ Method                 &lt;chr&gt; "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…
-## $ Energy.type            &lt;chr&gt; "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…
-## $ Last.stage             &lt;chr&gt; "Final", "Final", "Final", "Final", "Final", "F…
-## $ Year                   &lt;dbl&gt; 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…
-## $ Ledger.side            &lt;chr&gt; "Consumption", "Consumption", "Consumption", "C…
-## $ Flow.aggregation.point &lt;chr&gt; "Industry", "Industry", "Industry", "Industry",…
-## $ Flow                   &lt;chr&gt; "Iron and steel", "Iron and steel", "Iron and s…
-## $ Product                &lt;chr&gt; "Blast furnace gas", "Electricity", "Heat", "Ke…
-## $ Unit                   &lt;chr&gt; "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…
-## $ E.dot                  &lt;dbl&gt; 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…
-## $ matnames               &lt;chr&gt; "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</code></pre>
+<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="../reference/transform_to_dta.html">transform_to_dta</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Rows: 54</span>
+<span class="co">## Columns: 12</span>
+<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span>
+<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
+<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
+<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span>
+<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Consumption", "Consumption", "Consumption", "C…</span>
+<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Industry", "Industry", "Industry", "Industry",…</span>
+<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Iron and steel", "Iron and steel", "Iron and s…</span>
+<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Blast furnace gas", "Electricity", "Heat", "Ke…</span>
+<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
+<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span>
+<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</span></code></pre>
 <p>Only flows corresponding to country A are returned, and imports have been relocated to the balancing <strong>B</strong> matrix (and hence will not appear in the Input-Output matrices, see <span class="citation">Aramendia et al. (2021)</span> ):</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Imports"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 1
-## Columns: 12
-## $ Country                &lt;chr&gt; "A"
-## $ Method                 &lt;chr&gt; "PCM"
-## $ Energy.type            &lt;chr&gt; "E"
-## $ Last.stage             &lt;chr&gt; "Final"
-## $ Year                   &lt;dbl&gt; 2018
-## $ Ledger.side            &lt;chr&gt; "Supply"
-## $ Flow.aggregation.point &lt;chr&gt; "Total primary energy supply"
-## $ Flow                   &lt;chr&gt; "Imports [of Coke oven coke]"
-## $ Product                &lt;chr&gt; "Coke oven coke"
-## $ Unit                   &lt;chr&gt; "ktoe"
-## $ E.dot                  &lt;dbl&gt; -600
-## $ matnames               &lt;chr&gt; "B"</code></pre>
+<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Imports"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## Rows: 1</span>
+<span class="co">## Columns: 12</span>
+<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A"</span>
+<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM"</span>
+<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span>
+<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span>
+<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Supply"</span>
+<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply"</span>
+<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Imports [of Coke oven coke]"</span>
+<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coke oven coke"</span>
+<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe"</span>
+<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -600</span>
+<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B"</span></code></pre>
 </div>
 </div>
-<div id="references" class="section level2 unnumbered">
-<h2 class="hasAnchor">
-<a href="#references" class="anchor"></a>References</h2>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mr_psut_paper" class="csl-entry">
 Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Under Review</em>.
@@ -195,11 +191,13 @@ Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>
 
 
       <footer><div class="copyright">
-  <p>Developed by Emmanuel Aramendia.</p>
+  <p></p>
+<p>Developed by Emmanuel Aramendia.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
       </footer>
@@ -207,6 +205,8 @@ Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>
 
   
 
+
+  
 
   </body>
 </html>
