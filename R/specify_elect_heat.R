@@ -2,17 +2,8 @@
 #' Title
 #'
 #' @param .tidy_iea_df
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param flow
-#' @param product
-#' @param e_dot
-#' @param unit
+#' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
+#'        See `IEATools::iea_cols`.
 #' @param transformation_processes
 #' @param eiou_flows
 #' @param main_act_prod_elect
@@ -41,7 +32,7 @@
 #' @param share_renewables_From_Func
 #' @param e_dot_renewables
 #' @param e_dot_rest
-#' @param negzeropos
+#' @param negzeropos Temporary column name. Default is ".netzeropos".
 #'
 #' @return
 #' @export
@@ -285,17 +276,8 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 #' Title
 #'
 #' @param .tidy_iea_df
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param flow
-#' @param product
-#' @param e_dot
-#' @param unit
+#' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
+#'        See `IEATools::iea_cols`.
 #' @param transformation_processes
 #' @param eiou_flows
 #' @param main_act_prod_elect
@@ -310,7 +292,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 #' @param other_products
 #' @param product_type
 #' @param share_inputs_from_Func
-#' @param negzeropos
+#' @param negzeropos Temporary column name. Default is ".netzeropos".
 #'
 #' @return
 #' @export
@@ -471,24 +453,23 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Specified electricity and heat markets
 #'
-#' @param .tidy_iea_df
-#' @param country
-#' @param method
-#' @param energy_type
-#' @param last_stage
-#' @param year
-#' @param ledger_side
-#' @param flow_aggregation_point
-#' @param flow
-#' @param product
-#' @param e_dot
-#' @param unit
-#' @param transformation_processes
-#' @param negzeropos
+#' This function specifies electricity and heat markets. It does so by selecting production flows (V matrix) of:
+#' "Electricity [from Oil products]", "Electricity [from Coal products]", "Electricity [from Natural gas]",
+#' "Electricity [from Other products]", and "Electricity [from Renewables]", and routing them as inputs to a new industry: "Electricity market".
+#' The electricity market industry then produces "Electricity" in the same amount that it receives as input.
+#' Exactly the same process is conducted for heat.
 #'
-#' @return
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which electricity and heat markets need to be specified.
+#' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
+#'        See `IEATools::iea_cols`.
+#' @param transformation_processes The name of transformation processes in the data frame.
+#'                                 Default is IEATools::aggregation_flows$transformation_processes.
+#' @param negzeropos Temporary column name. Default is ".netzeropos".
+#'
+#' @return Returns a `.tidy_iea_df` with specified electricity and heat markets.
 #' @export
 #'
 #' @examples
