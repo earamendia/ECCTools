@@ -139,3 +139,9 @@ The energy due to renewables is then subtracted from the main activity and autop
 and the input and output flows due to renewables are directed to a new industry called "Renewable energy plants",
 which now produce "Electricity \code{[}from Renewables\verb{]}" and "Heat \code{[}from Renewables\verb{]}".
 }
+\examples{
+A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+IEATools::load_tidy_iea_df(A_B_path) \%>\%
+IEATools::specify_all() \%>\%
+specify_elect_heat_renewables()
+}

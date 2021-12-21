@@ -89,3 +89,9 @@ To do so, the code keeps the main activity and autoproducer electricity, heat an
 and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat ouputs.
 New industries that are now specified as function of the product type they take as input.
 }
+\examples{
+A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+IEATools::load_tidy_iea_df(A_B_path) \%>\%
+IEATools::specify_all() \%>\%
+specify_elect_heat_fossil_fuels()
+}

@@ -41,3 +41,9 @@ This function specifies electricity and heat markets. It does so by selecting pr
 The electricity market industry then produces "Electricity" in the same amount that it receives as input.
 Exactly the same process is conducted for heat.
 }
+\examples{
+A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+IEATools::load_tidy_iea_df(A_B_path) \%>\%
+IEATools::specify_all() \%>\%
+specify_elect_heat_markets()
+}
