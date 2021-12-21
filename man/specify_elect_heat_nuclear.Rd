@@ -35,3 +35,9 @@ A \code{.tidy_iea_df} with electricity and heat products specified when they com
 This function selects electricity and heat produced by the nuclear industry, and specifies them, so that the new product name is
 respectively "Electricity \code{[}from Nuclear\verb{]}" and "Heat \code{[}from Nuclear\verb{]}".
 }
+\examples{
+A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+IEATools::load_tidy_iea_df(A_B_path) \%>\%
+IEATools::specify_all() \%>\%
+specify_elect_heat_nuclear()
+}
