@@ -1,3 +1,10 @@
-# ECCTools 0.0.0.9000
+---
+title: "Release notes for `ECCTools`"
+output: html_document
+---
 
-* Added a `NEWS.md` file to track changes to the package.
+# ECCTools 0.1.1 (12/01/2022)
+
+* First release of the package
+* All tests passing (279)
+* Test coverage at 100%.

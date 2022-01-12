@@ -1,22 +1,24 @@
 Package: ECCTools
 Title: ECCTools Assists With Energy Conversion Chain Analysis
-Version: 0.0.0.9000
+Version: 0.1.1
 Authors@R: 
-    person(given = "Emmanuel",
+    c(person(given = "Emmanuel",
            family = "Aramendia",
            role = c("aut", "cre"),
-           email = "eeear@leeds.ac.uk",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+           email = "eeear@leeds.ac.uk"),
+           person(given = "Matthew", family = "Heun", role = "aut"))
 Description: What the package does (one paragraph).
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 Suggests: 
     testthat,
     spelling,
-    covr
+    covr,
+    knitr,
+    rmarkdown
 Language: en-US
 Imports: 
     magrittr,
@@ -27,4 +29,10 @@ Imports:
     Recca,
     matsbyname,
     matsindf,
-    stringr
+    stringr,
+    rlang,
+    tibble,
+    assertthat
+Depends: 
+    R (>= 2.10)
+VignetteBuilder: knitr

@@ -1,0 +1,131 @@
+---
+title: "Global Market Assumption"
+author: "Emmanuel Aramendia"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Global Market Assumption}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+bibliography: References.bib
+---
+
+In this vignette we explain how the Global Market Assumption can be formulated from a `.tidy_iea_df`.
+
+```{r setup, include = FALSE}
+library(dplyr)
+library(ECCTools)
+```
+
+
+## The Global Market Assumption
+
+The Global Market Assumption assumes a global market for each traded product. For each product $p$, the exporting share of each exporting country $s$ is determined as (see @mr_psut_paper):
+
+$$c_{s,p} = \frac{x_{s,p}}{x_p}$$
+
+where:
+
+* $c_{s,p}$ refers to the global share of exports of product $p$ by country $s$;
+* $x_{s,p}$ refers to the exports of product $p$ by country $s$;
+* $x_p$ refers to the global exports of product $p$.
+
+
+We note that:
+
+$$\sum_{s \in \mathcal{S}} c_{s,p} = 1$$
+
+where $\mathcal{S}$ stands for the set of countries considered.
+
+Hence, each country importing a product $p$ will import the share $c_{s,p}$ of its imports of product $p$ from country $s$.
+
+The Global Market Assumption is therefore a simplifying assumption which enables to:
+
+* Run a quick, explorative, or demonstrative analysis, when there is no need for the precision bilateral trade data can provide;
+* Conduct analysis when bilateral trade data are not available, or are not of sufficient quality.
+
+
+## Formulating the Global Market Assumption
+
+To formulate the Global Market Assumption, one simply needs to:
+
+* Call the `IEATools::add_psut_matnames')` to add a matrix name column.
+* Call the `convert_to_net_trade()`, which converts trade data to net trade. See "Possible issues" below.
+* Call the `transform_to_gma()` function.
+
+Let's see the example with the AB world example:
+
+```{r}
+tidy_AB_data_gma <- tidy_AB_data %>% 
+  IEATools::add_psut_matnames() %>% 
+  convert_to_net_trade() %>% 
+  transform_to_gma() %>% 
+  dplyr::glimpse()
+```
+
+The locations of each flow is now noted with the prefix "{Country}_" in the "Flow" column, and so is the location of origin of a given product in the "Product" column.
+
+
+### Unbalances
+
+Here we can see that unbalances appear. Indeed, that is due to the fact that imports and exports do not balance for some products (coke oven coke, crude oil).
+
+```{r}
+tidy_AB_data_gma %>% 
+  IEATools::calc_tidy_iea_df_balances() %>%
+  IEATools::tidy_iea_df_balanced()
+```
+
+To solve this issue, we can add a balancing vector to the **B** matrix. This is an approximate fix and should be handled carefully, it is only valid in the cases where the unbalances appearing is negligible compared to most energy flows. The balancing vector can be used to estimate the uncertainty of results.
+
+```{r}
+tidy_AB_data_gma %>% 
+  add_balancing_vector() %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
+  IEATools::tidy_iea_df_balanced()
+```
+
+
+### Possible issues
+
+Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing and exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption, and hence should be avoided prior to running either the `transform_to_gma()` or the `transform_to_bta()` function.
+
+#### Imported product not produced anywhere
+
+A potential inconsistency in IEA data is the case of a country importing a product $p$ which is not produced anywhere else. Let us show an example with the AB world. Say that country B also imports "A very odd product", but that country A does not produce it (and hence, doesn't export it).
+
+```{r, error = TRUE}
+tidy_AB_data %>% 
+  # Country B consumes "a very odd product" in its "very odd industry
+  tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Consumption", Flow.aggregation.point = "Industry", 
+                  Flow = "Very odd industry", Product = "A very odd product", Unit = "ktoe", E.dot = 100) %>% 
+  # Country B imports "a very odd product" from somewhere
+  tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
+                  Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
+                  Flow = "Imports [of A very odd product]", Product = "A very odd product", Unit = "ktoe", E.dot = 100) %>% 
+  IEATools::add_psut_matnames() %>% 
+  convert_to_net_trade() %>% 
+  transform_to_gma() %>% 
+  dplyr::glimpse()
+```
+
+As expected, the code above returns an error.
+
+**Note**: In the case where a product $p$ is imported by a given country but (1) is not exported by any other country, and (2) is produced by some other countries, we determine and apply the global production shares, instead of exports shares. This is an approximate way to deal with IEA data inconsistencies.
+
+
+#### Country both importing and exporting a product
+
+The `transform_to_gma()` function is not able to deal properly with a region that both imports and exports a given product. In other words, the data provided as input to the function needs to be described in net trade terms: either a product is imported, or is exported, by a given region.
+
+The case of having a region that both imports and exports a given product may however happen for two reasons:
+
+1. The data as reported by the IEA presents this feature. This may be an appropriate description of physical flows for instance in the case of a country exporting a product at a given time, and importing the same product in another time. Think of electricity, which production (and imports and exports) may vary considerably depending on the weather conditions.
+2. The analyst has aggregated countries to construct bigger regions, for instance EU countries have been aggregated in a single EU region. In that case, as some countries import a given product $p$ while some other countries export product $p$, then a region that both imports and exports product $p$ is constructed.
+
+To run the `transform_to_gma()` function, one can use the `convert_to_net_trade()` function, which will calculate the difference between imported and exported products, and report traded products either as imports or as exports, depending on whether there are more imports than exports of product $p$ or not.
+
+
+## References
+
