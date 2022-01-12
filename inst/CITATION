@@ -5,10 +5,11 @@ citEntry(
   title    = "ECCTools: Tools for modifying the Energy Conversion Chain",
   author       = personList(as.person("Emmanuel Aramendia"),
                             as.person("Matthew Kuperus Heun")),
-  year     = "2021",
+  year     = "2022",
+  note     = "R package version 0.1.1.",
   url      = "https://github.com/earamendia/ECCTools",
   textVersion =   paste(
-  "Emmanuel Aramendia (2021).",
+  "Emmanuel Aramendia, Matthew K. Heun (2022).",
         "ECCTools: Tools for modifying the Energy Conversion Chain",
-        "R package version 0.0.1.")
+        "R package version 0.1.1.")
 )
