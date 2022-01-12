@@ -21,15 +21,16 @@ library(ECCTools)
 
 The Domestic Technology Assumption assumes that all imported flows occur within the importing country. So, if country A imports 200 ktoe of coke oven coke from the rest of the world, the Domestic Technology Assumption assumes that these 200 ktoe have been produced in country A, or, rather, with a technology and industrial structure equivalent to country A technology and industrial structure. Although it is not a realistic assumption, it is 
 
-* (1) a helpful approximation when no data are available regarding trade flows and other countries' technologies and industrial structures, and * (2) a useful simulation tool, which answers the question "what would have happened if the imported products were produced locally?".
+1. a helpful approximation when no data are available regarding trade flows and other countries' technologies and industrial structures, and 
+2. a useful simulation tool, which answers the question "what would have happened if the imported products were produced locally?".
 
 
 ## Formulating the Domestic Technology Assumption
 
 The formulation of the Domestic Technology Assumption can be done using the following functions:
 
-* `find_list_dta_observations()`: the function identifies which observations (i.e.\ sets of Country-Year-Method-Energy.type-Last.stage) fulfil the conditions required for formulating the DTA;
-* `transform_to_dta()`: the function transforms those observations that fulfil the required conditions in DTA data frame.
+* `find_list_dta_observations()`: the function identifies which observations (i.e.\ sets of Country-Year-Method-Energy.type-Last.stage) that fulfil the conditions required for formulating the DTA;
+* `transform_to_dta()`: the function transforms those observations that fulfil the required conditions in a DTA data frame.
 
 The `find_list_dta_observations()` function is called within the `transform_to_dta()` function, and hence, does not need to be called. But calling the function may prove helpful to understand which observations fulfil required conditions for formulating the DTA.
 

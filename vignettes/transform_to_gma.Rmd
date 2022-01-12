@@ -88,7 +88,7 @@ tidy_AB_data_gma %>%
 
 ### Possible issues
 
-Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing and exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption, and hence should be avoided prior to running the `transform_to_gma()` function.
+Two possible issues are worth noting here; first, the issue of an imported product not being produced anywhere, and second, the issue of a country both importing and exporting a given product. We note that these issues will also cause issues when applying the Bilateral Trade Assumption, and hence should be avoided prior to running either the `transform_to_gma()` or the `transform_to_bta()` function.
 
 #### Imported product not produced anywhere
 

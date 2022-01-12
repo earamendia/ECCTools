@@ -21,11 +21,11 @@ library(ECCTools)
 
 ## The balancing matrix
 
-The balancing matrix is an extension of the original Physical Supply Use Table (PSUT) framework (see @Heun:2018) and has been introduced in a work presently under review. The figure below shows the expanded PSUT framework with the balancing **B** matrix.
+The balancing matrix is an extension of the original Physical Supply Use Table (PSUT) framework (see @Heun:2018) and has been introduced in @mr_psut_paper. The figure below shows the expanded PSUT framework with the balancing **B** matrix.
 
 ![](figs/psut_expanded.png)
 
-**Warning**: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the `Recca` package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the **B** matrix may prove helpful, we recommend its use only if the implications of the given use are fully understood. We also recommend reading the paper that introduces the **B** matrix @mr_psut_paper.
+**Warning**: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the `Recca` package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the **B** matrix may prove helpful, we recommend its use only if the implications of the given use are fully understood. We also recommend reading the paper that introduces the **B** matrix (@mr_psut_paper).
 
 The **B** matrix enables analysts to:
 

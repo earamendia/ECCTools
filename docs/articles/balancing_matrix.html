@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Using the balancing matrix</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2021-12-21</h4>
+            <h4 data-toc-skip class="date">2022-01-12</h4>
       
       
       <div class="hidden name"><code>balancing_matrix.Rmd</code></div>
@@ -102,15 +102,15 @@
 <div class="section level2">
 <h2 id="the-balancing-matrix">The balancing matrix<a class="anchor" aria-label="anchor" href="#the-balancing-matrix"></a>
 </h2>
-<p>The balancing matrix is an extension of the original Physical Supply Use Table (PSUT) framework (see <span class="citation">Heun, Owen, and Brockway (2018)</span>) and has been introduced in a work presently under review. The figure below shows the expanded PSUT framework with the balancing <strong>B</strong> matrix.</p>
+<p>The balancing matrix is an extension of the original Physical Supply Use Table (PSUT) framework (see <span class="citation">Heun, Owen, and Brockway (2018)</span>) and has been introduced in <span class="citation">Aramendia et al. (2022)</span>. The figure below shows the expanded PSUT framework with the balancing <strong>B</strong> matrix.</p>
 <p><img src="figs/psut_expanded.png"></p>
-<p><strong>Warning</strong>: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the <code>Recca</code> package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the <strong>B</strong> matrix may prove helpful, we recommend its use only if the implications of the given use are fully understood. We also recommend reading the paper that introduces the <strong>B</strong> matrix <span class="citation">Aramendia et al. (2021)</span>.</p>
+<p><strong>Warning</strong>: Before detailing further the use of the balancing matrix, the user needs to be aware that its use complexifies the conduction of downstream Input-Output analysis (for instance with the <code>Recca</code> package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the <strong>B</strong> matrix may prove helpful, we recommend its use only if the implications of the given use are fully understood. We also recommend reading the paper that introduces the <strong>B</strong> matrix (<span class="citation">Aramendia et al. (2022)</span>).</p>
 <p>The <strong>B</strong> matrix enables analysts to:</p>
 <ul>
 <li>modify the supply mix while conserving energy balance;</li>
 <li>modify the final demand while conserving energy balance.</li>
 </ul>
-<p>To scale up or down the supply of a given industry <em>i</em> by a factor <span class="math inline">\(\lambda\)</span>, one can proceed according to the table below, extracted from <span class="citation">Aramendia et al. (2021)</span> .</p>
+<p>To scale up or down the supply of a given industry <em>i</em> by a factor <span class="math inline">\(\lambda\)</span>, one can proceed according to the table below, extracted from <span class="citation">Aramendia et al. (2022)</span> .</p>
 <p><img src="figs/table_2.png"></p>
 <p>To modify the final demand without loosing energy balance, one can simply redirect energy flows belonging to the final demand (<strong>Y</strong> matrix) to the balancing matrix <strong>B</strong>.</p>
 </div>
@@ -266,7 +266,7 @@
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mr_psut_paper" class="csl-entry">
-Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2021. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Under Review</em>.
+Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2022. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Applied Energy</em>. <a href="https://doi.org/10.1016/j.apenergy.2021.118413" class="external-link">https://doi.org/10.1016/j.apenergy.2021.118413</a>.
 </div>
 <div id="ref-Heun:2018" class="csl-entry">
 Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.

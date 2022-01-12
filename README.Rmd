@@ -58,3 +58,4 @@ This package builds upon the previous `R` package `IEATools`, and has been first
 Find more information, including vignettes and function documentation, at 
 <https://earamendia.github.io/ECCTools/>.
 
+## References
