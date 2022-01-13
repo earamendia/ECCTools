@@ -30,7 +30,7 @@ The `R` package `ECCTools` provides tools to modify an Energy Conversion Chain (
 
 The `ECCTools` package enables analysts to overcome this limitation through two different options:
 
-1. The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.
+1. The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework (see @mr_psut_paper) representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.
 2. The formulation of a PSUT framework following the Domestic Technology Assumption (DTA). The DTA assumes that imports are produced within the region that imports them. Although the DTA is not a realistic assumption, it enables analysts to conduct useful simulations.
 
 
