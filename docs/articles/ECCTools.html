@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Get started</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2022-01-12</h4>
+            <h4 data-toc-skip class="date">2022-01-13</h4>
       
       
       <div class="hidden name"><code>ECCTools.Rmd</code></div>
@@ -101,7 +101,7 @@
 <p>The <code>R</code> package <code>ECCTools</code> provides tools to modify an Energy Conversion Chain (ECC) that has been previously loaded using the <code>R</code> package <code>IEATools</code>. The <code>IEATools</code> package helps to load IEA data as well as to sort and prepare IEA data to formulate a Physical Supply Use Table framework (PSUT, see <span class="citation">Heun, Owen, and Brockway (2018)</span>). However, the <code>IEATools</code> package treats imports as a supplying industry, and to this extent, adopts what we refer here to as the Free Imports Assumption: imports come for free, with no upstream associated conversion chain (and hence, neither associated environmental burden nor embodied energy consumption).</p>
 <p>The <code>ECCTools</code> package enables analysts to overcome this limitation through two different options:</p>
 <ol style="list-style-type: decimal">
-<li>The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.</li>
+<li>The formulation of a Multi-Regional Physical Supply Use Table (MR-PSUT) framework (see <span class="citation">Aramendia et al. (2022)</span>) representing the Energy Conversion Chain. In this case, imports are treated as supply coming from an industry located in a different region. This option is the most realistic one.</li>
 <li>The formulation of a PSUT framework following the Domestic Technology Assumption (DTA). The DTA assumes that imports are produced within the region that imports them. Although the DTA is not a realistic assumption, it enables analysts to conduct useful simulations.</li>
 </ol>
 <div class="section level2">
@@ -202,6 +202,9 @@
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-mr_psut_paper" class="csl-entry">
+Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2022. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Applied Energy</em>. <a href="https://doi.org/10.1016/j.apenergy.2021.118413" class="external-link">https://doi.org/10.1016/j.apenergy.2021.118413</a>.
+</div>
 <div id="ref-Heun:2018" class="csl-entry">
 Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physical Supply-Use Table Framework for Energy Analysis on the Energy Conversion Chain.”</span> <em>Applied Energy</em> 226 (September): 1134–62. <a href="https://doi.org/10.1016/j.apenergy.2018.05.109" class="external-link">https://doi.org/10.1016/j.apenergy.2018.05.109</a>.
 </div>
@@ -222,7 +225,7 @@ Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physica
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by Emmanuel Aramendia.</p>
+<p>Developed by Emmanuel Aramendia, Matthew Heun.</p>
 </div>
 
 <div class="pkgdown">
