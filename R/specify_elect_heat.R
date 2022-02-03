@@ -428,11 +428,11 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
     dplyr::mutate(
-      "{share_inputs_from_Func}" = dplyr::case_when(
+      "{share_inputs_from_Func}" := dplyr::case_when(
         is.na(.data[[share_inputs_from_Func]]) ~ 1,
         TRUE ~ .data[[share_inputs_from_Func]]
       ),
-      "{product_type}" = dplyr::case_when(
+      "{product_type}" := dplyr::case_when(
         is.na(.data[[product_type]]) ~ "Oil products",
         TRUE ~ .data[[product_type]]
       )
