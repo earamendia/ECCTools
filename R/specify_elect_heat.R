@@ -428,6 +428,16 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
     dplyr::mutate(
+      "{share_inputs_from_Func}" = dplyr::case_when(
+        is.na(.data[[share_inputs_from_Func]]) ~ 1,
+        TRUE ~ .data[[share_inputs_from_Func]]
+      ),
+      "{product_type}" = dplyr::case_when(
+        is.na(.data[[product_type]]) ~ "Oil products",
+        TRUE ~ .data[[product_type]]
+      )
+    ) %>%
+    dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
       "{flow}" := dplyr::case_when(
         .data[[product_type]] == oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
@@ -451,6 +461,16 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == eiou_flows & .data[[flow]] %in% elect_heat_producer_industries
     ) %>%
     dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
+    dplyr::mutate(
+      "{share_inputs_from_Func}" = dplyr::case_when(
+        is.na(.data[[share_inputs_from_Func]]) ~ 1,
+        TRUE ~ .data[[share_inputs_from_Func]]
+      ),
+      "{product_type}" = dplyr::case_when(
+        is.na(.data[[product_type]]) ~ "Oil products",
+        TRUE ~ .data[[product_type]]
+      )
+    ) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
       "{flow}" := dplyr::case_when(
