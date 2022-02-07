@@ -134,7 +134,7 @@ specify_MR_V <- function(.tidy_iea_df,
 #'                 Default is "Domestic".
 #' @param imported The string that indicates that the product is of imported origin in the new origin column.
 #'                 Default is "Imported".
-#' @param origin The name of the colupn that specifies the origin of each product.
+#' @param origin The name of the column that specifies the origin of each product.
 #' @param flow,country,method,energy_type,last_stage,year,product,unit,e_dot See `IEATools::iea_cols`.
 #' @param exports The name of the Exports flows in the `.tidy_iea_df`.
 #'                Default is `IEATools::interface_industries$exports`.
@@ -344,12 +344,12 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
 #'
 #' Note: running this function to transform to the Global Market Assumption only makes sense when the country coverage is
 #' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
-#' producing a very small fraction of global energy producition, are missing).
+#' producing a very small fraction of global energy production, are missing).
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` that needs to be converted into a data frame describing a Global Energy Conversion Chain,
 #' adopting the Global Market Assumption.
 #'
-#' @return A `.tidy_iea_df` describin a Global Energy Conversion Chain, adopting a Global Market Perspective.
+#' @return A `.tidy_iea_df` describing a Global Energy Conversion Chain, adopting a Global Market Perspective.
 #' @export
 #'
 #' @examples

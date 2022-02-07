@@ -116,7 +116,7 @@ calc_imports_by_product <- function(.tidy_iea_df,
 #' Note: the function needs to have a column indicating matrix names added first, most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which the shares of imports over final consumption, by produt, need to be calculated.
+#' @param .tidy_iea_df The `.tidy_iea_df` for which the shares of imports over final consumption, by product, need to be calculated.
 #' @param flow,country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,year,product,unit,e_dot See `IEATools::iea_cols`.
 #' @param imports The name of the column containing the quantity (in energy terms) of imported products.
 #'                Default is `IEATools::interface_industries$imports`.

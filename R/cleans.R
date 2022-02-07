@@ -21,7 +21,7 @@
 #' @param .net_imports A temporary column that calculates net imports as the difference between imports and exports.
 #'                     Default is "Net_Imports".
 #'
-#' @return A `.tidy_iea_df` for which trade flows are converte to net trade.
+#' @return A `.tidy_iea_df` for which trade flows are converted to net trade.
 #' @importFrom rlang :=
 #' @importFrom rlang .data
 #' @export
@@ -107,11 +107,11 @@ convert_to_net_trade <- function(.tidy_iea_df,
 #' meaning that flows akin to final demand will be positive,
 #' while flows akin to supply will be negative.
 #'
-#' See the Balacing matrix vignette for more information.
+#' See the Balancing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Balancingmatrix.
+#' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Balancing matrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
@@ -171,7 +171,7 @@ stat_diffs_to_balancing <- function(.tidy_iea_df,
 #' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
 #' while flows akin to supply (i.e. where stocks decrease) will be negative.
 #'
-#' See the Balacing matrix vignette for more information.
+#' See the Balancing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
@@ -234,7 +234,7 @@ stock_changes_to_balancing <- function(.tidy_iea_df,
 #' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
 #' while flows akin to supply (i.e. where stocks decrease) will be negative.
 #'
-#' See the Balacing matrix vignette for more information.
+#' See the Balancing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'

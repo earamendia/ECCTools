@@ -2,7 +2,7 @@
 % Please edit documentation in R/specify_elect_heat.R
 \name{specify_elect_heat_renewables}
 \alias{specify_elect_heat_renewables}
-\title{Specifies electricity and heat produced by renewables}
+\title{Specifies electricity and heat produced by renewable energy}
 \usage{
 specify_elect_heat_renewables(
   .tidy_iea_df,
@@ -50,7 +50,7 @@ specify_elect_heat_renewables(
 }
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} for which electricity and heat products need to be specified
-when they come from renewables. Default is \code{.tidy_iea_df}.}
+when they come from renewable energy. Default is \code{.tidy_iea_df}.}
 
 \item{country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit}{See \code{IEATools::iea_cols}.}
 
@@ -129,14 +129,14 @@ Default is 1, value comes from IEA's WEEB.}
 \item{negzeropos}{Temporary column name. Default is ".netzeropos".}
 }
 \value{
-A \code{.tidy_iea_df} with electricity and heat products specified when they come from renewables.
+A \code{.tidy_iea_df} with electricity and heat products specified when they come from renewable energy.
 }
 \description{
 This code selects main activity autoproducer electricity, heat and CHP plants,
-and figures out which fraction of the output is due to renewables, based on the conversion factors
+and figures out which fraction of the output is due to renewable energy, based on the conversion factors
 of energy output to energy input provided by the IEA's WEEB.
-The energy due to renewables is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
-and the input and output flows due to renewables are directed to a new industry called "Renewable energy plants",
+The energy due to renewable energy is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
+and the input and output flows due to renewable energy are directed to a new industry called "Renewable energy plants",
 which now produce "Electricity \code{[}from Renewables\verb{]}" and "Heat \code{[}from Renewables\verb{]}".
 }
 \examples{

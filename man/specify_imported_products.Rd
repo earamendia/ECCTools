@@ -57,7 +57,7 @@ Default is "Domestic".}
 \item{imported}{The string that indicates that the product is of imported origin in the new origin column.
 Default is "Imported".}
 
-\item{origin}{The name of the colupn that specifies the origin of each product.}
+\item{origin}{The name of the column that specifies the origin of each product.}
 
 \item{flow, country, method, energy_type, last_stage, year, product, unit, e_dot}{See \code{IEATools::iea_cols}.}
 

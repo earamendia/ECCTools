@@ -24,7 +24,7 @@ calc_share_imports_by_products(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which the shares of imports over final consumption, by produt, need to be calculated.}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which the shares of imports over final consumption, by product, need to be calculated.}
 
 \item{flow, country, method, energy_type, last_stage, ledger_side, flow_aggregation_point, year, product, unit, e_dot}{See \code{IEATools::iea_cols}.}
 
