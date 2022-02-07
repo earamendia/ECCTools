@@ -50,7 +50,7 @@ devtools::install_github("earamendia/ECCTools", build_vignettes = TRUE)
 
 ## History
 
-This package builds upon the previous `R` package `IEATools`, and has been first demonstrated in the paper @mr_psut_paper .
+This package builds upon the previous `R` package `IEATools`, and has been first demonstrated in the paper @mr_psut_paper.
 
 
 ## More Information

@@ -37,7 +37,7 @@ Default is \code{c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::
 \item{country, method, energy_type, last_stage, year, product, flow}{See \code{IEATools::iea_cols}.}
 
 \item{imports}{The name of imports flows in the \code{.tidy_iea_df}.
-Defaut is \code{IEATools::interface_industries$imports}.}
+Default is \code{IEATools::interface_industries$imports}.}
 
 \item{matnames}{The column name for matrices names.
 Default is \code{IEATools::mat_meta_cols$matnames}.}

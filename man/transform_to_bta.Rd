@@ -15,7 +15,7 @@ transform_to_bta(
 \item{bilateral_trade_df}{The bilateral trade data frame that will be used.}
 }
 \value{
-A \code{.tidy_iea_df} describin a Global Energy Conversion Chain, adopting a Bilateral Trade Perspective.
+A \code{.tidy_iea_df} describing a Global Energy Conversion Chain, adopting a Bilateral Trade Perspective.
 }
 \description{
 This function transforms a \code{.tidy_iea_df} that contains the representation of the Energy Conversion Chain for multiple
@@ -39,7 +39,7 @@ is used to fill the gap, for that particular (Country, Product) observation.
 
 Note 3: running this function to transform to the Bilateral Trade Assumption only makes sense when the country coverage is
 global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
-producing a very small fraction of global energy producition, are missing).
+producing a very small fraction of global energy production, are missing).
 }
 \examples{
 tidy_AB_data \%>\%

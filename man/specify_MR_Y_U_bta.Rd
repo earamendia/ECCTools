@@ -52,7 +52,7 @@ Default is "Imported".}
 \item{Share_Exports_By_Product}{The name of a temporary column that contains the share of global exports by country, for each product.
 Default is "Share_Exports_By_Product".}
 
-\item{Producing_Country}{The name of a temporary column that contains the provenience country for a given flow, i.e. the exportin country of a given flow.
+\item{Producing_Country}{The name of a temporary column that contains the provenance country for a given flow, i.e. the exporting country of a given flow.
 Default is "Producing_Country".}
 
 \item{Share_Global_Production_By_Product}{The name if a temporary column that contains the share of global product by country, for each product.

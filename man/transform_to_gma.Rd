@@ -11,7 +11,7 @@ transform_to_gma(.tidy_iea_df)
 adopting the Global Market Assumption.}
 }
 \value{
-A \code{.tidy_iea_df} describin a Global Energy Conversion Chain, adopting a Global Market Perspective.
+A \code{.tidy_iea_df} describing a Global Energy Conversion Chain, adopting a Global Market Perspective.
 }
 \description{
 This function transforms a \code{.tidy_iea_df} that contains the representation of the Energy Conversion Chain for multiple
@@ -28,7 +28,7 @@ and then binds all rows obtained using \code{dplyr::bind_rows()}.
 
 Note: running this function to transform to the Global Market Assumption only makes sense when the country coverage is
 global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
-producing a very small fraction of global energy producition, are missing).
+producing a very small fraction of global energy production, are missing).
 }
 \examples{
 tidy_AB_data \%>\%

@@ -41,7 +41,7 @@ Hence, each country importing a product $p$ will import the share $c_{s,p}$ of i
 
 The Global Market Assumption is therefore a simplifying assumption which enables to:
 
-* Run a quick, explorative, or demonstrative analysis, when there is no need for the precision bilateral trade data can provide;
+* Run a quick, exploratory, or demonstrative analysis, when there is no need for the precision bilateral trade data can provide;
 * Conduct analysis when bilateral trade data are not available, or are not of sufficient quality.
 
 

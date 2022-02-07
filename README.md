@@ -9,9 +9,9 @@ status](https://www.r-pkg.org/badges/version/ReboundTools)](https://cran.r-proje
 state and is being actively
 developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![R-CMD-check](https://github.com/earamendia/ECCTools/workflows/R-CMD-check/badge.svg)](https://github.com/earamendia/ECCTools/actions)
-[![codecov](https://codecov.io/gh/earamendia/ECCTools/branch/develop/graph/badge.svg?token=IG68VLDYEY)](https://codecov.io/gh/earamendia/ECCTools)
 [![Codecov test
 coverage](https://codecov.io/gh/earamendia/ECCTools/branch/master/graph/badge.svg)](https://codecov.io/gh/earamendia/ECCTools?branch=master)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5841962.svg)](https://doi.org/10.5281/zenodo.5841962)
 <!-- badges: end -->
 
 # ECCTools
@@ -55,21 +55,23 @@ devtools::install_github("earamendia/ECCTools", build_vignettes = TRUE)
 ## History
 
 This package builds upon the previous `R` package `IEATools`, and has
-been first demonstrated in the paper Aramendia et al. (2021) .
+been first demonstrated in the paper Aramendia et al. (2022).
 
 ## More Information
 
 Find more information, including vignettes and function documentation,
 at <https://earamendia.github.io/ECCTools/>.
 
+## References
+
 <div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-mr_psut_paper" class="csl-entry">
 
 Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor.
-2021. “Developing a Multi-Regional Physical Supply Use Table Framework
-to Improve the Accuracy and Reliability of Energy Analysis.” *Under
-Review*.
+2022. “Developing a Multi-Regional Physical Supply Use Table Framework
+to Improve the Accuracy and Reliability of Energy Analysis.” *Applied
+Energy*. <https://doi.org/10.1016/j.apenergy.2021.118413>.
 
 </div>
 

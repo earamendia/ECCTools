@@ -33,7 +33,7 @@ Default is \code{IEATools::interface_industries$exports}.}
 Default is "Net_Imports".}
 }
 \value{
-A \code{.tidy_iea_df} for which trade flows are converte to net trade.
+A \code{.tidy_iea_df} for which trade flows are converted to net trade.
 }
 \description{
 This function enables to convert a \code{.tidy_iea_df} to

@@ -1,15 +1,15 @@
 
-#' Specifies electricity and heat produced by renewables
+#' Specifies electricity and heat produced by renewable energy
 #'
 #' This code selects main activity autoproducer electricity, heat and CHP plants,
-#' and figures out which fraction of the output is due to renewables, based on the conversion factors
+#' and figures out which fraction of the output is due to renewable energy, based on the conversion factors
 #' of energy output to energy input provided by the IEA's WEEB.
-#' The energy due to renewables is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
-#' and the input and output flows due to renewables are directed to a new industry called "Renewable energy plants",
+#' The energy due to renewable energy is then subtracted from the main activity and autoproducer elect, heat and CHP plants,
+#' and the input and output flows due to renewable energy are directed to a new industry called "Renewable energy plants",
 #' which now produce "Electricity `[`from Renewables`]`" and "Heat `[`from Renewables`]`".
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which electricity and heat products need to be specified
-#'                     when they come from renewables. Default is `.tidy_iea_df`.
+#'                     when they come from renewable energy. Default is `.tidy_iea_df`.
 #' @param country,method,energy_type,last_stage,year,ledger_side,flow_aggregation_point,flow,product,e_dot,unit
 #'        See `IEATools::iea_cols`.
 #' @param transformation_processes Name of transformation process flows in data frame.
@@ -58,7 +58,7 @@
 #' @param e_dot_rest Temporary column name. Default is "E_dot_Rest".
 #' @param negzeropos Temporary column name. Default is ".netzeropos".
 #'
-#' @return A `.tidy_iea_df` with electricity and heat products specified when they come from renewables.
+#' @return A `.tidy_iea_df` with electricity and heat products specified when they come from renewable energy.
 #' @export
 #'
 #' @examples
@@ -306,7 +306,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
 #' This function specified the electricity and heat energy products by the type of energy carrier
 #' that has been used to produce them, at the moment "Oil products", "Coal products", "Natural gas", and "Other products".
 #' To do so, the code keeps the main activity and autoproducer electricity, heat and CHP activities,
-#' and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat ouputs.
+#' and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat outputs.
 #' New industries that are now specified as function of the product type they take as input.
 #'
 #' @param .tidy_iea_df Name of the `.tidy_iea_df` for which electricity and heat products
@@ -428,6 +428,16 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
     dplyr::mutate(
+      "{share_inputs_from_Func}" := dplyr::case_when(
+        is.na(.data[[share_inputs_from_Func]]) ~ 1,
+        TRUE ~ .data[[share_inputs_from_Func]]
+      ),
+      "{product_type}" := dplyr::case_when(
+        is.na(.data[[product_type]]) ~ "Oil products",
+        TRUE ~ .data[[product_type]]
+      )
+    ) %>%
+    dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
       "{flow}" := dplyr::case_when(
         .data[[product_type]] == oil_products ~ stringr::str_c(.data[[flow]], " [from Oil products]"),
@@ -451,6 +461,16 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == eiou_flows & .data[[flow]] %in% elect_heat_producer_industries
     ) %>%
     dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
+    dplyr::mutate(
+      "{share_inputs_from_Func}" := dplyr::case_when(
+        is.na(.data[[share_inputs_from_Func]]) ~ 1,
+        TRUE ~ .data[[share_inputs_from_Func]]
+      ),
+      "{product_type}" := dplyr::case_when(
+        is.na(.data[[product_type]]) ~ "Oil products",
+        TRUE ~ .data[[product_type]]
+      )
+    ) %>%
     dplyr::mutate(
       "{e_dot}" := .data[[e_dot]] * .data[[share_inputs_from_Func]],
       "{flow}" := dplyr::case_when(
