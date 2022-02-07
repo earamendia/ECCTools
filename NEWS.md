@@ -10,6 +10,7 @@ output: html_document
 
 
 # ECCTools 0.1.1 (12/01/2022)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5841963.svg)](https://doi.org/10.5281/zenodo.5841963)
 
 * First release of the package
 * All tests passing (279)
