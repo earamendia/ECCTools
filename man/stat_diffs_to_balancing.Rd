@@ -14,7 +14,7 @@ stat_diffs_to_balancing(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which statistical differences flows need to be sent to the Balancingmatrix.}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which statistical differences flows need to be sent to the Balancing matrix.}
 
 \item{flow, e_dot}{See \code{IEATools::iea_cols}.}
 
@@ -37,7 +37,7 @@ meaning that flows akin to final demand will be positive,
 while flows akin to supply will be negative.
 }
 \details{
-See the Balacing matrix vignette for more information.
+See the Balancing matrix vignette for more information.
 Note: one needs to add the column containing matrices names first,
 most likely using the \code{IEATools::add_psut_matnames()} function.
 }

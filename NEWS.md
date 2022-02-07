@@ -3,7 +3,7 @@ title: "Release notes for `ECCTools`"
 output: html_document
 ---
 
-# ECCTools 0.1.2
+# ECCTools 0.1.2 (07/01/2022)
 
 * Some fixes on the specify_elect_heat_fossil_fuels() function
 * All tests passing (279)

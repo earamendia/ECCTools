@@ -26,7 +26,7 @@
 #'                                  Default is `c(IEATools::psut_cols$Y, IEATools::psut_cols$U_eiou, IEATools::psut_cols$U_feed)`.
 #' @param country,method,energy_type,last_stage,year,product,flow See `IEATools::iea_cols`.
 #' @param imports The name of imports flows in the `.tidy_iea_df`.
-#'                Defaut is `IEATools::interface_industries$imports`.
+#'                Default is `IEATools::interface_industries$imports`.
 #' @param matnames The column name for matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param y_matrix The name of the Y matrix.
@@ -126,7 +126,7 @@ find_list_dta_observations <- function(.tidy_iea_df,
 #'                                Default is TRUE.
 #' @param country,method,energy_type,last_stage,year,flow,ledger_side,e_dot See `IEATools::iea_cols`.
 #' @param imports The name of imports flows in the `.tidy_iea_df`.
-#'                Defaut is `IEATools::interface_industries$imports`.
+#'                Default is `IEATools::interface_industries$imports`.
 #' @param matnames The column name for matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param balancing_matrix The name of the Balancing matrix.

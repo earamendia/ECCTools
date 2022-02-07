@@ -37,7 +37,7 @@ meaning that flows akin to final demand (i.e. where stocks increase) will be pos
 while flows akin to supply (i.e. where stocks decrease) will be negative.
 }
 \details{
-See the Balacing matrix vignette for more information.
+See the Balancing matrix vignette for more information.
 Note: one needs to add the column containing matrices names first,
 most likely using the \code{IEATools::add_psut_matnames()} function.
 }

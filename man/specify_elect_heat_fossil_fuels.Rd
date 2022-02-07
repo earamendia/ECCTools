@@ -86,7 +86,7 @@ with origin product type.
 This function specified the electricity and heat energy products by the type of energy carrier
 that has been used to produce them, at the moment "Oil products", "Coal products", "Natural gas", and "Other products".
 To do so, the code keeps the main activity and autoproducer electricity, heat and CHP activities,
-and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat ouputs.
+and calculates the inputs shares by each of the four product types group. The same shares are ascribe to electricity and heat outputs.
 New industries that are now specified as function of the product type they take as input.
 }
 \examples{

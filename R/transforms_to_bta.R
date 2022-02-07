@@ -105,7 +105,7 @@ check_bilateral_trade_df <- function(.bilateral_trade_df,
 #'                 Default is "Imported".
 #' @param Share_Exports_By_Product The name of a temporary column that contains the share of global exports by country, for each product.
 #'                                 Default is "Share_Exports_By_Product".
-#' @param Producing_Country The name of a temporary column that contains the provenience country for a given flow, i.e. the exportin country of a given flow.
+#' @param Producing_Country The name of a temporary column that contains the provenance country for a given flow, i.e. the exporting country of a given flow.
 #'                          Default is "Producing_Country".
 #' @param Share_Global_Production_By_Product The name if a temporary column that contains the share of global product by country, for each product.
 #'                                           Default is "Share_Global_Production_By_Product".
@@ -256,12 +256,12 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
 #'
 #' Note 3: running this function to transform to the Bilateral Trade Assumption only makes sense when the country coverage is
 #' global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
-#' producing a very small fraction of global energy producition, are missing).
+#' producing a very small fraction of global energy production, are missing).
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which the Bilateral Trade Assumption flows need to be calculated according to a given `bilateral_trade_df`.
 #' @param bilateral_trade_df The bilateral trade data frame that will be used.
 #'
-#' @return A `.tidy_iea_df` describin a Global Energy Conversion Chain, adopting a Bilateral Trade Perspective.
+#' @return A `.tidy_iea_df` describing a Global Energy Conversion Chain, adopting a Bilateral Trade Perspective.
 #' @export
 #'
 #' @examples
