@@ -427,3 +427,112 @@ test_that("exports_to_balancing works", {
 
   expect_equal(n_after, 95)
 })
+
+
+# ADD TESTS ON SIGN AND LEDGER SIDE
+test_that("losses_to_balancing works" ,{
+
+  # Number of rows of original tidy_AB_data, we add 1 because we add an additional balancing flow below
+  n_tidy_AB_data <- nrow(tidy_AB_data) +1
+
+  # Add a couple of flows; the losses one and a balancing flow so that we have balance
+  tidy_AB_data_with_losses <- tidy_AB_data %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "TFC compare",
+      Flow = "Losses",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = -100,
+    ) %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "TFC compare",
+      Flow = "Some electricity coming from some fancy plant for the sake of the balance",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = 100,
+    ) %>%
+    IEATools::add_psut_matnames()
+
+  # Check balance
+  expect_true(tidy_AB_data_with_losses %>% IEATools::tidy_iea_df_balanced())
+
+  # Relocate losses to balancing
+  tidy_AB_data_with_losses_relocated <- tidy_AB_data_with_losses %>%
+    losses_to_balancing()
+
+  # Re-check balance
+  expect_true(tidy_AB_data_with_losses_relocated %>% IEATools::tidy_iea_df_balanced())
+
+  # Number of Losses flows rows in B matrix, and check value
+  n_balancing <-tidy_AB_data_with_losses_relocated %>%
+    dplyr::filter(matnames == "B") %>%
+    dplyr::filter(Flow == "Losses") %>%
+    nrow()
+  expect_equal(n_balancing, 1)
+
+  # Check diff values
+  n_diff <- (tidy_AB_data_with_losses %>%
+    dplyr::filter(matnames != "B") %>%
+    nrow()) - n_balancing
+
+  expect_equal(n_diff, n_tidy_AB_data)
+
+  tidy_AB_data_with_losses_relocated %>%
+    dplyr::filter(matnames == "B") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal(100)
+
+  tidy_AB_data_with_losses_relocated %>%
+    dplyr::filter(matnames == "B") %>%
+    magrittr::extract2("Ledger.side") %>%
+    expect_equal("Consumption")
+})
+
+
+test_that("non_energy_uses_to_balancing works" ,{
+
+  n_tidy_AB_data <- tidy_AB_data %>% nrow()
+
+  tidy_AB_data_with_neu <- tidy_AB_data %>%
+    tibble::add_row(
+      Country = "A",
+      Method = "PCM",
+      Energy.type = "E",
+      Last.stage = "Final",
+      Year = 2018,
+      Ledger.side = "Supply",
+      Flow.aggregation.point = "Consumption",
+      Flow = "Non-energy use in whatever sector",
+      Product = "Electricity",
+      Unit = "ktoe",
+      E.dot = 10,
+    ) %>%
+    IEATools::add_psut_matnames()
+
+  n_balancing <- tidy_AB_data_with_neu %>%
+    non_energy_uses_to_balancing() %>%
+    dplyr::filter(matnames == "B") %>%
+    dplyr::filter(stringr::str_detect(Flow, "Non-energy use")) %>%
+    nrow()
+
+  expect_equal(n_balancing, 1)
+
+  n_diff <- (tidy_AB_data_with_neu %>%
+               dplyr::filter(matnames != "B") %>%
+               nrow()) - n_balancing
+
+  expect_equal(n_diff, n_tidy_AB_data)
+})
+
