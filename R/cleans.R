@@ -453,3 +453,48 @@ add_balancing_vector <- function(.tidy_iea_df,
     dplyr::bind_rows(balancing_vector) %>%
     return()
 }
+
+
+#' Relocates export flows in the Balancing matrix
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which export flows need to be sent to the Balancing matrix.
+#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param exports The string that identifies export flows.
+#'                Default is `IEATools::interface_industries$exports`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                         Default is "B".
+#'
+#' @return A `.tidy_iea_df` with Stock changes flows relocated in the Balancing matrix.
+#' @export
+#'
+#' @examples
+#' tidy_AB_data %>%
+#' IEATools::add_psut_matnames() %>%
+#' dplyr::filter(stringr::str_detect(Flow, "Exports")) %>%
+#' exports_to_balancing() %>%
+#' print()
+exports_to_balancing <- function(.tidy_iea_df,
+                                 flow = IEATools::iea_cols$flow,
+                                 matnames = IEATools::mat_meta_cols$matnames,
+                                 e_dot = IEATools::iea_cols$e_dot,
+                                 exports = IEATools::interface_industries$exports,
+                                 balancing_matrix = "B"){
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{matnames}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], exports) ~ balancing_matrix,
+        TRUE ~ .data[[matnames]]
+      )
+    )
+}
+
+#' This function sends stock changes flows to a balancing matrix B.
+#' The Balancing matrix is akin to an additional final demand matrix,
+#' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
+#' while flows akin to supply (i.e. where stocks decrease) will be negative.
+#'
+#' See the Balancing matrix vignette for more information.
+#' Note: one needs to add the column containing matrices names first,
+#' most likely using the `IEATools::add_psut_matnames()` function.
