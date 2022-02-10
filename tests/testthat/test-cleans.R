@@ -406,3 +406,24 @@ test_that("international_bunkers_to_balancing works",{
     magrittr::extract2("matnames") %>%
     expect_equal("B")
 })
+
+
+test_that("exports_to_balancing works", {
+
+  exports_relocated <- tidy_AB_data %>%
+    IEATools::add_psut_matnames() %>%
+    exports_to_balancing()
+
+  exports_relocated %>%
+    dplyr::filter(matnames == "B") %>%
+    dplyr::filter(stringr::str_detect(Flow, "Exports")) %>%
+    nrow() %>%
+    expect_equal(4)
+
+  n_ini <- exports_relocated %>%
+    nrow()
+
+  n_after <- n_ini - (exports_relocated %>% dplyr::filter(matnames == "B") %>% nrow())
+
+  expect_equal(n_after, 95)
+})
