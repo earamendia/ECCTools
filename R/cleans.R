@@ -528,7 +528,7 @@ exports_to_balancing <- function(.tidy_iea_df,
 #' tidy_AB_data %>%
 #' tibble::add_row(
 #'  Country = "A",
-#'  Methpd = "PCM",
+#'  Method = "PCM",
 #'  Energy.type = "E",
 #'  Last.stage = "Final",
 #'  Year = 2018,
@@ -537,7 +537,7 @@ exports_to_balancing <- function(.tidy_iea_df,
 #'  Flow = "Losses",
 #'  Product = "Electricity",
 #'  Unit = "ktoe",
-#'  E.dot = 1,
+#'  E.dot = -100,
 #' ) %>%
 #'  IEATools::add_psut_matnames() %>%
 #'  dplyr::filter(matnames == "B")
