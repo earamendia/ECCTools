@@ -7,6 +7,8 @@ output: html_document
 # ECCTools 0.1.3
 
 * exports_to_balancing function and corresponding tests added
+* losses_to_balancing function and corresponding tests added
+* non_energy_uses_to_balancing function and corresponding tests added
 
 
 # ECCTools 0.1.2 (07/01/2022)

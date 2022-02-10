@@ -14,11 +14,11 @@ exports_to_balancing(
 )
 }
 \arguments{
-\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which export flows need to be sent to the Balancing matrix.}
+\item{.tidy_iea_df}{The \code{.tidy_iea_df} for which export flows need to be relocated in the Balancing matrix.}
 
 \item{flow, e_dot}{See \code{IEATools::iea_cols}.}
 
-\item{matnames}{The column name of the column having matrices names.
+\item{matnames}{The column name of the column containing matrices names.
 Default is \code{IEATools::mat_meta_cols$matnames}.}
 
 \item{exports}{The string that identifies export flows.
@@ -31,7 +31,13 @@ Default is "B".}
 A \code{.tidy_iea_df} with Stock changes flows relocated in the Balancing matrix.
 }
 \description{
-Relocates export flows in the Balancing matrix
+This function relocates exports to the balancing matrix B.
+The Balancing matrix is akin to an additional final demand matrix.
+}
+\details{
+See the Balancing matrix vignette for more information.
+Note: one needs to add the column containing matrices names first,
+most likely using the \code{IEATools::add_psut_matnames()} function.
 }
 \examples{
 tidy_AB_data \%>\%

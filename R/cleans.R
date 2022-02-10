@@ -455,11 +455,20 @@ add_balancing_vector <- function(.tidy_iea_df,
 }
 
 
+
+
 #' Relocates export flows in the Balancing matrix
 #'
-#' @param .tidy_iea_df The `.tidy_iea_df` for which export flows need to be sent to the Balancing matrix.
+#' This function relocates exports to the balancing matrix B.
+#' The Balancing matrix is akin to an additional final demand matrix.
+#'
+#' See the Balancing matrix vignette for more information.
+#' Note: one needs to add the column containing matrices names first,
+#' most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which export flows need to be relocated in the Balancing matrix.
 #' @param flow,e_dot See `IEATools::iea_cols`.
-#' @param matnames The column name of the column having matrices names.
+#' @param matnames The column name of the column containing matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param exports The string that identifies export flows.
 #'                Default is `IEATools::interface_industries$exports`.
@@ -490,11 +499,124 @@ exports_to_balancing <- function(.tidy_iea_df,
     )
 }
 
-#' This function sends stock changes flows to a balancing matrix B.
-#' The Balancing matrix is akin to an additional final demand matrix,
-#' meaning that flows akin to final demand (i.e. where stocks increase) will be positive,
-#' while flows akin to supply (i.e. where stocks decrease) will be negative.
+
+#' Relocates losses in the Balancing matrix
+#'
+#' This function relocates losses to the balancing matrix B.
+#' The Balancing matrix is akin to an additional final demand matrix.
 #'
 #' See the Balancing matrix vignette for more information.
 #' Note: one needs to add the column containing matrices names first,
 #' most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' Importantly, we change the sign of losses flows when moving them to the balancing matrix, so that they stay akin to
+#' final demand flows. And we change their ledger side to "Consumption" so that the energy balance is respected.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which losses need to be relocated in the Balancing matrix.
+#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
+#' @param matnames The column name of the column containing matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param losses The name of losses flows.
+#'               Default is `IEATools::tfc_compare_flows$losses`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                         Default is "B".
+#'
+#' @return A `.tidy_iea_df` with losses relocated in the Balancing matrix.
+#' @export
+#'
+#' @examples
+#' tidy_AB_data %>%
+#' tibble::add_row(
+#'  Country = "A",
+#'  Method = "PCM",
+#'  Energy.type = "E",
+#'  Last.stage = "Final",
+#'  Year = 2018,
+#'  Ledger.side = "Supply",
+#'  Flow.aggregation.point = "TFC compare",
+#'  Flow = "Losses",
+#'  Product = "Electricity",
+#'  Unit = "ktoe",
+#'  E.dot = -100,
+#' ) %>%
+#'  IEATools::add_psut_matnames() %>%
+#'  dplyr::filter(matnames == "B")
+losses_to_balancing <- function(.tidy_iea_df,
+                                flow = IEATools::iea_cols$flow,
+                                matnames = IEATools::mat_meta_cols$matnames,
+                                e_dot = IEATools::iea_cols$e_dot,
+                                ledger_side = IEATools::iea_cols$ledger_side,
+                                losses = IEATools::tfc_compare_flows$losses,
+                                balancing_matrix = "B"){
+
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{matnames}" := dplyr::case_when(
+        .data[[flow]] == losses ~ balancing_matrix,
+        TRUE ~ .data[[matnames]]
+      ),
+      "{e_dot}" := dplyr::case_when(
+        .data[[flow]] == losses ~ abs(.data[[e_dot]]),
+        TRUE ~ .data[[e_dot]]
+      ),
+      "{ledger_side}" := dplyr::case_when(
+        .data[[flow]] == losses ~ "Consumption",
+        TRUE ~ .data[[ledger_side]]
+      )
+    )
+}
+
+
+#' Relocates non-energy uses flows in the balancing matrix
+#'
+#' This function relocates non-energy uses to the balancing matrix B.
+#' The Balancing matrix is akin to an additional final demand matrix.
+#'
+#' See the Balancing matrix vignette for more information.
+#' Note: one needs to add the column containing matrices names first,
+#' most likely using the `IEATools::add_psut_matnames()` function.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which non-energy use flows need to be relocated in the Balancing matrix.
+#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param matnames The column name of the column having matrices names.
+#'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param non_energy_uses The string that identifies non-energy uses.
+#'                        Default is `IEATools::tfc_flows$non_energy_use`.
+#' @param balancing_matrix The name of the Balancing matrix.
+#'                         Default is "B".
+#'
+#' @return A `.tidy_iea_df` with non-energy uses flows relocated in the Balancing matrix.
+#' @export
+#'
+#' @examples
+#' tidy_AB_data %>%
+#' tibble::add_row(
+#'  Country = "A",
+#'  Method = "PCM",
+#'  Energy.type = "E",
+#'  Last.stage = "Final",
+#'  Year = 2018,
+#'  Ledger.side = "Supply",
+#'  Flow.aggregation.point = "Consumption",
+#'  Flow = "Non-energy use in whatever sector",
+#'  Product = "Electricity",
+#'  Unit = "ktoe",
+#'  E.dot = 10,
+#' ) %>%
+#' IEATools::add_psut_matnames() %>%
+#' dplyr::filter(matnames == "B")
+non_energy_uses_to_balancing <- function(.tidy_iea_df,
+                                         flow = IEATools::iea_cols$flow,
+                                         matnames = IEATools::mat_meta_cols$matnames,
+                                         e_dot = IEATools::iea_cols$e_dot,
+                                         non_energy_uses = IEATools::tfc_flows$non_energy_use,
+                                         balancing_matrix = "B"){
+  .tidy_iea_df %>%
+    dplyr::mutate(
+      "{matnames}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], non_energy_uses) ~ balancing_matrix,
+        TRUE ~ .data[[matnames]]
+      )
+    )
+}
+
