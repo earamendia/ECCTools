@@ -588,20 +588,28 @@ specify_elect_heat_nuclear <- function(.tidy_iea_df,
 
 
 
-#' Title
+#' Specifies remaining electricity and heat production flows
 #'
-#' @param .tidy_iea_df
-#' @param flow_aggregation_point
-#' @param flow
-#' @param e_dot
-#' @param product
-#' @param transformation_processes
-#' @param negzeropos
+#' This function specifies electricity and heat production flows (i.e. positive flows in the transformation processes
+#' flow aggregation point) that are not yet specified by calling the energy product
+#' respectively "Electricity `[`from Other processes`]` and "Heat `[`from Other processes`]`.
 #'
-#' @return
+#' @param .tidy_iea_df The `.tidy_iea_df` for which non-specified electricity and heat production flows need to be specified.
+#' @param flow_aggregation_point,flow,e_col,product See `IEATools::iea_cols`.
+#' @param transformation_processes The name of the transformation processes in the flow aggregation point column.
+#'                                 Default is IEATools::aggregation_flows$transformation_processes.
+#' @param negzeropos Temporary column name. Default is ".netzeropos".
+#'
+#' @return Returns a tidy data frame with all electricity and heat production flows specified (products are specified).
 #' @export
 #'
 #' @examples
+#' A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#' IEATools::load_tidy_iea_df(A_B_path) %>%
+#' IEATools::specify_all() %>%
+#' tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, Ledger.side = "Supply", Unit = "ktoe",
+#' Flow.aggregation.point = "Transformation processes", Flow = "Heat pumps", Product = "Heat", E.dot = 82) %>%
+#' specify_other_elec_heat_production()
 specify_other_elec_heat_production <- function(.tidy_iea_df,
                                                flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                                flow = IEATools::iea_cols$flow,
