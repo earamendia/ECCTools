@@ -694,7 +694,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Electricity [from Oil products]", "Electricity [from Coal products]",
                                           "Electricity [from Natural gas]", "Electricity [from Other products]",
-                                          "Electricity [from Renewables]", "Electricity [from Nuclear]")) %>%
+                                          "Electricity [from Renewables]", "Electricity [from Nuclear]",
+                                          "Electricity [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Electricity market",
       "{e_dot}" := -.data[[e_dot]]
@@ -706,7 +707,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Electricity [from Oil products]", "Electricity [from Coal products]",
                                           "Electricity [from Natural gas]", "Electricity [from Other products]",
-                                          "Electricity [from Renewables]", "Electricity [from Nuclear]")) %>%
+                                          "Electricity [from Renewables]", "Electricity [from Nuclear]",
+                                          "Electricity [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Electricity market",
       "{product}" := "Electricity"
@@ -718,7 +720,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Heat [from Oil products]", "Heat [from Coal products]",
                                           "Heat [from Natural gas]", "Heat [from Other products]",
-                                          "Heat [from Renewables]", "Heat [from Nuclear]")) %>%
+                                          "Heat [from Renewables]", "Heat [from Nuclear]",
+                                          "Heat [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Heat market",
       "{e_dot}" := -.data[[e_dot]]
@@ -730,7 +733,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Heat [from Oil products]", "Heat [from Coal products]",
                                           "Heat [from Natural gas]", "Heat [from Other products]",
-                                          "Heat [from Renewables]", "Heat [from Nuclear]")) %>%
+                                          "Heat [from Renewables]", "Heat [from Nuclear]",
+                                          "Heat [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Heat market",
       "{product}" := "Heat"
