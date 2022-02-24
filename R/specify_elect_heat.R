@@ -588,6 +588,61 @@ specify_elect_heat_nuclear <- function(.tidy_iea_df,
 
 
 
+#' Title
+#'
+#' @param .tidy_iea_df
+#' @param flow_aggregation_point
+#' @param flow
+#' @param e_dot
+#' @param product
+#' @param transformation_processes
+#' @param negzeropos
+#'
+#' @return
+#' @export
+#'
+#' @examples
+specify_other_elec_heat_production <- function(.tidy_iea_df,
+                                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                               flow = IEATools::iea_cols$flow,
+                                               e_dot = IEATools::iea_cols$e_dot,
+                                               product = IEATools::iea_cols$product,
+                                               transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                               negzeropos = ".negzeropos"){
+
+  modified_production_flows <- .tidy_iea_df %>%
+  dplyr::filter(.data[[product]] == "Electricity" | .data[[product]] == "Heat") %>%
+  dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes) %>%
+  dplyr::filter(.data[[e_dot]] > 0) %>%
+  dplyr::mutate(
+    "{product}" := stringr::str_c(.data[[product]], " [from Other processes]")
+  )
+
+  .tidy_iea_df %>%
+    dplyr::filter(! ((.data[[product]] == "Electricity" | .data[[product]] == "Heat") & (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[e_dot]] > 0))) %>%
+    dplyr::bind_rows(modified_production_flows) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+}
+
+
+
 #' Specifies electricity and heat markets
 #'
 #' This function specifies electricity and heat markets. See details for more information.
