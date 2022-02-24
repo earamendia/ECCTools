@@ -9,6 +9,8 @@ output: html_document
 * exports_to_balancing function and corresponding tests added
 * losses_to_balancing function and corresponding tests added
 * non_energy_uses_to_balancing function and corresponding tests added
+* specify_other_elec_heat_production function and corresponding tests added
+* specify_elect_heat_markets function and corresponding tests modified so that it works with the new specify_other_elec_heat_production function too
 
 
 # ECCTools 0.1.2 (07/01/2022)
