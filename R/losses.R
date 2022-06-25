@@ -27,6 +27,21 @@
 #' @export
 #'
 #' @examples
+#' ECCTools::tidy_AB_data %>%
+#'  tibble::add_row(
+#'   Country = "A",
+#'   Method = "PCM",
+#'   Energy.type = "E",
+#'   Last.stage = "Final",
+#'   Year = 2018,
+#'   Ledger.side = "Supply",
+#'   Flow.aggregation.point = "TFC compare",
+#'   Flow = "Losses",
+#'   Product = "Coke oven coke",
+#'   Unit = "ktoe",
+#'   E.dot = -20
+#'  ) %>%
+#'  specify_losses_as_industry()
 specify_losses_as_industry <- function(.tidy_iea_df,
                                        country = IEATools::iea_cols$country,
                                        method = IEATools::iea_cols$method,
@@ -45,8 +60,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
                                        stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                                        transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
                                        supply = IEATools::ledger_sides$supply,
-                                       observation_string = "Observation_String",
-                                       string_to_check = "String_to_Check"){
+                                       observation_string = "Observation_String"){
 
   # General comment: we exclude Imports and Statistical differences from changes in supply
   # Otherwise for imports it will be a mess when building the MR-PSUT, and for statistical differences they don't make sense anyway.
