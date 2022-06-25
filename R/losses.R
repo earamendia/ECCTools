@@ -5,8 +5,10 @@
 #' as a transformation industry, which takes as input "Product (before Losses)" and provides "Product".
 #' Hence, final demand sectors still consume "Product", but where relevant, products go first through a "Losses (of Product)" industry.
 #'
+#' TO DO:!!! Importantly, we need to check that values do not become negative...!!!
+#'
 #' @param .tidy_iea_df The `.tidy__iea_df` for which losses need to be specified as transformation industry.
-#' @param country,method,energy_type,last_stage,year,flow,product,unit,e_dot See `IEATools::iea_cols`.
+#' @param country,method,energy_type,last_stage,ledger_side,flow_aggregation_point,year,flow,product,unit,e_dot See `IEATools::iea_cols`.
 #' @param matnames The name of the matrix name column in the input data frame.
 #' @param losses The name of the "Losses" flows in the input data frame.
 #'               Default is `IEATools::tfc_compare_flows$losses`.
@@ -31,11 +33,13 @@ specify_losses_as_industry <- function(.tidy_iea_df,
                                        energy_type = IEATools::iea_cols$energy_type,
                                        last_stage = IEATools::iea_cols$last_stage,
                                        year = IEATools::iea_cols$year,
+                                       ledger_side = IEATools::iea_cols$ledger_side,
+                                       flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
                                        flow = IEATools::iea_cols$flow,
                                        product = IEATools::iea_cols$product,
                                        unit = IEATools::iea_cols$unit,
                                        e_dot = IEATools::iea_cols$e_dot,
-                                       matnames = IEATools::mat_meta_cols,
+                                       matnames = IEATools::mat_meta_cols$matnames,
                                        losses = IEATools::tfc_compare_flows$losses,
                                        imports = IEATools::interface_industries$imports,
                                        stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
@@ -52,7 +56,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]],
                   .data[[product]], .data[[unit]]) %>%
     dplyr::mutate(
-      "{Observation_String}" := stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_",
+      "{observation_string}" := stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_",
                                                .data[[last_stage]], "_", .data[[year]], "_", .data[[product]], "_")
     ) %>%
     dplyr::select(.data[[observation_string]]) %>%
@@ -62,7 +66,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
   modified_supply_excluding_losses <- .tidy_iea_df %>%
     dplyr::filter(
       stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
-                     .data[[year]], "_", .data[[product]], "_") %in% observations_losses
+                     .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations
     ) %>%
     dplyr::filter(.data[[matnames]] == "V") %>%
     dplyr::filter(! stringr::str_detect(.data[[flow]], imports)) %>%
@@ -72,10 +76,10 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     )
 
   # Building energy flows supplied by the new losses industries
-  supply_industry_losses_df <- specified_world_iea_data_2019 %>%
+  supply_industry_losses_df <- .tidy_iea_df %>%
     dplyr::filter(
       stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
-                     .data[[year]], "_", .data[[product]], "_") %in% observations_losses
+                     .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations
     ) %>%
     dplyr::filter(.data[[matnames]] == "V" | stringr::str_detect(.data[[flow]], losses)) %>%
     dplyr::filter(! stringr::str_detect(.data[[flow]], imports)) %>%
@@ -87,15 +91,15 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     dplyr::mutate(
       "{ledger_side}" := supply,
       "{flow_aggregation_point}" := transformation_processes,
-      "{flow}" := stringr::str_c("Losses [of ", .data[[flow]], "]"),
+      "{flow}" := stringr::str_c("Losses [of ", .data[[product]], "]"),
       "{matnames}" := "V"
     )
 
   # Building energy flows consumed by the new losses industries
-  inputs_to_losses_industry_df <- specified_world_iea_data_2019 %>%
+  inputs_to_losses_industry_df <- .tidy_iea_df %>%
     dplyr::filter(
       stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
-                     .data[[year]], "_", .data[[product]], "_") %in% observations_losses
+                     .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations
     ) %>%
     dplyr::filter(.data[[matnames]] == "V") %>%#
     dplyr::filter(! stringr::str_detect(.data[[flow]], imports)) %>%
@@ -107,7 +111,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     dplyr::mutate(
       "{ledger_side}" := supply,
       "{flow_aggregation_point}" := transformation_processes,
-      "{fow}" := stringr::str_c("Losses [of ", .data[[product]], "]"),
+      "{flow}" := stringr::str_c("Losses [of ", .data[[product]], "]"),
       "{product}" := stringr::str_c(.data[[product]], " [before Losses]"),
       "{matnames}" := "U_feed"
     )
@@ -116,7 +120,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
   imports_stat_diffs_V_df <- .tidy_iea_df %>%
     dplyr::filter(
       stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
-                     .data[[year]], "_", .data[[product]], "_") %in% observations_losses
+                     .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations
     ) %>%
     dplyr::filter(matnames == "V" & (stringr::str_detect(.data[[flow]], imports) | stringr::str_detect(.data[[flow]], stat_diffs)))
 
@@ -130,7 +134,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
   tidy_iea_df_with_losses_specified <- .tidy_iea_df %>%
     dplyr::filter(
       ! ((stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
-                       .data[[year]], "_", .data[[product]], "_") %in% observations_losses) & (.data[[matnames == "V"]]))
+                       .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations) && (.data[[matnames == "V"]]))
     ) %>%
     dplyr::bind_rows(
       modified_supply_excluding_losses,
