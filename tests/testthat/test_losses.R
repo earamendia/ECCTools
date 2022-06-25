@@ -117,11 +117,33 @@ test_that("specify_losses_as_industry works",{
 
   # Number of rows
   res_dta %>% nrow() %>%
-    expect_equal()
+    expect_equal(134)
 
   # Actual values
   res_dta %>%
-    dplyr::filter() %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Losses [of Coke oven coke]", Product == "Coke oven coke", matnames == "V") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal()
+  res_dta %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Losses [of Coke oven coke]", Product == "Coke oven coke", matnames == "U_feed") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal()
+
+  res_dta %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Losses [of Electricity]", Product == "Electricity", matnames == "V") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal()
+  res_dta %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Losses [of Electricity]", Product == "Electricity", matnames == "U_feed") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal()
+
+  res_dta %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Losses [of Heat]", Product == "Heat", matnames == "V") %>%
+    magrittr::extract2("E.dot") %>%
+    expect_equal()
+  res_dta %>%
+    dplyr::filter(Country == "A", Flow.aggregation.point == "Transformation processes", Flow == "Losses [of Heat]", Product == "Heat", matnames == "U_feed") %>%
     magrittr::extract2("E.dot") %>%
     expect_equal()
 
