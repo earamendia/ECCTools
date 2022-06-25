@@ -11,6 +11,7 @@ output: html_document
 * non_energy_uses_to_balancing function and corresponding tests added
 * specify_other_elec_heat_production function and corresponding tests added
 * specify_elect_heat_markets function and corresponding tests modified so that it works with the new specify_other_elec_heat_production function too
+* New specify_losses_as_industry function to treat losses as a transformation industry
 
 
 # ECCTools 0.1.2 (07/01/2022)

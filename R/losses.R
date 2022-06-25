@@ -45,7 +45,8 @@ specify_losses_as_industry <- function(.tidy_iea_df,
                                        stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
                                        transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
                                        supply = IEATools::ledger_sides$supply,
-                                       observation_string = "Observation_String"){
+                                       observation_string = "Observation_String",
+                                       string_to_check = "String_to_Check"){
 
   # General comment: we exclude Imports and Statistical differences from changes in supply
   # Otherwise for imports it will be a mess when building the MR-PSUT, and for statistical differences they don't make sense anyway.
@@ -106,7 +107,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     dplyr::filter(! stringr::str_detect(.data[[flow]], stat_diffs)) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]]) %>%
     dplyr::summarise(
-      "{e_dot}" := sum(.data[[e_dot]])
+      "{e_dot}" := - sum(.data[[e_dot]])
     ) %>%
     dplyr::mutate(
       "{ledger_side}" := supply,
@@ -130,12 +131,18 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     nrow() %>%
     testthat::expect_equal(0)
 
-  # CAREFUL HERE ON HOW TO DEFINE THIS BIT TO AVOID DOUBLE ACCOUNTING FLOWS!!!!
+  # Filter out flows that are not needed anymore, and bind the newly defined flows:
   tidy_iea_df_with_losses_specified <- .tidy_iea_df %>%
-    dplyr::filter(
-      ! ((stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
-                       .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations) && (.data[[matnames == "V"]]))
+    dplyr::mutate(
+      "{observation_string}" := stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
+                                            .data[[year]], "_", .data[[product]], "_")
     ) %>%
+    dplyr::filter(! (.data[[observation_string]] %in% products_losses_observations & .data[[matnames]] == "V")) %>%
+    # dplyr::filter(
+    #   ! ((stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
+    #                    .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations) && (.data[[matnames == "V"]]))
+    # ) %>%
+    dplyr::select(-.data[[observation_string]]) %>%
     dplyr::bind_rows(
       modified_supply_excluding_losses,
       supply_industry_losses_df,
