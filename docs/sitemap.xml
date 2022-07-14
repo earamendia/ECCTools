@@ -82,6 +82,9 @@
     <loc>/reference/convert_to_net_trade.html</loc>
   </url>
   <url>
+    <loc>/reference/exports_to_balancing.html</loc>
+  </url>
+  <url>
     <loc>/reference/extract_tidy_industry_erois.html</loc>
   </url>
   <url>
@@ -95,6 +98,12 @@
   </url>
   <url>
     <loc>/reference/international_bunkers_to_balancing.html</loc>
+  </url>
+  <url>
+    <loc>/reference/losses_to_balancing.html</loc>
+  </url>
+  <url>
+    <loc>/reference/non_energy_uses_to_balancing.html</loc>
   </url>
   <url>
     <loc>/reference/pipe.html</loc>
@@ -125,6 +134,12 @@
   </url>
   <url>
     <loc>/reference/specify_imported_products.html</loc>
+  </url>
+  <url>
+    <loc>/reference/specify_losses_as_industry.html</loc>
+  </url>
+  <url>
+    <loc>/reference/specify_other_elec_heat_production.html</loc>
   </url>
   <url>
     <loc>/reference/stat_diffs_to_balancing.html</loc>

@@ -588,6 +588,79 @@ specify_elect_heat_nuclear <- function(.tidy_iea_df,
 
 
 
+#' Specifies remaining electricity and heat production flows
+#'
+#' This function specifies electricity and heat production flows (i.e. positive flows in the transformation processes
+#' flow aggregation point) that are not yet specified by calling the energy product
+#' respectively "Electricity `[`from Other processes`]` and "Heat `[`from Other processes`]`.
+#'
+#' @param .tidy_iea_df The `.tidy_iea_df` for which non-specified electricity and heat production flows need to be specified.
+#' @param flow_aggregation_point,flow,e_dot,product See `IEATools::iea_cols`.
+#' @param transformation_processes The name of the transformation processes in the flow aggregation point column.
+#'                                 Default is IEATools::aggregation_flows$transformation_processes.
+#' @param negzeropos Temporary column name. Default is ".netzeropos".
+#'
+#' @return Returns a tidy data frame with all electricity and heat production flows specified (products are specified).
+#' @export
+#'
+#' @examples
+#' A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
+#' IEATools::load_tidy_iea_df(A_B_path) %>%
+#' IEATools::specify_all() %>%
+#' tibble::add_row(
+#' Country = "A",
+#' Method = "PCM",
+#' Energy.type = "E",
+#' Last.stage = "Final",
+#' Year = 2018,
+#' Ledger.side = "Supply",
+#' Unit = "ktoe",
+#' Flow.aggregation.point = "Transformation processes",
+#' Flow = "Heat pumps",
+#' Product = "Heat",
+#' E.dot = 82) %>%
+#' specify_other_elec_heat_production()
+specify_other_elec_heat_production <- function(.tidy_iea_df,
+                                               flow_aggregation_point = IEATools::iea_cols$flow_aggregation_point,
+                                               flow = IEATools::iea_cols$flow,
+                                               e_dot = IEATools::iea_cols$e_dot,
+                                               product = IEATools::iea_cols$product,
+                                               transformation_processes = IEATools::aggregation_flows$transformation_processes,
+                                               negzeropos = ".negzeropos"){
+
+  modified_production_flows <- .tidy_iea_df %>%
+  dplyr::filter(.data[[product]] == "Electricity" | .data[[product]] == "Heat") %>%
+  dplyr::filter(.data[[flow_aggregation_point]] == transformation_processes) %>%
+  dplyr::filter(.data[[e_dot]] > 0) %>%
+  dplyr::mutate(
+    "{product}" := stringr::str_c(.data[[product]], " [from Other processes]")
+  )
+
+  .tidy_iea_df %>%
+    dplyr::filter(! ((.data[[product]] == "Electricity" | .data[[product]] == "Heat") & (.data[[flow_aggregation_point]] == transformation_processes) & (.data[[e_dot]] > 0))) %>%
+    dplyr::bind_rows(modified_production_flows) %>%
+    dplyr::mutate(
+      "{negzeropos}" := dplyr::case_when(
+        .data[[e_dot]] < 0 ~ "neg",
+        .data[[e_dot]] == 0 ~ "zero",
+        .data[[e_dot]] > 0 ~ "pos"
+      )
+    ) %>%
+    # Now sum similar rows using summarise.
+    # Group by everything except the energy flow rate column, "E.dot".
+    matsindf::group_by_everything_except(e_dot) %>%
+    dplyr::summarise(
+      "{e_dot}" := sum(.data[[e_dot]])
+    ) %>%
+    dplyr::mutate(
+      #Eliminate the column we added.
+      "{negzeropos}" := NULL
+    ) %>%
+    dplyr::ungroup()
+}
+
+
+
 #' Specifies electricity and heat markets
 #'
 #' This function specifies electricity and heat markets. See details for more information.
@@ -639,7 +712,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Electricity [from Oil products]", "Electricity [from Coal products]",
                                           "Electricity [from Natural gas]", "Electricity [from Other products]",
-                                          "Electricity [from Renewables]", "Electricity [from Nuclear]")) %>%
+                                          "Electricity [from Renewables]", "Electricity [from Nuclear]",
+                                          "Electricity [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Electricity market",
       "{e_dot}" := -.data[[e_dot]]
@@ -651,7 +725,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Electricity [from Oil products]", "Electricity [from Coal products]",
                                           "Electricity [from Natural gas]", "Electricity [from Other products]",
-                                          "Electricity [from Renewables]", "Electricity [from Nuclear]")) %>%
+                                          "Electricity [from Renewables]", "Electricity [from Nuclear]",
+                                          "Electricity [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Electricity market",
       "{product}" := "Electricity"
@@ -663,7 +738,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Heat [from Oil products]", "Heat [from Coal products]",
                                           "Heat [from Natural gas]", "Heat [from Other products]",
-                                          "Heat [from Renewables]", "Heat [from Nuclear]")) %>%
+                                          "Heat [from Renewables]", "Heat [from Nuclear]",
+                                          "Heat [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Heat market",
       "{e_dot}" := -.data[[e_dot]]
@@ -675,7 +751,8 @@ specify_elect_heat_markets <- function(.tidy_iea_df,
     dplyr::filter(.data[[e_dot]] > 0) %>%
     dplyr::filter(.data[[product]] %in% c("Heat [from Oil products]", "Heat [from Coal products]",
                                           "Heat [from Natural gas]", "Heat [from Other products]",
-                                          "Heat [from Renewables]", "Heat [from Nuclear]")) %>%
+                                          "Heat [from Renewables]", "Heat [from Nuclear]",
+                                          "Heat [from Other processes]")) %>%
     dplyr::mutate(
       "{flow}" := "Heat market",
       "{product}" := "Heat"
