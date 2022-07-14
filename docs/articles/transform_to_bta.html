@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.3</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Bilateral Trade Assumption</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2022-02-07</h4>
+            <h4 data-toc-skip class="date">2022-07-14</h4>
       
       
       <div class="hidden name"><code>transform_to_bta.Rmd</code></div>
@@ -120,7 +120,7 @@
 <code class="sourceCode R"><span class="va">AB_world_btd</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/calc_bilateral_trade_df_gma.html">calc_bilateral_trade_df_gma</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Rows: 8</span>
 <span class="co">## Columns: 8</span>
 <span class="co">## $ Provenience              <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "B", "B"</span>
@@ -157,7 +157,7 @@
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/convert_to_net_trade.html">convert_to_net_trade</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="../reference/transform_to_bta.html">transform_to_bta</a></span><span class="op">(</span>bilateral_trade_df <span class="op">=</span> <span class="va">AB_world_btd</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code><span class="co">## Rows: 94</span>
 <span class="co">## Columns: 12</span>
 <span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "World", "World", "World", "World", "World", "W…</span>
