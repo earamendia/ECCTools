@@ -117,7 +117,7 @@ test_that("specify_losses_as_industry works",{
 
   # Number of rows
   res_dta %>% nrow() %>%
-    expect_equal(137)
+    expect_equal(134)
 
   # Actual values
   res_dta %>%
