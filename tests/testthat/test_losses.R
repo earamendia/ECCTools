@@ -147,6 +147,12 @@ test_that("specify_losses_as_industry works",{
     magrittr::extract2("E.dot") %>%
     expect_equal(-260)
 
+  # Checking that there are no rows anymore with flow being just "Losses", and matrix being Y...
+  res_dta %>%
+    dplyr::filter(Flow == "Losses") %>%
+    nrow() %>%
+    expect_equal(0)
+
 
   # Checking what happens if there are more losses than domestic supply...! (I.e. the rest of supply comes from imports or so...)
   AB_data_big_losses <- A_B_path %>%
