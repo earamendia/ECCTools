@@ -147,6 +147,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
 
   # Filter out flows that are not needed anymore, and bind the newly defined flows:
   tidy_iea_df_with_losses_specified <- .tidy_iea_df %>%
+    dplyr::filter(.data[[flow]] != losses) %>%
     dplyr::mutate(
       "{observation_string}" := stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
                                             .data[[year]], "_", .data[[product]], "_")

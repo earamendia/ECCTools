@@ -187,7 +187,3 @@ test_that("specify_losses_as_industry works",{
     expect_error()
 })
 
-
-
-
-
