@@ -112,7 +112,7 @@ test_that("specify_losses_as_industry works",{
 
   # Balanced
   res_dta %>%
-    calc_tidy_iea_df_balances() %>%
+    IEATools::calc_tidy_iea_df_balances() %>%
     IEATools::tidy_iea_df_balanced() %>%
     expect_true()
 

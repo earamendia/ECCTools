@@ -23,8 +23,7 @@ specify_losses_as_industry(
   stat_diffs = IEATools::tfc_compare_flows$statistical_differences,
   transformation_processes = IEATools::tfc_compare_flows$transformation_processes,
   supply = IEATools::ledger_sides$supply,
-  observation_string = "Observation_String",
-  string_to_check = "String_to_Check"
+  observation_string = "Observation_String"
 )
 }
 \arguments{
@@ -62,4 +61,22 @@ Hence, final demand sectors still consume "Product", but where relevant, product
 }
 \details{
 TO DO:!!! Importantly, we need to check that values do not become negative...!!!
+}
+\examples{
+ECCTools::tidy_AB_data \%>\%
+ tibble::add_row(
+  Country = "A",
+  Method = "PCM",
+  Energy.type = "E",
+  Last.stage = "Final",
+  Year = 2018,
+  Ledger.side = "Supply",
+  Flow.aggregation.point = "TFC compare",
+  Flow = "Losses",
+  Product = "Coke oven coke",
+  Unit = "ktoe",
+  E.dot = -20
+ ) \%>\%
+ IEATools::add_psut_matnames() \%>\%
+ specify_losses_as_industry()
 }

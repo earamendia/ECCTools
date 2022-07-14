@@ -41,6 +41,7 @@
 #'   Unit = "ktoe",
 #'   E.dot = -20
 #'  ) %>%
+#'  IEATools::add_psut_matnames() %>%
 #'  specify_losses_as_industry()
 specify_losses_as_industry <- function(.tidy_iea_df,
                                        country = IEATools::iea_cols$country,
