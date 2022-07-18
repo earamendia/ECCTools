@@ -126,5 +126,16 @@ test_that("transform_to_dta works", {
   is_list_correct <- ! (FALSE %in% are_observations_correct)
 
   expect_true(is_list_correct)
+
+
+  # Checking that balance is maintained
+  AB_data_dta <- AB_data %>%
+    transform_to_dta(select_dta_observations = FALSE)
+
+  balance_maintained <- AB_data_dta %>%
+    IEATools::calc_tidy_iea_df_balances() %>%
+    IEATools::tidy_iea_df_balanced()
+
+  expect_true(balance_maintained)
 })
 
