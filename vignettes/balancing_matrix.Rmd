@@ -83,6 +83,7 @@ We can now verify that the adjusted ECC remains balanced:
 ```{r}
 # Fix product-level balances within each country
 tidy_AB_data_added_flows %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
   IEATools::tidy_iea_df_balanced()
 ```
 
@@ -134,6 +135,7 @@ Finally, let's verify that the Energy Conversion Chain remains balanced once flo
 
 ```{r}
 tidy_AB_data_relocated_flows %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
   IEATools::tidy_iea_df_balanced()
 ```
 
