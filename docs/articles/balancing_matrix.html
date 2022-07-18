@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Using the balancing matrix</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2022-07-14</h4>
+            <h4 data-toc-skip class="date">2022-07-18</h4>
       
       
       <div class="hidden name"><code>balancing_matrix.Rmd</code></div>
@@ -171,8 +171,9 @@
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
 <span class="va">tidy_AB_data_added_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] TRUE</span></code></pre>
+<pre><code><span class="co">## [1] FALSE</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="relocating-flows-to-balancing-matrix">Relocating flows to balancing matrix<a class="anchor" aria-label="anchor" href="#relocating-flows-to-balancing-matrix"></a>
@@ -226,7 +227,7 @@
 <span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span>
 <span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span>
 <span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Supply"</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing"</span>
 <span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "TFC compare"</span>
 <span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Statistical differences"</span>
 <span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Crude oil"</span>
@@ -245,7 +246,7 @@
 <span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E"</span>
 <span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final"</span>
 <span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Supply", "Supply"</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing", "balancing"</span>
 <span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply", "Total primary e…</span>
 <span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Stock changes", "Stock changes"</span>
 <span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coke oven coke", "Coke oven coke"</span>
@@ -255,8 +256,9 @@
 <p>Finally, let’s verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] TRUE</span></code></pre>
+<pre><code><span class="co">## [1] FALSE</span></code></pre>
 <p><em>Note regarding the sign convention in the balancing matrix</em>: Flow appearing as positive in the <strong>B</strong> matrix are akin to final demand flows. For instance, final demand flows relocated to <strong>B</strong> will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in <strong>B</strong>: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.</p>
 <p>In conclusion, the analyst may use directly some functions directly available, such as <code><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing()</a></code> and <code><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing()</a></code>. Alternatively, the analyst may directly relocate a flow to <strong>B</strong> by modifying the matrix name column of the flow that needs to be modified. Be careful with the sign convention!</p>
 </div>
