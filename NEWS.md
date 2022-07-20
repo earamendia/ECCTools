@@ -3,6 +3,12 @@ title: "Release notes for `ECCTools`"
 output: html_document
 ---
 
+# ECCTools 0.1.4
+
+* Minor balance issues sorted out
+* All tests passing (332)
+* Test coverage at 100%.
+
 
 # ECCTools 0.1.3 (14/07/2022)
 

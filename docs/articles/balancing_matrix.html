@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Using the balancing matrix</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2022-07-18</h4>
+            <h4 data-toc-skip class="date">2022-07-20</h4>
       
       
       <div class="hidden name"><code>balancing_matrix.Rmd</code></div>
@@ -140,7 +140,7 @@
   <span class="co"># Third, adding the stock changes supplying 400 ktoe of coke oven coke in country B:</span>
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="op">-</span><span class="fl">400</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="co"># Fourth, adding the bonfire sessions in country B:</span>
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>, 
@@ -148,7 +148,7 @@
   <span class="co"># Fifth, adding stock build-up of 200 ktoe of coke oven coke in country A</span>
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="op">-</span><span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="co"># Sixth, adding imports of 200 ktoe of coke oven coke by country A</span>
   <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
                   Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
@@ -173,7 +173,7 @@
 <span class="va">tidy_AB_data_added_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] FALSE</span></code></pre>
+<pre><code><span class="co">## [1] TRUE</span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="relocating-flows-to-balancing-matrix">Relocating flows to balancing matrix<a class="anchor" aria-label="anchor" href="#relocating-flows-to-balancing-matrix"></a>
@@ -251,14 +251,14 @@
 <span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Stock changes", "Stock changes"</span>
 <span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coke oven coke", "Coke oven coke"</span>
 <span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe"</span>
-<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 400, -200</span>
+<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -400, 200</span>
 <span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B", "B"</span></code></pre>
 <p>Finally, let’s verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
   <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] FALSE</span></code></pre>
+<pre><code><span class="co">## [1] TRUE</span></code></pre>
 <p><em>Note regarding the sign convention in the balancing matrix</em>: Flow appearing as positive in the <strong>B</strong> matrix are akin to final demand flows. For instance, final demand flows relocated to <strong>B</strong> will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in <strong>B</strong>: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.</p>
 <p>In conclusion, the analyst may use directly some functions directly available, such as <code><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing()</a></code> and <code><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing()</a></code>. Alternatively, the analyst may directly relocate a flow to <strong>B</strong> by modifying the matrix name column of the flow that needs to be modified. Be careful with the sign convention!</p>
 </div>
