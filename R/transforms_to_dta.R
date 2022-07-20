@@ -171,6 +171,10 @@ transform_to_dta <- function(.tidy_iea_df,
         "{e_dot}" := dplyr::case_when(
           stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
           TRUE ~ .data[[e_dot]]
+        ),
+        "{ledger_side}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ "balancing",
+          TRUE ~ .data[[ledger_side]]
         )
       ) %>%
       dplyr::ungroup()
@@ -187,6 +191,10 @@ transform_to_dta <- function(.tidy_iea_df,
         "{e_dot}" := dplyr::case_when(
           stringr::str_detect(.data[[flow]], imports) ~ -.data[[e_dot]],
           TRUE ~ .data[[e_dot]]
+        ),
+        "{ledger_side}" := dplyr::case_when(
+          stringr::str_detect(.data[[flow]], imports) ~ "balancing",
+          TRUE ~ .data[[ledger_side]]
         )
       ) %>%
       dplyr::ungroup()

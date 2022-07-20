@@ -67,4 +67,13 @@ tidy_AB_data_dta %>%
   dplyr::glimpse()
 ```
 
+And we can verify that the Domestic Technology Assumption data frame remains balanced:
+
+```{r}
+tidy_AB_data_dta %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
+  IEATools::tidy_iea_df_balanced()
+```
+
+
 ## References

@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Domestic Technology Assumption</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2022-07-14</h4>
+            <h4 data-toc-skip class="date">2022-07-20</h4>
       
       
       <div class="hidden name"><code>transform_to_dta.Rmd</code></div>
@@ -159,13 +159,19 @@
 <span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span>
 <span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span>
 <span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Supply"</span>
+<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing"</span>
 <span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply"</span>
 <span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Imports [of Coke oven coke]"</span>
 <span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coke oven coke"</span>
 <span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe"</span>
 <span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -600</span>
 <span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B"</span></code></pre>
+<p>And we can verify that the Domestic Technology Assumption data frame remains balanced:</p>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">tidy_AB_data_dta</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code><span class="co">## [1] TRUE</span></code></pre>
 </div>
 </div>
 <div class="section level2 unnumbered">
