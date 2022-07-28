@@ -121,7 +121,6 @@ test_that("stat_diffs_to_balancing works",{
                  dplyr::select(E.dot) %>%
                  dplyr::pull(),
                -10)
-
 })
 
 
@@ -136,15 +135,9 @@ test_that("stock_changes_to_balancing works",{
   AB_data_specified <- AB_data %>%
     IEATools::specify_all()
 
-  expect_true(AB_data_specified %>%
-                IEATools::tidy_iea_df_balanced())
-
   AB_data_stock_changes_to_balancing <- AB_data_specified %>%
     IEATools::add_psut_matnames() %>%
     stock_changes_to_balancing()
-
-  expect_true(AB_data_stock_changes_to_balancing %>%
-                IEATools::tidy_iea_df_balanced())
 
 
   expect_equal(AB_data_stock_changes_to_balancing[1,] %>%
@@ -349,6 +342,7 @@ test_that("add_balancing_vector works", {
     IEATools::specify_all()
 
   expect_true(AB_data %>%
+                IEATools::calc_tidy_iea_df_balances() %>%
                 IEATools::tidy_iea_df_balanced())
 
   AB_tidy_MR <- AB_data %>%
@@ -415,6 +409,11 @@ test_that("exports_to_balancing works", {
     exports_to_balancing()
 
   exports_relocated %>%
+    IEATools::calc_tidy_iea_df_balances() %>%
+    IEATools::tidy_iea_df_balanced() %>%
+    expect_true()
+
+  exports_relocated %>%
     dplyr::filter(matnames == "B") %>%
     dplyr::filter(stringr::str_detect(Flow, "Exports")) %>%
     nrow() %>%
@@ -466,14 +465,14 @@ test_that("losses_to_balancing works" ,{
     IEATools::add_psut_matnames()
 
   # Check balance
-  expect_true(tidy_AB_data_with_losses %>% IEATools::tidy_iea_df_balanced())
+  expect_true(tidy_AB_data_with_losses %>% IEATools::calc_tidy_iea_df_balances() %>%  IEATools::tidy_iea_df_balanced())
 
   # Relocate losses to balancing
   tidy_AB_data_with_losses_relocated <- tidy_AB_data_with_losses %>%
     losses_to_balancing()
 
   # Re-check balance
-  expect_true(tidy_AB_data_with_losses_relocated %>% IEATools::tidy_iea_df_balanced())
+  expect_true(tidy_AB_data_with_losses_relocated %>% IEATools::calc_tidy_iea_df_balances() %>%  IEATools::tidy_iea_df_balanced())
 
   # Number of Losses flows rows in B matrix, and check value
   n_balancing <-tidy_AB_data_with_losses_relocated %>%
@@ -497,7 +496,7 @@ test_that("losses_to_balancing works" ,{
   tidy_AB_data_with_losses_relocated %>%
     dplyr::filter(matnames == "B") %>%
     magrittr::extract2("Ledger.side") %>%
-    expect_equal("Consumption")
+    expect_equal("balancing")
 })
 
 

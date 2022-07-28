@@ -62,7 +62,7 @@ tidy_AB_data_added_flows <- tidy_AB_data %>%
   # Third, adding the stock changes supplying 400 ktoe of coke oven coke in country B:
   tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
                   Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
-                  Flow = "Stock changes", Product = "Coke oven coke", Unit = "ktoe", E.dot = -400) %>% 
+                  Flow = "Stock changes", Product = "Coke oven coke", Unit = "ktoe", E.dot = 400) %>% 
   # Fourth, adding the bonfire sessions in country B:
   tibble::add_row(Country = "B", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
                   Ledger.side = "Consumption", Flow.aggregation.point = "Industry", 
@@ -70,7 +70,7 @@ tidy_AB_data_added_flows <- tidy_AB_data %>%
   # Fifth, adding stock build-up of 200 ktoe of coke oven coke in country A
   tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
                   Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
-                  Flow = "Stock changes", Product = "Coke oven coke", Unit = "ktoe", E.dot = 200) %>% 
+                  Flow = "Stock changes", Product = "Coke oven coke", Unit = "ktoe", E.dot = -200) %>% 
   # Sixth, adding imports of 200 ktoe of coke oven coke by country A
   tibble::add_row(Country = "A", Method = "PCM", Energy.type = "E", Last.stage = "Final", Year = 2018, 
                   Ledger.side = "Supply", Flow.aggregation.point = "Total primary energy supply", 
@@ -83,6 +83,7 @@ We can now verify that the adjusted ECC remains balanced:
 ```{r}
 # Fix product-level balances within each country
 tidy_AB_data_added_flows %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
   IEATools::tidy_iea_df_balanced()
 ```
 
@@ -134,6 +135,7 @@ Finally, let's verify that the Energy Conversion Chain remains balanced once flo
 
 ```{r}
 tidy_AB_data_relocated_flows %>% 
+  IEATools::calc_tidy_iea_df_balances() %>% 
   IEATools::tidy_iea_df_balanced()
 ```
 

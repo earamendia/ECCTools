@@ -18,7 +18,15 @@ test_that("specify_elect_heat_renewables works",{
   # The code should NOT change the default data frame
   res <- tidy_AB_data %>%
     specify_elect_heat_renewables()
-  expect_true(all(res == tidy_AB_data))
+
+
+  a <- tidy_AB_data %>%
+    dplyr::left_join(res, by = c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
+    dplyr::mutate(
+      err = abs(E.dot.x - E.dot.y)
+    )
+
+  expect_true(all(a$err == 0))
 
 
   # Now, preparing proper test.
@@ -704,7 +712,14 @@ test_that("specify_elect_heat_markets works",{
   tidy_AB_data_1 <- tidy_AB_data %>%
     specify_elect_heat_markets()
 
-  expect_equal(tidy_AB_data, tidy_AB_data_1)
+  a <- tidy_AB_data %>%
+    dplyr::left_join(tidy_AB_data_1, by = c("Country", "Method", "Energy.type", "Last.stage", "Ledger.side", "Flow.aggregation.point", "Flow", "Product", "Unit")) %>%
+    dplyr::mutate(
+      err = abs(E.dot.x - E.dot.y)
+    )
+
+  expect_true(all(a$err == 0))
+
 
   # Now, making actual tests regarding values
   res <- AB_data %>%

@@ -147,6 +147,7 @@ stat_diffs_to_balancing <- function(.tidy_iea_df,
                               matnames = IEATools::mat_meta_cols$matnames,
                               e_dot = IEATools::iea_cols$e_dot,
                               stat_diffs = "Statistical differences",
+                              ledger_side = IEATools::iea_cols$ledger_side,
                               balancing_matrix = "B"){
   .tidy_iea_df %>%
     dplyr::mutate(
@@ -157,6 +158,10 @@ stat_diffs_to_balancing <- function(.tidy_iea_df,
       "{e_dot}" := dplyr::case_when(
         .data[[flow]] == stat_diffs ~ -.data[[e_dot]],
         TRUE ~ .data[[e_dot]]
+      ),
+      "{ledger_side}" := dplyr::case_when(
+        .data[[flow]] == stat_diffs ~ "balancing",
+        TRUE ~ .data[[ledger_side]]
       )
     )
 }
@@ -210,6 +215,7 @@ stock_changes_to_balancing <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
                                  matnames = IEATools::mat_meta_cols$matnames,
                                  e_dot = IEATools::iea_cols$e_dot,
+                                 ledger_side = IEATools::iea_cols$ledger_side,
                                  stock_changes = IEATools::interface_industries$stock_changes,
                                  balancing_matrix = "B"){
   .tidy_iea_df %>%
@@ -221,6 +227,10 @@ stock_changes_to_balancing <- function(.tidy_iea_df,
       "{e_dot}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], stock_changes) ~ -.data[[e_dot]],
         TRUE ~ .data[[e_dot]]
+      ),
+      "{ledger_side}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], stock_changes) ~ "balancing",
+        TRUE ~ .data[[ledger_side]]
       )
     )
 }
@@ -255,6 +265,7 @@ international_bunkers_to_balancing <- function(.tidy_iea_df,
                                              flow = IEATools::iea_cols$flow,
                                              matnames = IEATools::mat_meta_cols$matnames,
                                              e_dot = IEATools::iea_cols$e_dot,
+                                             ledger_side = IEATools::iea_cols$ledger_side,
                                              international_marine_bunkers = "International marine bunkers",
                                              international_aviation_bunkers = "International aviation bunkers",
                                              balancing_matrix = "B"){
@@ -268,6 +279,10 @@ international_bunkers_to_balancing <- function(.tidy_iea_df,
       "{e_dot}" := dplyr::case_when(
         (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ -.data[[e_dot]],
         TRUE ~ .data[[e_dot]]
+      ),
+      "{ledger_side}" := dplyr::case_when(
+        (stringr::str_detect(.data[[flow]], international_marine_bunkers) | stringr::str_detect(.data[[flow]], international_aviation_bunkers)) ~ "balancing",
+        TRUE ~ .data[[ledger_side]]
       )
     )
 }
@@ -487,6 +502,7 @@ add_balancing_vector <- function(.tidy_iea_df,
 exports_to_balancing <- function(.tidy_iea_df,
                                  flow = IEATools::iea_cols$flow,
                                  matnames = IEATools::mat_meta_cols$matnames,
+                                 ledger_side = IEATools::iea_cols$ledger_side,
                                  e_dot = IEATools::iea_cols$e_dot,
                                  exports = IEATools::interface_industries$exports,
                                  balancing_matrix = "B"){
@@ -495,6 +511,14 @@ exports_to_balancing <- function(.tidy_iea_df,
       "{matnames}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], exports) ~ balancing_matrix,
         TRUE ~ .data[[matnames]]
+      ),
+      "{ledger_side}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], exports) ~ "balancing",
+        TRUE ~ .data[[ledger_side]]
+      ),
+      "{e_dot}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], exports) ~ -.data[[e_dot]],
+        TRUE ~ .data[[e_dot]]
       )
     )
 }
@@ -560,7 +584,7 @@ losses_to_balancing <- function(.tidy_iea_df,
         TRUE ~ .data[[e_dot]]
       ),
       "{ledger_side}" := dplyr::case_when(
-        .data[[flow]] == losses ~ "Consumption",
+        .data[[flow]] == losses ~ "balancing",
         TRUE ~ .data[[ledger_side]]
       )
     )
@@ -608,6 +632,7 @@ losses_to_balancing <- function(.tidy_iea_df,
 non_energy_uses_to_balancing <- function(.tidy_iea_df,
                                          flow = IEATools::iea_cols$flow,
                                          matnames = IEATools::mat_meta_cols$matnames,
+                                         ledger_side = IEATools::iea_cols$ledger_side,
                                          e_dot = IEATools::iea_cols$e_dot,
                                          non_energy_uses = IEATools::tfc_flows$non_energy_use,
                                          balancing_matrix = "B"){
@@ -616,6 +641,10 @@ non_energy_uses_to_balancing <- function(.tidy_iea_df,
       "{matnames}" := dplyr::case_when(
         stringr::str_detect(.data[[flow]], non_energy_uses) ~ balancing_matrix,
         TRUE ~ .data[[matnames]]
+      ),
+      "{ledger_side}" := dplyr::case_when(
+        stringr::str_detect(.data[[flow]], non_energy_uses) ~ "balancing",
+        TRUE ~ .data[[ledger_side]]
       )
     )
 }
