@@ -3,7 +3,7 @@ title: "Release notes for `ECCTools`"
 output: html_document
 ---
 
-# ECCTools 0.1.4
+# ECCTools 0.1.4 (28/07/2022)
 
 * Minor balance issues sorted out
 * All tests passing (332)
@@ -11,6 +11,7 @@ output: html_document
 
 
 # ECCTools 0.1.3 (14/07/2022)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5998974.svg)](https://doi.org/10.5281/zenodo.6833507)
 
 * exports_to_balancing function and corresponding tests added
 * losses_to_balancing function and corresponding tests added
