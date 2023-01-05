@@ -14,7 +14,7 @@ test_that("specify_MR_R works", {
     IEATools::specify_all()
 
   AB_resources_MR <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     specify_MR_R()
 
 
@@ -86,7 +86,7 @@ test_that("specify_MR_V works", {
     )
 
   AB_supply_MR <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     stock_changes_to_balancing() %>%
     specify_MR_V()
 
@@ -157,7 +157,7 @@ test_that("specify_imported_products works", {
     IEATools::specify_all()
 
   defined_imported_products <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     specify_imported_products()
 
 
@@ -264,7 +264,7 @@ test_that("specify_imported_products works", {
     )
 
   defined_imported_products <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     stock_changes_to_balancing() %>%
     specify_imported_products()
 
@@ -317,7 +317,7 @@ test_that("specify_MR_Y_U_gma works", {
     IEATools::specify_all()
 
   AB_MR_Y_U_gma <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     specify_MR_Y_U_gma()
 
   # Check that there is only Y and U flows in resulting data frame.
@@ -421,7 +421,7 @@ test_that("specify_MR_Y_U_gma works", {
     )
 
   AB_MR_Y_U_gma <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     stock_changes_to_balancing() %>%
     specify_MR_Y_U_gma()
 
@@ -473,7 +473,7 @@ test_that("transform_to_gma works", {
 
 
   AB_MR_PSUT_gma <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     transform_to_gma()
 
 
@@ -648,7 +648,7 @@ test_that("transform_to_gma works", {
     )
 
   AB_MR_PSUT_gma <- AB_data %>%
-    IEATools::add_psut_matnames() %>%
+    IEATools::add_psut_matnames(R_includes_all_exogenous_flows = FALSE) %>%
     stock_changes_to_balancing() %>%
     transform_to_gma()
 
