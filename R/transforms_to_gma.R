@@ -193,9 +193,9 @@ specify_imported_products <- function(.tidy_iea_df,
       "{domestic}" := .data[[e_dot]] * (1 - .data[[Share_Imports_By_Product]]),
       "{imported}" := .data[[e_dot]] * .data[[Share_Imports_By_Product]]
     ) %>%
-    dplyr::select(-.data[[e_dot]], -.data[[imports]], -.data[[Total_Consumption_By_Product]], -.data[[Share_Imports_By_Product]]) %>%
-    tidyr::pivot_longer(cols = c(.data[[domestic]], .data[[imported]]), names_to = origin, values_to = e_dot) %>%
-    dplyr::relocate(.data[[origin]], .after = .data[[product]]) %>%
+    dplyr::select(-tidyselect::all_of(c(e_dot, imports, Total_Consumption_By_Product, Share_Imports_By_Product))) %>%
+    tidyr::pivot_longer(cols = tidyselect::all_of(c(domestic, imported)), names_to = origin, values_to = e_dot) %>%
+    dplyr::relocate(tidyselect::all_of(origin), .after = tidyselect::all_of(product)) %>%
     dplyr::filter(.data[[e_dot]] != 0)
 
   return(defined_imported_flows)
@@ -273,8 +273,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[origin]])
-
+    dplyr::select(-tidyselect::all_of(origin))
 
   # (3) Specifying foreign consumption
   tidy_imported_consumption_MR_gma_with_nas <- tidy_iea_df_specified_imports %>%
@@ -290,7 +289,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[[origin]])
+    dplyr::select(-tidyselect::all_of(c(provenience, Share_Exports_By_Product, origin)))
 
   # (4) When a given product is imported by a given country, but no country exports such product, then calculate the global production mix.
   tidy_imported_consumption_MR_gma_whout_nas <- tidy_imported_consumption_MR_gma_with_nas %>%
@@ -304,7 +303,7 @@ specify_MR_Y_U_gma <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * Share_Global_Production_By_Product,
       "{product}" := stringr::str_c("{", .data[[Producing_Country]], "}_", .data[[product]])
     ) %>%
-    dplyr::select(-.data[[Producing_Country]], -.data[[Share_Global_Production_By_Product]])
+    dplyr::select(-tidyselect::all_of(c(Producing_Country, Share_Global_Production_By_Product)))
 
   # (5) Bind rows.
   tidy_imported_consumption_MR_gma <- tidy_imported_consumption_MR_gma_with_nas %>%
@@ -426,7 +425,7 @@ calc_bilateral_trade_df_gma <- function(.tidy_iea_df,
         TRUE ~ .data[[Share_Exports_By_Product]]
       )
     ) %>%
-    dplyr::relocate(.data[[country]], .after = .data[[provenience]])
+    dplyr::relocate(tidyselect::all_of(country), .after = tidyselect::all_of(provenience))
 
   return(bilateral_trade_df_gma)
 }

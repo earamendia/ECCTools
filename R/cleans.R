@@ -63,13 +63,13 @@ convert_to_net_trade <- function(.tidy_iea_df,
         TRUE ~ .data[[flow]]
       )
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[flow]], values_from = .data[[e_dot]]) %>%
+    tidyr::pivot_wider(names_from = tidyselect::all_of(flow), values_from = tidyselect::all_of(e_dot)) %>%
     dplyr::mutate(
       "{imports}" := tidyr::replace_na(.data[[imports]], 0),
       "{exports}" := tidyr::replace_na(.data[[exports]], 0),
       "{.net_imports}" := .data[[imports]] + .data[[exports]]
     ) %>%
-    tidyr::pivot_longer(cols = c({imports}, {exports}, {.net_imports}), names_to = flow, values_to = e_dot) %>%
+    tidyr::pivot_longer(cols = tidyselect::all_of(c(imports, exports, .net_imports)), names_to = flow, values_to = e_dot) %>%
     dplyr::filter(.data[[flow]] == {.net_imports}) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
@@ -112,7 +112,7 @@ convert_to_net_trade <- function(.tidy_iea_df,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which statistical differences flows need to be sent to the Balancing matrix.
-#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param stat_diffs The name of the statistical differences flows.
@@ -181,7 +181,7 @@ stat_diffs_to_balancing <- function(.tidy_iea_df,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Balancing matrix.
-#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param stock_changes The name of the Stock changes flows.
@@ -249,7 +249,7 @@ stock_changes_to_balancing <- function(.tidy_iea_df,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which Stock changes flows need to be sent to the Balancing matrix.
-#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param international_marine_bunkers The name of the international marine bunkers flows in the `.tidy_iea_df`.
@@ -453,7 +453,7 @@ add_balancing_vector <- function(.tidy_iea_df,
 
   balancing_vector <- balances %>%
     dplyr::filter(balance_OK == FALSE) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]], .data[[unit]], .data[[err]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, product, unit, err))) %>%
     dplyr::mutate(
       "{ledger_side}" := balancing,
       "{flow_aggregation_point}" := balancing,
@@ -461,12 +461,13 @@ add_balancing_vector <- function(.tidy_iea_df,
       "{matnames}" := balancing_matrix
     ) %>%
     dplyr::rename(
-      "{e_dot}" := .data[[err]]
+      "{e_dot}" := tidyselect::all_of(err)
     )
 
-  .tidy_iea_df %>%
-    dplyr::bind_rows(balancing_vector) %>%
-    return()
+  to_return <- .tidy_iea_df %>%
+    dplyr::bind_rows(balancing_vector)
+
+  return(to_return)
 }
 
 
@@ -482,7 +483,7 @@ add_balancing_vector <- function(.tidy_iea_df,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which export flows need to be relocated in the Balancing matrix.
-#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
 #' @param matnames The column name of the column containing matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param exports The string that identifies export flows.
@@ -601,7 +602,7 @@ losses_to_balancing <- function(.tidy_iea_df,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which non-energy use flows need to be relocated in the Balancing matrix.
-#' @param flow,e_dot See `IEATools::iea_cols`.
+#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
 #' @param matnames The column name of the column having matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
 #' @param non_energy_uses The string that identifies non-energy uses.

@@ -70,7 +70,7 @@ find_list_dta_observations <- function(.tidy_iea_df,
     dplyr::filter((.data[[matnames]] == v_matrix | .data[[matnames]] == r_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     tidyr::expand(.data[[product]]) %>%
-    tidyr::unite(col = "Observation_Product_From_Func", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[product]]) %>%
+    tidyr::unite(col = "Observation_Product_From_Func", tidyselect::all_of(c(country, method, energy_type, last_stage, year, product))) %>%
     dplyr::pull()
 
 
@@ -85,7 +85,7 @@ find_list_dta_observations <- function(.tidy_iea_df,
     ) %>%
     dplyr::group_by(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
     dplyr::filter(! (FALSE %in% .data[["is_produced_domestically"]])) %>%
-    tidyr::unite(col = "Observation_For_DTA_From_Func", .data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]]) %>%
+    tidyr::unite(col = "Observation_For_DTA_From_Func", tidyselect::all_of(c(country, method, energy_type, last_stage, year))) %>%
     tidyr::expand(.data[["Observation_For_DTA_From_Func"]]) %>%
     dplyr::pull()
 

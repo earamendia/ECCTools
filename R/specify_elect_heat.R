@@ -196,8 +196,8 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       ),
     ) %>%
     dplyr::select(-tidyselect::all_of(share_elect_output_From_Func)) %>%
-    tidyr::pivot_longer(cols = c({electricity}, {heat}, {hydro}, {geothermal}, {solar_pv}, {solar_th}, {tide_wave_ocean}, {wind}, "Electricity [from Renewables]", "Heat [from Renewables]")
-                        , values_to = {e_dot}, names_to = {product}) %>%
+    tidyr::pivot_longer(cols = tidyselect::all_of(c(electricity, heat, hydro, geothermal, solar_pv, solar_th, tide_wave_ocean, wind, "Electricity [from Renewables]", "Heat [from Renewables]")),
+                        values_to = {e_dot}, names_to = {product}) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
@@ -250,7 +250,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       "{e_dot_rest}" := .data[[e_dot]] * (1 - .data[[share_renewables_From_Func]])
     ) %>%
     dplyr::select(-tidyselect::any_of(c(e_dot, share_renewables_From_Func))) %>%
-    tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
+    tidyr::pivot_longer(cols = tidyselect::all_of(c(e_dot_renewables, e_dot_rest)), names_to = "Renewables", values_to = {e_dot}) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
         .data[["Renewables"]] == e_dot_renewables ~ "Renewable energy plants",

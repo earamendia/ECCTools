@@ -7,7 +7,7 @@ output: html_document
 # ECCTools 0.1.5
 
 * Package adapted so that it works with recent releases of the tidyverse packages (both errors and warnings removed)
-* All tests passing (XXX)
+* All tests passing (332)
 * Tests coverage at xxx%.
 
 
