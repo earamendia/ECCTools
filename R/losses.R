@@ -69,13 +69,12 @@ specify_losses_as_industry <- function(.tidy_iea_df,
   # Finding out, for each region and year, the products for which losses ought to be modelled
   products_losses_observations <- .tidy_iea_df %>%
     dplyr::filter(.data[[flow]] == losses) %>%
-    dplyr::select(.data[[country]], .data[[method]], .data[[energy_type]], .data[[last_stage]], .data[[year]], .data[[flow]],
-                  .data[[product]], .data[[unit]]) %>%
+    dplyr::select(tidyselect::all_of(c(country, method, energy_type, last_stage, year, flow, product, unit))) %>%
     dplyr::mutate(
       "{observation_string}" := stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_",
                                                .data[[last_stage]], "_", .data[[year]], "_", .data[[product]], "_")
     ) %>%
-    dplyr::select(.data[[observation_string]]) %>%
+    dplyr::select(tidyselect::all_of(observation_string)) %>%
     dplyr::pull()
 
   # Modifying the new supply flows so that they now supply "Product [before Losses]"
@@ -158,7 +157,7 @@ specify_losses_as_industry <- function(.tidy_iea_df,
     #   ! ((stringr::str_c(.data[[country]], "_", .data[[method]], "_", .data[[energy_type]], "_", .data[[last_stage]], "_",
     #                    .data[[year]], "_", .data[[product]], "_") %in% products_losses_observations) && (.data[[matnames == "V"]]))
     # ) %>%
-    dplyr::select(-.data[[observation_string]]) %>%
+    dplyr::select(-tidyselect::all_of(observation_string)) %>%
     dplyr::bind_rows(
       modified_supply_excluding_losses,
       supply_industry_losses_df,

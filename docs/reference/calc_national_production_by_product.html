@@ -30,7 +30,7 @@ R or V matrices, excluding import flows."><!-- mathjax --><script src="https://c
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -71,45 +71,60 @@ R or V matrices, excluding import flows.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">calc_national_production_by_product</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,
-  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,
-  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,
-  V_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,
-  R_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,
-  imports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">imports</span>,
-  National_Production_By_Product <span class="op">=</span> <span class="st">"National_Production_By_Product"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calc_national_production_by_product</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,</span>
+<span>  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,</span>
+<span>  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,</span>
+<span>  V_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
+<span>  R_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">R</span>,</span>
+<span>  imports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">imports</span>,</span>
+<span>  National_Production_By_Product <span class="op">=</span> <span class="st">"National_Production_By_Product"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>The <code>.tidy_iea_df</code> for which national production by product needs to be calculated.</p></dd>
+
+
 <dt>ledger_side, flow_aggregation_point, flow, e_dot</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
+
+
 <dt>matnames</dt>
 <dd><p>The column name for matrices names.
 Default is <code>IEATools::mat_meta_cols$matnames</code>.</p></dd>
+
+
 <dt>V_matrix</dt>
 <dd><p>The name of the V matrix.
 Default is <code>IEATools::psut_cols$V</code>.</p></dd>
+
+
 <dt>R_matrix</dt>
 <dd><p>The name of the R matrix.
 Default is <code>IEATools::psut_cols$R</code>.</p></dd>
+
+
 <dt>imports</dt>
 <dd><p>The name of imports flows in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::interface_industries$imports</code>.</p></dd>
+
+
 <dt>National_Production_By_Product</dt>
 <dd><p>The name of the column containing national production for each product, by country.
 Default is "National_Production_By_Product".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame that returns the national production by product.</p>
+    
+
+<p>A data frame that returns the national production by product.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -118,32 +133,33 @@ Default is "National_Production_By_Product".</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">calc_national_production_by_product</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">calc_national_production_by_product</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 8</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   Country, Method, Energy.type, Last.stage, Year, Product [18]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Product    Unit  National_Produc…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Blast fur… ktoe               850</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coke oven… ktoe               400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coking co… ktoe              <span style="text-decoration: underline;">5</span>000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coking co… ktoe              <span style="text-decoration: underline;">5</span>000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Crude oil  ktoe              <span style="text-decoration: underline;">8</span>500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Crude oil… ktoe              <span style="text-decoration: underline;">8</span>500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Electrici… ktoe              <span style="text-decoration: underline;">3</span>200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Heat       ktoe               250</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Kerosene … ktoe              <span style="text-decoration: underline;">1</span>750</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Motor gas… ktoe              <span style="text-decoration: underline;">2</span>400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Natural g… ktoe              <span style="text-decoration: underline;">4</span>100</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Natural g… ktoe              <span style="text-decoration: underline;">4</span>000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Blast fur… ktoe               850</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coke oven… ktoe              <span style="text-decoration: underline;">1</span>400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Electrici… ktoe              <span style="text-decoration: underline;">1</span>000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Heat       ktoe               500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Kerosene … ktoe              <span style="text-decoration: underline;">1</span>000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Motor gas… ktoe              <span style="text-decoration: underline;">1</span>200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Product             Unit  Natio…¹</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Blast furnace gas   ktoe      850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coke oven coke      ktoe      400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coking coal         ktoe     <span style="text-decoration: underline;">5</span>000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coking coal [from … ktoe     <span style="text-decoration: underline;">5</span>000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Crude oil           ktoe     <span style="text-decoration: underline;">8</span>500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Crude oil [from Re… ktoe     <span style="text-decoration: underline;">8</span>500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Electricity         ktoe     <span style="text-decoration: underline;">3</span>200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Heat                ktoe      250</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Kerosene type jet … ktoe     <span style="text-decoration: underline;">1</span>750</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Motor gasoline exc… ktoe     <span style="text-decoration: underline;">2</span>400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Natural gas         ktoe     <span style="text-decoration: underline;">4</span>100</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Natural gas [from … ktoe     <span style="text-decoration: underline;">4</span>000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Blast furnace gas   ktoe      850</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Coke oven coke      ktoe     <span style="text-decoration: underline;">1</span>400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Electricity         ktoe     <span style="text-decoration: underline;">1</span>000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Heat                ktoe      500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Kerosene type jet … ktoe     <span style="text-decoration: underline;">1</span>000</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Motor gasoline exc… ktoe     <span style="text-decoration: underline;">1</span>200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable name ¹​National_Production_By_Product</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -158,7 +174,7 @@ Default is "National_Production_By_Product".</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

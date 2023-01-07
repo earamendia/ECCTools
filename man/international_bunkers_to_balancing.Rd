@@ -9,6 +9,7 @@ international_bunkers_to_balancing(
   flow = IEATools::iea_cols$flow,
   matnames = IEATools::mat_meta_cols$matnames,
   e_dot = IEATools::iea_cols$e_dot,
+  ledger_side = IEATools::iea_cols$ledger_side,
   international_marine_bunkers = "International marine bunkers",
   international_aviation_bunkers = "International aviation bunkers",
   balancing_matrix = "B"
@@ -17,7 +18,7 @@ international_bunkers_to_balancing(
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} for which Stock changes flows need to be sent to the Balancing matrix.}
 
-\item{flow, e_dot}{See \code{IEATools::iea_cols}.}
+\item{flow, e_dot, ledger_side}{See \code{IEATools::iea_cols}.}
 
 \item{matnames}{The column name of the column having matrices names.
 Default is \code{IEATools::mat_meta_cols$matnames}.}
