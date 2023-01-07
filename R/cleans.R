@@ -483,9 +483,11 @@ add_balancing_vector <- function(.tidy_iea_df,
 #' most likely using the `IEATools::add_psut_matnames()` function.
 #'
 #' @param .tidy_iea_df The `.tidy_iea_df` for which export flows need to be relocated in the Balancing matrix.
-#' @param flow,e_dot,ledger_side See `IEATools::iea_cols`.
+#' @param flow See `IEATools::iea_cols`.
 #' @param matnames The column name of the column containing matrices names.
 #'                 Default is `IEATools::mat_meta_cols$matnames`.
+#' @param ledger_side See `IEATools::iea_cols`.
+#' @param e_dot See `IEATools::iea_cols`.
 #' @param exports The string that identifies export flows.
 #'                Default is `IEATools::interface_industries$exports`.
 #' @param balancing_matrix The name of the Balancing matrix.
