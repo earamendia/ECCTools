@@ -95,7 +95,7 @@ calc_imports_by_product <- function(.tidy_iea_df,
 
   tidy_total_imports_by_product <- .tidy_iea_df %>%
     dplyr::filter(stringr::str_detect(.data[[flow]], imports)) %>%
-    dplyr::rename("{imports}" := .data[[e_dot]]) %>%
+    dplyr::rename("{imports}" := tidyselect::all_of(e_dot)) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{imports}" := sum(.data[[imports]])

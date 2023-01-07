@@ -137,7 +137,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == transformation_processes &
         ((.data[[flow]] %in% elect_heat_producer_industries & .data[[product]] %in% products_list))
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    tidyr::pivot_wider(names_from = tidyselect::all_of(product), values_from = tidyselect::all_of(e_dot)) %>%
     dplyr::select(-tidyselect::any_of({e_dot}))
 
   # Storing the names
@@ -213,7 +213,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == transformation_processes &
         ((.data[[flow]] %in% elect_heat_producer_industries & .data[[product]] %in% products_list))
     ) %>%
-    tidyr::pivot_wider(names_from = .data[[product]], values_from = .data[[e_dot]]) %>%
+    tidyr::pivot_wider(names_from = tidyselect::all_of(product), values_from = tidyselect::all_of(e_dot)) %>%
     dplyr::select(-tidyselect::any_of({e_dot})) %>%
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     # Putting zeros where we have NAs
