@@ -150,14 +150,14 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     # Putting zeros where we have NAs
     dplyr::mutate(
-      "{hydro}" := tidyr::replace_na(.data[[hydro]], 0),
-      "{geothermal}" := tidyr::replace_na(.data[[geothermal]], 0),
-      "{solar_pv}" := tidyr::replace_na(.data[[solar_pv]], 0),
-      "{solar_th}" := tidyr::replace_na(.data[[solar_th]], 0),
-      "{tide_wave_ocean}" := tidyr::replace_na(.data[[tide_wave_ocean]], 0),
-      "{wind}" := tidyr::replace_na(.data[[wind]], 0),
-      "{electricity}" := tidyr::replace_na(.data[[electricity]], 0),
-      "{heat}" := tidyr::replace_na(.data[[heat]], 0)
+      "{hydro}" := as.numeric(tidyr::replace_na(.data[[hydro]], 0)),
+      "{geothermal}" := as.numeric(tidyr::replace_na(.data[[geothermal]], 0)),
+      "{solar_pv}" := as.numeric(tidyr::replace_na(.data[[solar_pv]], 0)),
+      "{solar_th}" := as.numeric(tidyr::replace_na(.data[[solar_th]], 0)),
+      "{tide_wave_ocean}" := as.numeric(tidyr::replace_na(.data[[tide_wave_ocean]], 0)),
+      "{wind}" := as.numeric(tidyr::replace_na(.data[[wind]], 0)),
+      "{electricity}" := as.numeric(tidyr::replace_na(.data[[electricity]], 0)),
+      "{heat}" := as.numeric(tidyr::replace_na(.data[[heat]], 0)),
     ) %>%
     # Now come the interesting bit, modifying flows output flows
     dplyr::mutate(
@@ -195,7 +195,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
         (.data[[flow]] == main_act_prod_heat | .data[[flow]] == autoprod_heat) ~ - (.data[[geothermal]] * ratio_geothermal_heat_to_input + .data[[solar_th]] * ratio_solar_thermal_heat_to_input)
       ),
     ) %>%
-    dplyr::select(-.data[[share_elect_output_From_Func]]) %>%
+    dplyr::select(-tidyselect::all_of(share_elect_output_From_Func)) %>%
     tidyr::pivot_longer(cols = c({electricity}, {heat}, {hydro}, {geothermal}, {solar_pv}, {solar_th}, {tide_wave_ocean}, {wind}, "Electricity [from Renewables]", "Heat [from Renewables]")
                         , values_to = {e_dot}, names_to = {product}) %>%
     dplyr::filter(.data[[e_dot]] != 0) %>%
@@ -218,14 +218,14 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
     tibble::add_column(!!products_tibble[! names(products_tibble) %in% names_intermediary_modified_flows]) %>%
     # Putting zeros where we have NAs
     dplyr::mutate(
-      "{hydro}" := tidyr::replace_na(.data[[hydro]], 0),
-      "{geothermal}" := tidyr::replace_na(.data[[geothermal]], 0),
-      "{solar_pv}" := tidyr::replace_na(.data[[solar_pv]], 0),
-      "{solar_th}" := tidyr::replace_na(.data[[solar_th]], 0),
-      "{tide_wave_ocean}" := tidyr::replace_na(.data[[tide_wave_ocean]], 0),
-      "{wind}" := tidyr::replace_na(.data[[wind]], 0),
-      "{electricity}" := tidyr::replace_na(.data[[electricity]], 0),
-      "{heat}" := tidyr::replace_na(.data[[heat]], 0)
+      "{hydro}" := as.numeric(tidyr::replace_na(.data[[hydro]], 0)),
+      "{geothermal}" := as.numeric(tidyr::replace_na(.data[[geothermal]], 0)),
+      "{solar_pv}" := as.numeric(tidyr::replace_na(.data[[solar_pv]], 0)),
+      "{solar_th}" := as.numeric(tidyr::replace_na(.data[[solar_th]], 0)),
+      "{tide_wave_ocean}" := as.numeric(tidyr::replace_na(.data[[tide_wave_ocean]], 0)),
+      "{wind}" := as.numeric(tidyr::replace_na(.data[[wind]], 0)),
+      "{electricity}" := as.numeric(tidyr::replace_na(.data[[electricity]], 0)),
+      "{heat}" := as.numeric(tidyr::replace_na(.data[[heat]], 0))
     ) %>%
     dplyr::mutate(
       "{share_elect_output_From_Func}" := .data[[electricity]] / (.data[[electricity]] + .data[[heat]]),
@@ -239,9 +239,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
                                                                                       .data[[solar_th]] * ratio_solar_thermal_heat_to_input) / .data[[heat]],
       )
     ) %>%
-    dplyr::select(-.data[[hydro]], -.data[[geothermal]], -.data[[solar_pv]], -.data[[solar_th]], -.data[[tide_wave_ocean]], -.data[[wind]],
-                  -.data[[electricity]], -.data[[heat]], -.data[[flow_aggregation_point]], -.data[[share_elect_output_From_Func]])
-
+    dplyr::select(-tidyselect::any_of(c(hydro, geothermal, solar_pv, solar_th, tide_wave_ocean, wind, electricity, heat, flow_aggregation_point, share_elect_output_From_Func)))
 
   # Modifying EIOU flows to change the industry consuming (-> "Renewable energy plants")
   modified_eiou_flows <- .tidy_iea_df %>%
@@ -251,7 +249,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
       "{e_dot_renewables}" := .data[[e_dot]] * .data[[share_renewables_From_Func]],
       "{e_dot_rest}" := .data[[e_dot]] * (1 - .data[[share_renewables_From_Func]])
     ) %>%
-    dplyr::select(-.data[[e_dot]], -.data[[share_renewables_From_Func]]) %>%
+    dplyr::select(-tidyselect::any_of(c(e_dot, share_renewables_From_Func))) %>%
     tidyr::pivot_longer(cols = c({e_dot_renewables}, {e_dot_rest}), names_to = "Renewables", values_to = {e_dot}) %>%
     dplyr::mutate(
       "{flow}" := dplyr::case_when(
@@ -259,8 +257,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
         TRUE ~ .data[[flow]]
       )
     ) %>%
-    dplyr::select(-.data[["Renewables"]])
-
+    dplyr::select(-tidyselect::any_of("Renewables"))
 
   to_return <- .tidy_iea_df %>%
     # FILTER OUT FIRST
@@ -403,7 +400,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::mutate(
       "{share_inputs_from_Func}" := .data[[e_dot]] / sum(.data[[e_dot]])
     ) %>%
-    dplyr::select(-.data[[e_dot]])
+    dplyr::select(-tidyselect::all_of(e_dot))
 
   # Second step, changing input flows so they now flow to the appropriate industry
   input_flows_modified <- .tidy_iea_df %>%
@@ -452,8 +449,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
         TRUE ~ stringr::str_c(.data[[product]], " [from Other products]")
       )
     ) %>%
-    dplyr::select(-.data[[share_inputs_from_Func]])
-
+    dplyr::select(-tidyselect::all_of(share_inputs_from_Func))
 
   # Fourth step, changing EIOU flows as function of input shares
   eiou_flows_modified <- .tidy_iea_df %>%
@@ -480,8 +476,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
         TRUE ~ stringr::str_c(.data[[flow]], " [from Other products]")
       )
     ) %>%
-    dplyr::select(-.data[[share_inputs_from_Func]])
-
+    dplyr::select(-tidyselect::all_of(share_inputs_from_Func))
 
   # Fifth, filtering out, binding, and returning modified data frame
   .tidy_iea_df %>%
@@ -497,7 +492,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::bind_rows(input_flows_modified) %>%
     dplyr::bind_rows(output_flows_modified) %>%
     dplyr::bind_rows(eiou_flows_modified) %>%
-    dplyr::select(-.data[[product_type]]) %>%
+    dplyr::select(-tidyselect::all_of(product_type)) %>%
     dplyr::mutate(
       "{negzeropos}" := dplyr::case_when(
         .data[[e_dot]] < 0 ~ "neg",
