@@ -80,7 +80,7 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
     tidyr::pivot_longer(cols = -c({country}, {method}, {energy_type}, {last_stage}, {year}), names_to = {matnames}, values_to = {matvals}) %>%
     dplyr::filter(.data[[matnames]] %in% c(eroi_g_p, eroi_n_p, eroi_g_p_feed, eroi_n_p_feed)) %>%
     matsindf::expand_to_tidy(matnames = matnames, matvals = matvals, rownames = product, colnames = colnames) %>%
-    dplyr::select(-.data[[colnames]], -.data[[rowtypes]], -.data[[coltypes]]) %>%
+    dplyr::select(-tidyselect::all_of(c(colnames, rowtypes, coltypes))) %>%
     dplyr::mutate(
       "{boundary}" := dplyr::case_when(
         stringr::str_detect(.data[[matnames]], "_feed") ~ "Feedstock",
@@ -91,9 +91,9 @@ extract_tidy_product_erois <- function(.tidy_io_mats,
         TRUE ~ "Net"
       )
     ) %>%
-    dplyr::select(-.data[[matnames]]) %>%
-    dplyr::relocate(.data[[boundary]], .before = product) %>%
-    dplyr::relocate(.data[[type]], .before = boundary) %>%
+    dplyr::select(-tidyselect::all_of(matnames)) %>%
+    dplyr::relocate(tidyselect::all_of(boundary), .before = tidyselect::all_of(product)) %>%
+    dplyr::relocate(tidyselect::all_of(type), .before = tidyselect::all_of(boundary)) %>%
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
       ) %>%
@@ -192,7 +192,7 @@ extract_tidy_industry_erois <- function(.tidy_io_mats,
     tidyr::pivot_longer(cols = -c({country}, {method}, {energy_type}, {last_stage}, {year}), names_to = {matnames}, values_to = {matvals}) %>%
     dplyr::filter(.data[[matnames]] %in% c(eroi_g_i, eroi_n_i, eroi_g_i_feed, eroi_n_i_feed)) %>%
     matsindf::expand_to_tidy(matnames = matnames, matvals = matvals, rownames = industry, colnames = colnames) %>%
-    dplyr::select(-.data[[colnames]], -.data[[rowtypes]], -.data[[coltypes]]) %>%
+    dplyr::select(-tidyselect::all_of(c(colnames, rowtypes, coltypes))) %>%
     dplyr::mutate(
       "{boundary}" := dplyr::case_when(
         stringr::str_detect(.data[[matnames]], "_feed") ~ "Feedstock",
@@ -203,9 +203,9 @@ extract_tidy_industry_erois <- function(.tidy_io_mats,
         TRUE ~ "Net"
       ),
     ) %>%
-    dplyr::select(-.data[[matnames]]) %>%
-    dplyr::relocate(.data[[boundary]], .before = industry) %>%
-    dplyr::relocate(.data[[type]], .before = boundary) %>%
+    dplyr::select(-tidyselect::all_of(matnames)) %>%
+    dplyr::relocate(tidyselect::all_of(boundary), .before = tidyselect::all_of(industry)) %>%
+    dplyr::relocate(tidyselect::all_of(type), .before = tidyselect::all_of(boundary)) %>%
     dplyr::rename(
       "{eroi}" := .data[[matvals]]
     )
