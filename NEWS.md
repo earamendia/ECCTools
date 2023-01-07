@@ -3,6 +3,14 @@ title: "Release notes for `ECCTools`"
 output: html_document
 ---
 
+
+# ECCTools 0.1.5
+
+* Package adapted so that it works with recent releases of the tidyverse packages (both errors and warnings removed)
+* All tests passing (XXX)
+* Tests coverage at xxx%.
+
+
 # ECCTools 0.1.4 (28/07/2022)
 
 * Minor balance issues sorted out

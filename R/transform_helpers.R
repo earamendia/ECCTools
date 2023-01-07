@@ -156,7 +156,7 @@ calc_share_imports_by_products <- function(.tidy_iea_df,
     calc_imports_by_product(.tidy_iea_df,
                             imports = imports),
     by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product}, {unit})) %>%
-    dplyr::select(-.data[[ledger_side]], -.data[[matnames]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]]) %>%
+    dplyr::select(-tidyselect::all_of(c(ledger_side, matnames, flow_aggregation_point, flow, unit))) %>%
     dplyr::mutate(
       "{imports}" := tidyr::replace_na(.data[[imports]], 0),
       "{Share_Imports_By_Product}" := .data[[imports]] / .data[[Total_Consumption_By_Product]]
@@ -206,7 +206,7 @@ calc_global_production_by_product <- function(.tidy_iea_df,
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[country]], -.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
+    dplyr::select(-tidyselect::all_of(c(country, ledger_side, flow_aggregation_point, flow, matnames))) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{Global_Production_By_Product}" := sum(.data[[e_dot]])
@@ -255,7 +255,7 @@ calc_national_production_by_product <- function(.tidy_iea_df,
   .tidy_iea_df %>%
     dplyr::filter((matnames == V_matrix | matnames == R_matrix) & (! stringr::str_detect(.data[[flow]], imports))) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[matnames]]) %>%
+    dplyr::select(-tidyselect::all_of(c(ledger_side, flow_aggregation_point, flow, matnames))) %>%
     matsindf::group_by_everything_except(e_dot) %>%
     dplyr::summarise(
       "{National_Production_By_Product}" := sum(.data[[e_dot]])
@@ -320,10 +320,12 @@ calc_share_global_production_by_product <- function(.tidy_iea_df,
     dplyr::mutate(
       "{Share_Global_Production_By_Product}" := .data[[National_Production_By_Product]] / .data[[Global_Production_By_Product]]
     ) %>%
-    dplyr::select(-.data[[National_Production_By_Product]], -.data[[Global_Production_By_Product]]) %>%
+    dplyr::select(-tidyselect::all_of(c(National_Production_By_Product, Global_Production_By_Product))) %>%
     dplyr::rename(
-      "{Producing_Country}" := .data[[country]])
+      "{Producing_Country}" := tidyselect::all_of(country)
+    )
 
+  return(share_global_production_by_product)
 }
 
 
@@ -430,9 +432,9 @@ calc_share_exports_by_product <- function(.tidy_iea_df,
     dplyr::mutate(
       "{Share_Exports_By_Product}" := .data[[e_dot]] / .data[[Global_Exports_By_Product]]
     ) %>%
-    dplyr::rename("{provenience}" := .data[[country]]) %>%
+    dplyr::rename("{provenience}" := tidyselect::all_of(country)) %>%
     dplyr::ungroup() %>%
-    dplyr::select(-.data[[ledger_side]], -.data[[flow_aggregation_point]], -.data[[flow]], -.data[[unit]], -.data[[e_dot]], -.data[[matnames]], -.data[[Global_Exports_By_Product]])
+    dplyr::select(-tidyselect::all_of(c(ledger_side, flow_aggregation_point, flow, unit, e_dot, matnames, Global_Exports_By_Product)))
 
   return(tidy_share_exports_by_product)
 }
