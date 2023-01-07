@@ -34,7 +34,7 @@ which now produce &quot;Electricity [from Renewables]&quot; and &quot;Heat [from
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -79,49 +79,49 @@ which now produce "Electricity <code>[</code>from Renewables<code>]</code>" and 
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">specify_elect_heat_renewables</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  country <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,
-  method <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">method</span>,
-  energy_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">energy_type</span>,
-  last_stage <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">last_stage</span>,
-  year <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,
-  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,
-  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,
-  unit <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">unit</span>,
-  transformation_processes <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/aggregation_flows.html" class="external-link">aggregation_flows</a></span><span class="op">$</span><span class="va">transformation_processes</span>,
-  eiou_flows <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/aggregation_flows.html" class="external-link">aggregation_flows</a></span><span class="op">$</span><span class="va">energy_industry_own_use</span>,
-  main_act_prod_elect <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/main_act_plants.html" class="external-link">main_act_plants</a></span><span class="op">$</span><span class="va">main_act_prod_elect_plants</span>,
-  main_act_prod_chp <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/main_act_plants.html" class="external-link">main_act_plants</a></span><span class="op">$</span><span class="va">main_act_prod_chp_plants</span>,
-  main_act_prod_heat <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/main_act_plants.html" class="external-link">main_act_plants</a></span><span class="op">$</span><span class="va">main_act_prod_heat_plants</span>,
-  autoprod_elect <span class="op">=</span> <span class="st">"Autoproducer electricity plants"</span>,
-  autoprod_chp <span class="op">=</span> <span class="st">"Autoproducer CHP plants"</span>,
-  autoprod_heat <span class="op">=</span> <span class="st">"Autoproducer heat plants"</span>,
-  hydro <span class="op">=</span> <span class="st">"Hydro"</span>,
-  geothermal <span class="op">=</span> <span class="st">"Geothermal"</span>,
-  solar_pv <span class="op">=</span> <span class="st">"Solar photovoltaics"</span>,
-  solar_th <span class="op">=</span> <span class="st">"Solar thermal"</span>,
-  tide_wave_ocean <span class="op">=</span> <span class="st">"Tide, wave and ocean"</span>,
-  wind <span class="op">=</span> <span class="st">"Wind"</span>,
-  electricity <span class="op">=</span> <span class="st">"Electricity"</span>,
-  heat <span class="op">=</span> <span class="st">"Heat"</span>,
-  ratio_hydro_to_input <span class="op">=</span> <span class="fl">1</span>,
-  ratio_solar_PV_to_input <span class="op">=</span> <span class="fl">1</span>,
-  ratio_solar_thermal_elect_to_input <span class="op">=</span> <span class="fl">0.33</span>,
-  ratio_solar_thermal_heat_to_input <span class="op">=</span> <span class="fl">1</span>,
-  ratio_wind_to_input <span class="op">=</span> <span class="fl">1</span>,
-  ratio_geothermal_elect_to_input <span class="op">=</span> <span class="fl">0.1</span>,
-  ratio_geothermal_heat_to_input <span class="op">=</span> <span class="fl">0.5</span>,
-  ratio_tidal_wave_to_input <span class="op">=</span> <span class="fl">1</span>,
-  share_elect_output_From_Func <span class="op">=</span> <span class="st">"Share_Output_Elect_From_Func"</span>,
-  share_renewables_From_Func <span class="op">=</span> <span class="st">"Share_Renewables_From_Func"</span>,
-  e_dot_renewables <span class="op">=</span> <span class="st">"E_dot_Renewables"</span>,
-  e_dot_rest <span class="op">=</span> <span class="st">"E_dot_Rest"</span>,
-  negzeropos <span class="op">=</span> <span class="st">".netzeropos"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">specify_elect_heat_renewables</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  country <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">method</span>,</span>
+<span>  energy_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">energy_type</span>,</span>
+<span>  last_stage <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">last_stage</span>,</span>
+<span>  year <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,</span>
+<span>  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,</span>
+<span>  flow_aggregation_point <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow_aggregation_point</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,</span>
+<span>  unit <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">unit</span>,</span>
+<span>  transformation_processes <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/aggregation_flows.html" class="external-link">aggregation_flows</a></span><span class="op">$</span><span class="va">transformation_processes</span>,</span>
+<span>  eiou_flows <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/aggregation_flows.html" class="external-link">aggregation_flows</a></span><span class="op">$</span><span class="va">energy_industry_own_use</span>,</span>
+<span>  main_act_prod_elect <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/main_act_plants.html" class="external-link">main_act_plants</a></span><span class="op">$</span><span class="va">main_act_prod_elect_plants</span>,</span>
+<span>  main_act_prod_chp <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/main_act_plants.html" class="external-link">main_act_plants</a></span><span class="op">$</span><span class="va">main_act_prod_chp_plants</span>,</span>
+<span>  main_act_prod_heat <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/main_act_plants.html" class="external-link">main_act_plants</a></span><span class="op">$</span><span class="va">main_act_prod_heat_plants</span>,</span>
+<span>  autoprod_elect <span class="op">=</span> <span class="st">"Autoproducer electricity plants"</span>,</span>
+<span>  autoprod_chp <span class="op">=</span> <span class="st">"Autoproducer CHP plants"</span>,</span>
+<span>  autoprod_heat <span class="op">=</span> <span class="st">"Autoproducer heat plants"</span>,</span>
+<span>  hydro <span class="op">=</span> <span class="st">"Hydro"</span>,</span>
+<span>  geothermal <span class="op">=</span> <span class="st">"Geothermal"</span>,</span>
+<span>  solar_pv <span class="op">=</span> <span class="st">"Solar photovoltaics"</span>,</span>
+<span>  solar_th <span class="op">=</span> <span class="st">"Solar thermal"</span>,</span>
+<span>  tide_wave_ocean <span class="op">=</span> <span class="st">"Tide, wave and ocean"</span>,</span>
+<span>  wind <span class="op">=</span> <span class="st">"Wind"</span>,</span>
+<span>  electricity <span class="op">=</span> <span class="st">"Electricity"</span>,</span>
+<span>  heat <span class="op">=</span> <span class="st">"Heat"</span>,</span>
+<span>  ratio_hydro_to_input <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ratio_solar_PV_to_input <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ratio_solar_thermal_elect_to_input <span class="op">=</span> <span class="fl">0.33</span>,</span>
+<span>  ratio_solar_thermal_heat_to_input <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ratio_wind_to_input <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  ratio_geothermal_elect_to_input <span class="op">=</span> <span class="fl">0.1</span>,</span>
+<span>  ratio_geothermal_heat_to_input <span class="op">=</span> <span class="fl">0.5</span>,</span>
+<span>  ratio_tidal_wave_to_input <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  share_elect_output_From_Func <span class="op">=</span> <span class="st">"Share_Output_Elect_From_Func"</span>,</span>
+<span>  share_renewables_From_Func <span class="op">=</span> <span class="st">"Share_Renewables_From_Func"</span>,</span>
+<span>  e_dot_renewables <span class="op">=</span> <span class="st">"E_dot_Renewables"</span>,</span>
+<span>  e_dot_rest <span class="op">=</span> <span class="st">"E_dot_Rest"</span>,</span>
+<span>  negzeropos <span class="op">=</span> <span class="st">".netzeropos"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -129,109 +129,172 @@ which now produce "Electricity <code>[</code>from Renewables<code>]</code>" and 
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>The <code>.tidy_iea_df</code> for which electricity and heat products need to be specified
 when they come from renewable energy. Default is <code>.tidy_iea_df</code>.</p></dd>
+
+
 <dt>country, method, energy_type, last_stage, year, ledger_side, flow_aggregation_point, flow, product, e_dot, unit</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
+
+
 <dt>transformation_processes</dt>
 <dd><p>Name of transformation process flows in data frame.
 Default is IEATools::aggregation_flows$transformation_processes.</p></dd>
+
+
 <dt>eiou_flows</dt>
 <dd><p>Name of energy industry own use flows in data frame.
 Default is IEATools::aggregation_flows$energy_industry_own_use.</p></dd>
+
+
 <dt>main_act_prod_elect</dt>
 <dd><p>Name of electricity producing plants.
 Default is IEATools::main_act_plants$main_act_prod_elect_plants.</p></dd>
+
+
 <dt>main_act_prod_chp</dt>
 <dd><p>Name of CHP producing plants.
 Default is IEATools::main_act_plants$main_act_prod_chp_plants</p></dd>
+
+
 <dt>main_act_prod_heat</dt>
 <dd><p>Name of heat producing plants.
 Default is IEATools::main_act_plants$main_act_prod_heat_plants</p></dd>
+
+
 <dt>autoprod_elect</dt>
 <dd><p>Name of autoproducer electricity plants.
 Default is "Autoproducer electricity plants".</p></dd>
+
+
 <dt>autoprod_chp</dt>
 <dd><p>Name of autoproducer CHP plants.
 Default is "Autoproducer CHP plants".</p></dd>
+
+
 <dt>autoprod_heat</dt>
 <dd><p>Name of autoproducer heat plants.
 Default is "Autoproducer heat plants".</p></dd>
+
+
 <dt>hydro</dt>
 <dd><p>Temporary column name. Default is "Hydro".</p></dd>
+
+
 <dt>geothermal</dt>
 <dd><p>Temporary column name. Default is "Geothermal".</p></dd>
+
+
 <dt>solar_pv</dt>
 <dd><p>Temporary column name. Default is "Solar photovoltaics".</p></dd>
+
+
 <dt>solar_th</dt>
 <dd><p>Temporary column name. Default is "Solar thermal".</p></dd>
+
+
 <dt>tide_wave_ocean</dt>
 <dd><p>Temporary column name. Default is "Tide, wave and ocean".</p></dd>
+
+
 <dt>wind</dt>
 <dd><p>Temporary column name. Default is "Wind".</p></dd>
+
+
 <dt>electricity</dt>
 <dd><p>Temporary column name. Default is "Electricity".</p></dd>
+
+
 <dt>heat</dt>
 <dd><p>Temporary column name. Default is "Heat".</p></dd>
+
+
 <dt>ratio_hydro_to_input</dt>
 <dd><p>Ratio of input hydro to output electricity.
 Default is 1, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_solar_PV_to_input</dt>
 <dd><p>Ratio of output electricity to input solar PV.
 Default is 1, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_solar_thermal_elect_to_input</dt>
 <dd><p>Ratio of output electricity to input solar thermal.
 Default is 0.33, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_solar_thermal_heat_to_input</dt>
 <dd><p>Ratio of output heat to input solar thermal.
 Default is 1, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_wind_to_input</dt>
 <dd><p>Ratio of output electricity to input wind.
 Default is 1, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_geothermal_elect_to_input</dt>
 <dd><p>Ratio of output electricity to input geothermal.
 Default is 0.1, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_geothermal_heat_to_input</dt>
 <dd><p>Ratio of output heat to input geothermal.
 Default is 0.5, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>ratio_tidal_wave_to_input</dt>
 <dd><p>Ratio of output electricity to input tide, wave, ocean.
 Default is 1, value comes from IEA's WEEB.</p></dd>
+
+
 <dt>share_elect_output_From_Func</dt>
 <dd><p>Temporary column name. Default is "Share_Output_Elect_From_Func".</p></dd>
+
+
 <dt>share_renewables_From_Func</dt>
 <dd><p>Temporary column name. Default is "Share_Renewables_From_Func".</p></dd>
+
+
 <dt>e_dot_renewables</dt>
 <dd><p>Temporary column name. Default is "E_dot_Renewables".</p></dd>
+
+
 <dt>e_dot_rest</dt>
 <dd><p>Temporary column name. Default is "E_dot_Rest".</p></dd>
+
+
 <dt>negzeropos</dt>
 <dd><p>Temporary column name. Default is ".netzeropos".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>.tidy_iea_df</code> with electricity and heat products specified when they come from renewable energy.</p>
+    
+
+<p>A <code>.tidy_iea_df</code> with electricity and heat products specified when they come from renewable energy.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">A_B_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/A_B_data_full_2018_format.csv"</span>, package <span class="op">=</span> <span class="st">"ECCTools"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/load_tidy_iea_df.html" class="external-link">load_tidy_iea_df</a></span><span class="op">(</span><span class="va">A_B_path</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/specify_all.html" class="external-link">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">specify_elect_heat_renewables</span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">A_B_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata/A_B_data_full_2018_format.csv"</span>, package <span class="op">=</span> <span class="st">"ECCTools"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/load_tidy_iea_df.html" class="external-link">load_tidy_iea_df</a></span><span class="op">(</span><span class="va">A_B_path</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/specify_all.html" class="external-link">specify_all</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">specify_elect_heat_renewables</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 102 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 92 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.s…¹  Year Ledge…² Flow.…³ Flow  Product Unit </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Blast … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Electr… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Heat    ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Kerose… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Motor … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Natura… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Blast … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Coke o… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Motor … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Natura… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 92 more rows, 1 more variable: E.dot &lt;dbl&gt;, and abbreviated variable</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   names ¹​Last.stage, ²​Ledger.side, ³​Flow.aggregation.point</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -246,7 +309,7 @@ Default is 1, value comes from IEA's WEEB.</p></dd>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

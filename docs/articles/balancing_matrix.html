@@ -46,7 +46,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Using the balancing matrix</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2022-07-28</h4>
+            <h4 data-toc-skip class="date">2023-01-07</h4>
       
       
       <div class="hidden name"><code>balancing_matrix.Rmd</code></div>
@@ -96,12 +96,12 @@
     
     
 <p>In this vignette we show how to use the balancing matrix <strong>B</strong> to modify the Energy Conversion Chain.</p>
-<div class="section level1">
-<h1 id="introduction-and-use-of-the-balancing-matrix">Introduction and use of the balancing matrix<a class="anchor" aria-label="anchor" href="#introduction-and-use-of-the-balancing-matrix"></a>
-</h1>
 <div class="section level2">
-<h2 id="the-balancing-matrix">The balancing matrix<a class="anchor" aria-label="anchor" href="#the-balancing-matrix"></a>
+<h2 id="introduction-and-use-of-the-balancing-matrix">Introduction and use of the balancing matrix<a class="anchor" aria-label="anchor" href="#introduction-and-use-of-the-balancing-matrix"></a>
 </h2>
+<div class="section level3">
+<h3 id="the-balancing-matrix">The balancing matrix<a class="anchor" aria-label="anchor" href="#the-balancing-matrix"></a>
+</h3>
 <p>The balancing matrix is an extension of the original Physical Supply Use Table (PSUT) framework (see <span class="citation">Heun, Owen, and Brockway (2018)</span>) and has been introduced in <span class="citation">Aramendia et al. (2022)</span>. The figure below shows the expanded PSUT framework with the balancing <strong>B</strong> matrix.</p>
 <p><img src="figs/psut_expanded.png"></p>
 <p><strong>Warning</strong>: Before detailing further the use of the balancing matrix, the user needs to be aware that its use makes more complex the conduction of downstream Input-Output analysis (for instance with the <code>Recca</code> package). Indeed, by relocating flows to the balancing matrix, one is changing the definition of the matrices and vectors structuring the PSUT. Vectors may then be defined differently with a supply and with a consumption perspective. So, while the use of the <strong>B</strong> matrix may prove helpful, we recommend its use only if the implications of the given use are fully understood. We also recommend reading the paper that introduces the <strong>B</strong> matrix (<span class="citation">Aramendia et al. (2022)</span>).</p>
@@ -114,12 +114,12 @@
 <p><img src="figs/table_2.png"></p>
 <p>To modify the final demand without loosing energy balance, one can simply redirect energy flows belonging to the final demand (<strong>Y</strong> matrix) to the balancing matrix <strong>B</strong>.</p>
 </div>
-<div class="section level2">
-<h2 id="using-the-balancing-b-matrix">Using the balancing B matrix<a class="anchor" aria-label="anchor" href="#using-the-balancing-b-matrix"></a>
-</h2>
 <div class="section level3">
-<h3 id="initialising-data">Initialising data<a class="anchor" aria-label="anchor" href="#initialising-data"></a>
+<h3 id="using-the-balancing-b-matrix">Using the balancing B matrix<a class="anchor" aria-label="anchor" href="#using-the-balancing-b-matrix"></a>
 </h3>
+<div class="section level4">
+<h4 id="initialising-data">Initialising data<a class="anchor" aria-label="anchor" href="#initialising-data"></a>
+</h4>
 <p>Let us use the AB world example introduced in the <a href="">Get started</a> vignette, but let us add flows, so that:</p>
 <ol style="list-style-type: decimal">
 <li>Statistical differences provide 100 ktoe of crude oil in country A. To keep balance between supply and use, we assume that these 100 ktoe are consumed by a submarine race organised in country A.</li>
@@ -127,57 +127,57 @@
 <li>Stock changes consume 200 ktoe of coke oven coke in country A, which importations are actually 800 ktoe and not 600 ktoe! Hence that final demand contributes to the build-up of country A stocks, and will be used later on, when country A lacks coke oven coke.</li>
 </ol>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
-<span class="va">tidy_AB_data_added_flows</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># First, adding statistical differences providing 100 ktoe of crude oil in country A:</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
-                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"TFC compare"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Statistical differences"</span>, Product <span class="op">=</span> <span class="st">"Crude oil"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># Second, adding the submarine race organised in country A:</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
-                  Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Submarine race"</span>, Product <span class="op">=</span> <span class="st">"Crude oil"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># Third, adding the stock changes supplying 400 ktoe of coke oven coke in country B:</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
-                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># Fourth, adding the bonfire sessions in country B:</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
-                  Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Bonfires"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># Fifth, adding stock build-up of 200 ktoe of coke oven coke in country A</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
-                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="op">-</span><span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="co"># Sixth, adding imports of 200 ktoe of coke oven coke by country A</span>
-  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, 
-                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, 
-                  Flow <span class="op">=</span> <span class="st">"Imports [of Coke oven coke]"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span>
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Rows: 105</span>
-<span class="co">## Columns: 11</span>
-<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span>
-<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Consumption", "Consumption", "Consumption", "C…</span>
-<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Industry", "Industry", "Industry", "Industry",…</span>
-<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Iron and steel", "Iron and steel", "Iron and s…</span>
-<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Blast furnace gas", "Electricity", "Heat", "Ke…</span>
-<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># Fix product-level balances within each country</span></span>
+<span><span class="va">tidy_AB_data_added_flows</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># First, adding statistical differences providing 100 ktoe of crude oil in country A:</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, </span>
+<span>                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"TFC compare"</span>, </span>
+<span>                  Flow <span class="op">=</span> <span class="st">"Statistical differences"</span>, Product <span class="op">=</span> <span class="st">"Crude oil"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># Second, adding the submarine race organised in country A:</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, </span>
+<span>                  Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>, </span>
+<span>                  Flow <span class="op">=</span> <span class="st">"Submarine race"</span>, Product <span class="op">=</span> <span class="st">"Crude oil"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># Third, adding the stock changes supplying 400 ktoe of coke oven coke in country B:</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, </span>
+<span>                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, </span>
+<span>                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># Fourth, adding the bonfire sessions in country B:</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"B"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, </span>
+<span>                  Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>, </span>
+<span>                  Flow <span class="op">=</span> <span class="st">"Bonfires"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">400</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># Fifth, adding stock build-up of 200 ktoe of coke oven coke in country A</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, </span>
+<span>                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, </span>
+<span>                  Flow <span class="op">=</span> <span class="st">"Stock changes"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="op">-</span><span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="co"># Sixth, adding imports of 200 ktoe of coke oven coke by country A</span></span>
+<span>  <span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span>Country <span class="op">=</span> <span class="st">"A"</span>, Method <span class="op">=</span> <span class="st">"PCM"</span>, Energy.type <span class="op">=</span> <span class="st">"E"</span>, Last.stage <span class="op">=</span> <span class="st">"Final"</span>, Year <span class="op">=</span> <span class="fl">2018</span>, </span>
+<span>                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, </span>
+<span>                  Flow <span class="op">=</span> <span class="st">"Imports [of Coke oven coke]"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Rows: 105</span></span>
+<span><span class="co">## Columns: 11</span></span>
+<span><span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span></span>
+<span><span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span></span>
+<span><span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span></span>
+<span><span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span></span>
+<span><span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span></span>
+<span><span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Consumption", "Consumption", "Consumption", "C…</span></span>
+<span><span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Industry", "Industry", "Industry", "Industry",…</span></span>
+<span><span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Iron and steel", "Iron and steel", "Iron and s…</span></span>
+<span><span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Blast furnace gas", "Electricity", "Heat", "Ke…</span></span>
+<span><span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span></span>
+<span><span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span></span></code></pre>
 <p>We can now verify that the adjusted ECC remains balanced:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Fix product-level balances within each country</span>
-<span class="va">tidy_AB_data_added_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] TRUE</span></code></pre>
+<code class="sourceCode R"><span><span class="co"># Fix product-level balances within each country</span></span>
+<span><span class="va">tidy_AB_data_added_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 </div>
-<div class="section level3">
-<h3 id="relocating-flows-to-balancing-matrix">Relocating flows to balancing matrix<a class="anchor" aria-label="anchor" href="#relocating-flows-to-balancing-matrix"></a>
-</h3>
+<div class="section level4">
+<h4 id="relocating-flows-to-balancing-matrix">Relocating flows to balancing matrix<a class="anchor" aria-label="anchor" href="#relocating-flows-to-balancing-matrix"></a>
+</h4>
 <p>Now, let’s assume that we want to modify the given ECC as follows:</p>
 <ol style="list-style-type: decimal">
 <li>Statistical differences do not contribute to the supply mix in reality. The fact that some energy products are provided by statistical differences hides the upstream conversion processes associated to these energy products. Hence, we want to <em>remove statistical differences from the supply mix</em>.</li>
@@ -196,76 +196,76 @@
 </ul>
 <p>The code is as follows:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data_added_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu"><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Rows: 105</span>
-<span class="co">## Columns: 12</span>
-<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span>
-<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span>
-<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span>
-<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span>
-<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Consumption", "Consumption", "Consumption", "C…</span>
-<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Industry", "Industry", "Industry", "Industry",…</span>
-<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Iron and steel", "Iron and steel", "Iron and s…</span>
-<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Blast furnace gas", "Electricity", "Heat", "Ke…</span>
-<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span>
-<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span>
-<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</span></code></pre>
+<code class="sourceCode R"><span><span class="va">tidy_AB_data_relocated_flows</span> <span class="op">&lt;-</span> <span class="va">tidy_AB_data_added_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Rows: 105</span></span>
+<span><span class="co">## Columns: 12</span></span>
+<span><span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span></span>
+<span><span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span></span>
+<span><span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E", "E", "E", "E", "E", "E", "E", "E", "E…</span></span>
+<span><span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final", "Final", "Final", "Final", "F…</span></span>
+<span><span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018, 2018, 2018, 2018, 2018, 2018, 2018,…</span></span>
+<span><span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Consumption", "Consumption", "Consumption", "C…</span></span>
+<span><span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Industry", "Industry", "Industry", "Industry",…</span></span>
+<span><span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Iron and steel", "Iron and steel", "Iron and s…</span></span>
+<span><span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Blast furnace gas", "Electricity", "Heat", "Ke…</span></span>
+<span><span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe", "ktoe", "ktoe", "ktoe", "ktoe",…</span></span>
+<span><span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 500, 2920, 50, 1750, 500, 365, 200, 120, 700, 2…</span></span>
+<span><span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y", "Y…</span></span></code></pre>
 <p>Now, we can see that the Statistical differences and Stock changes flows belong to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Statistical differences"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Rows: 1</span>
-<span class="co">## Columns: 12</span>
-<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A"</span>
-<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM"</span>
-<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span>
-<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span>
-<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing"</span>
-<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "TFC compare"</span>
-<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Statistical differences"</span>
-<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Crude oil"</span>
-<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe"</span>
-<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -100</span>
-<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B"</span></code></pre>
+<code class="sourceCode R"><span><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Statistical differences"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Rows: 1</span></span>
+<span><span class="co">## Columns: 12</span></span>
+<span><span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A"</span></span>
+<span><span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM"</span></span>
+<span><span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E"</span></span>
+<span><span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final"</span></span>
+<span><span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018</span></span>
+<span><span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing"</span></span>
+<span><span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "TFC compare"</span></span>
+<span><span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Statistical differences"</span></span>
+<span><span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Crude oil"</span></span>
+<span><span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe"</span></span>
+<span><span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -100</span></span>
+<span><span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B"</span></span></code></pre>
 <p>and:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Stock changes"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## Rows: 2</span>
-<span class="co">## Columns: 12</span>
-<span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B", "A"</span>
-<span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM"</span>
-<span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E"</span>
-<span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final"</span>
-<span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018</span>
-<span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing", "balancing"</span>
-<span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply", "Total primary e…</span>
-<span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Stock changes", "Stock changes"</span>
-<span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coke oven coke", "Coke oven coke"</span>
-<span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe"</span>
-<span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -400, 200</span>
-<span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B", "B"</span></code></pre>
+<code class="sourceCode R"><span><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Flow</span>, <span class="st">"Stock changes"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Rows: 2</span></span>
+<span><span class="co">## Columns: 12</span></span>
+<span><span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B", "A"</span></span>
+<span><span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM"</span></span>
+<span><span class="co">## $ Energy.type            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E"</span></span>
+<span><span class="co">## $ Last.stage             <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Final", "Final"</span></span>
+<span><span class="co">## $ Year                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> 2018, 2018</span></span>
+<span><span class="co">## $ Ledger.side            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "balancing", "balancing"</span></span>
+<span><span class="co">## $ Flow.aggregation.point <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Total primary energy supply", "Total primary e…</span></span>
+<span><span class="co">## $ Flow                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Stock changes", "Stock changes"</span></span>
+<span><span class="co">## $ Product                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "Coke oven coke", "Coke oven coke"</span></span>
+<span><span class="co">## $ Unit                   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "ktoe", "ktoe"</span></span>
+<span><span class="co">## $ E.dot                  <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> -400, 200</span></span>
+<span><span class="co">## $ matnames               <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "B", "B"</span></span></code></pre>
 <p>Finally, let’s verify that the Energy Conversion Chain remains balanced once flows are relocated to the balancing <strong>B</strong> matrix:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> 
-  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<pre><code><span class="co">## [1] TRUE</span></code></pre>
+<code class="sourceCode R"><span><span class="va">tidy_AB_data_relocated_flows</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/calc_tidy_iea_df_balances.html" class="external-link">calc_tidy_iea_df_balances</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/tidy_iea_df_balanced.html" class="external-link">tidy_iea_df_balanced</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] TRUE</span></span></code></pre>
 <p><em>Note regarding the sign convention in the balancing matrix</em>: Flow appearing as positive in the <strong>B</strong> matrix are akin to final demand flows. For instance, final demand flows relocated to <strong>B</strong> will be positive, a build-up in energy products stocks will be positive. Conversely, flows akin to supply will be registered as negative in <strong>B</strong>: for instance, flows removed from supply, energy products drawn from stocks, will all appear as negative values.</p>
 <p>In conclusion, the analyst may use directly some functions directly available, such as <code><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing()</a></code> and <code><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing()</a></code>. Alternatively, the analyst may directly relocate a flow to <strong>B</strong> by modifying the matrix name column of the flow that needs to be modified. Be careful with the sign convention!</p>
 </div>
 </div>
-<div class="section level2 unnumbered">
-<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
-</h2>
+<div class="section level3">
+<h3 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h3>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-mr_psut_paper" class="csl-entry">
 Aramendia, Emmanuel, Matthew Heun, Paul Brockway, and Peter Taylor. 2022. <span>“Developing a Multi-Regional Physical Supply Use Table Framework to Improve the Accuracy and Reliability of Energy Analysis.”</span> <em>Applied Energy</em>. <a href="https://doi.org/10.1016/j.apenergy.2021.118413" class="external-link">https://doi.org/10.1016/j.apenergy.2021.118413</a>.
@@ -295,7 +295,7 @@ Heun, Matthew Kuperus, Anne Owen, and Paul E. Brockway. 2018. <span>“A Physica
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

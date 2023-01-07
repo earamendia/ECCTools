@@ -31,7 +31,7 @@ The function then gathers those flows into a single new flow. Basically, it aggr
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -73,90 +73,97 @@ The function then gathers those flows into a single new flow. Basically, it aggr
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">convert_fuel_gasoline_into_motor_gasoline</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">convert_fuel_gasoline_into_motor_gasoline</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>The <code>.tidy_iea_df</code> for which jet fuel type gasoline needs to be converted into motor gasoline.</p></dd>
+
+
 <dt>product, e_dot, flow</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>.tidy_iea_df</code> for which jet fuel type gasoline is converted into motor gasoline.</p>
+    
+
+<p>A <code>.tidy_iea_df</code> for which jet fuel type gasoline is converted into motor gasoline.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Here we add a flow of "Gasoline type jet fuel":</span></span>
-<span class="r-in"><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span></span>
-<span class="r-in"> Country <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span class="r-in"> Method <span class="op">=</span> <span class="st">"PCM"</span>,</span>
-<span class="r-in"> Energy.type <span class="op">=</span> <span class="st">"E"</span>,</span>
-<span class="r-in"> Last.stage <span class="op">=</span> <span class="st">"Final"</span>,</span>
-<span class="r-in"> Year <span class="op">=</span> <span class="fl">2018</span>,</span>
-<span class="r-in"> Product <span class="op">=</span> <span class="st">"Gasoline type jet fuel"</span>,</span>
-<span class="r-in"> Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>,</span>
-<span class="r-in"> Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>,</span>
-<span class="r-in"> Flow <span class="op">=</span> <span class="st">"Iron and steel"</span>,</span>
-<span class="r-in"> Unit <span class="op">=</span> <span class="st">"ktoe"</span>,</span>
-<span class="r-in"> E.dot <span class="op">=</span> <span class="fl">20</span></span>
-<span class="r-in"><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"A"</span> <span class="op">&amp;</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Product</span>, <span class="st">"(G|g)asoline"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Here we add a flow of "Gasoline type jet fuel":</span></span></span>
+<span class="r-in"><span><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span> Country <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span> Method <span class="op">=</span> <span class="st">"PCM"</span>,</span></span>
+<span class="r-in"><span> Energy.type <span class="op">=</span> <span class="st">"E"</span>,</span></span>
+<span class="r-in"><span> Last.stage <span class="op">=</span> <span class="st">"Final"</span>,</span></span>
+<span class="r-in"><span> Year <span class="op">=</span> <span class="fl">2018</span>,</span></span>
+<span class="r-in"><span> Product <span class="op">=</span> <span class="st">"Gasoline type jet fuel"</span>,</span></span>
+<span class="r-in"><span> Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>,</span></span>
+<span class="r-in"><span> Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>,</span></span>
+<span class="r-in"><span> Flow <span class="op">=</span> <span class="st">"Iron and steel"</span>,</span></span>
+<span class="r-in"><span> Unit <span class="op">=</span> <span class="st">"ktoe"</span>,</span></span>
+<span class="r-in"><span> E.dot <span class="op">=</span> <span class="fl">20</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"A"</span> <span class="op">&amp;</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Product</span>, <span class="st">"(G|g)asoline"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 9 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio… Flow </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry         Iron…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other            Resi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Transport        Road </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Energy industry… Coal…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Energy industry… Oil …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Energy industry… Oil …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation … Blas…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation … Oil …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry         Iron…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 3 more variables: Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span></span>
-<span class="r-in"><span class="co"># Then we gather both flows:</span></span>
-<span class="r-in"><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span></span>
-<span class="r-in"> Country <span class="op">=</span> <span class="st">"A"</span>,</span>
-<span class="r-in"> Method <span class="op">=</span> <span class="st">"PCM"</span>,</span>
-<span class="r-in"> Energy.type <span class="op">=</span> <span class="st">"E"</span>,</span>
-<span class="r-in"> Last.stage <span class="op">=</span> <span class="st">"Final"</span>,</span>
-<span class="r-in"> Year <span class="op">=</span> <span class="fl">2018</span>,</span>
-<span class="r-in"> Product <span class="op">=</span> <span class="st">"Gasoline type jet fuel"</span>,</span>
-<span class="r-in"> Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>,</span>
-<span class="r-in"> Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>,</span>
-<span class="r-in"> Flow <span class="op">=</span> <span class="st">"Iron and steel"</span>,</span>
-<span class="r-in"> Unit <span class="op">=</span> <span class="st">"ktoe"</span>,</span>
-<span class="r-in"> E.dot <span class="op">=</span> <span class="fl">20</span></span>
-<span class="r-in"><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"A"</span> <span class="op">&amp;</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Product</span>, <span class="st">"(G|g)asoline"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu">convert_fuel_gasoline_into_motor_gasoline</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energ…¹ Last.…²  Year Ledge…³ Flow.…⁴ Flow  Product Unit  E.dot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Motor … ktoe    500</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Motor … ktoe    700</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Transp… Road  Motor … ktoe    830</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Energy… Coal… Motor … ktoe    -<span style="color: #BB0000;">20</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Energy… Oil … Motor … ktoe    -<span style="color: #BB0000;">50</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Energy… Oil … Motor … ktoe   -<span style="color: #BB0000;">200</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Transf… Blas… Motor … ktoe   -<span style="color: #BB0000;">100</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Transf… Oil … Motor … ktoe   <span style="text-decoration: underline;">2</span>400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">9</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Gasoli… ktoe     20</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​Energy.type, ²​Last.stage, ³​Ledger.side,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​Flow.aggregation.point</span></span>
+<span class="r-in"><span><span class="co"># Then we gather both flows:</span></span></span>
+<span class="r-in"><span><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">tibble</span><span class="fu">::</span><span class="fu"><a href="https://tibble.tidyverse.org/reference/add_row.html" class="external-link">add_row</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span> Country <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span> Method <span class="op">=</span> <span class="st">"PCM"</span>,</span></span>
+<span class="r-in"><span> Energy.type <span class="op">=</span> <span class="st">"E"</span>,</span></span>
+<span class="r-in"><span> Last.stage <span class="op">=</span> <span class="st">"Final"</span>,</span></span>
+<span class="r-in"><span> Year <span class="op">=</span> <span class="fl">2018</span>,</span></span>
+<span class="r-in"><span> Product <span class="op">=</span> <span class="st">"Gasoline type jet fuel"</span>,</span></span>
+<span class="r-in"><span> Ledger.side <span class="op">=</span> <span class="st">"Consumption"</span>,</span></span>
+<span class="r-in"><span> Flow.aggregation.point <span class="op">=</span> <span class="st">"Industry"</span>,</span></span>
+<span class="r-in"><span> Flow <span class="op">=</span> <span class="st">"Iron and steel"</span>,</span></span>
+<span class="r-in"><span> Unit <span class="op">=</span> <span class="st">"ktoe"</span>,</span></span>
+<span class="r-in"><span> E.dot <span class="op">=</span> <span class="fl">20</span></span></span>
+<span class="r-in"><span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">Country</span> <span class="op">==</span> <span class="st">"A"</span> <span class="op">&amp;</span> <span class="fu">stringr</span><span class="fu">::</span><span class="fu"><a href="https://stringr.tidyverse.org/reference/str_detect.html" class="external-link">str_detect</a></span><span class="op">(</span><span class="va">Product</span>, <span class="st">"(G|g)asoline"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu">convert_fuel_gasoline_into_motor_gasoline</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 8 × 11</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># Groups:   Country, Method, Energy.type, Last.stage, Year, Ledger.side,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Flow.aggregation.point, Flow, Product [8]</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregatio… Flow </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>            <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry         Iron…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other            Resi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Transport        Road </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Energy industry… Coal…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Energy industry… Oil …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Energy industry… Oil …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation … Blas…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation … Oil …</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 3 more variables: Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energ…¹ Last.…²  Year Ledge…³ Flow.…⁴ Flow  Product Unit  E.dot</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Motor … ktoe    520</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Motor … ktoe    700</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Consum… Transp… Road  Motor … ktoe    830</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Energy… Coal… Motor … ktoe    -<span style="color: #BB0000;">20</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">5</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Energy… Oil … Motor … ktoe    -<span style="color: #BB0000;">50</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">6</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Energy… Oil … Motor … ktoe   -<span style="color: #BB0000;">200</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">7</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Transf… Blas… Motor … ktoe   -<span style="color: #BB0000;">100</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">8</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 Supply  Transf… Oil … Motor … ktoe   <span style="text-decoration: underline;">2</span>400</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with abbreviated variable names ¹​Energy.type, ²​Last.stage, ³​Ledger.side,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ⁴​Flow.aggregation.point</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -171,7 +178,7 @@ The function then gathers those flows into a single new flow. Basically, it aggr
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

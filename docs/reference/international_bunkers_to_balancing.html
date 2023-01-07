@@ -32,7 +32,7 @@ while flows akin to supply (i.e. where stocks decrease) will be negative."><!-- 
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -75,39 +75,53 @@ while flows akin to supply (i.e. where stocks decrease) will be negative.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">international_bunkers_to_balancing</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,
-  international_marine_bunkers <span class="op">=</span> <span class="st">"International marine bunkers"</span>,
-  international_aviation_bunkers <span class="op">=</span> <span class="st">"International aviation bunkers"</span>,
-  balancing_matrix <span class="op">=</span> <span class="st">"B"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">international_bunkers_to_balancing</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,</span>
+<span>  ledger_side <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">ledger_side</span>,</span>
+<span>  international_marine_bunkers <span class="op">=</span> <span class="st">"International marine bunkers"</span>,</span>
+<span>  international_aviation_bunkers <span class="op">=</span> <span class="st">"International aviation bunkers"</span>,</span>
+<span>  balancing_matrix <span class="op">=</span> <span class="st">"B"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>The <code>.tidy_iea_df</code> for which Stock changes flows need to be sent to the Balancing matrix.</p></dd>
-<dt>flow, e_dot</dt>
+
+
+<dt>flow, e_dot, ledger_side</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
+
+
 <dt>matnames</dt>
 <dd><p>The column name of the column having matrices names.
 Default is <code>IEATools::mat_meta_cols$matnames</code>.</p></dd>
+
+
 <dt>international_marine_bunkers</dt>
 <dd><p>The name of the international marine bunkers flows in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::interface_industries$international_marine_bunkers</code>.</p></dd>
+
+
 <dt>international_aviation_bunkers</dt>
 <dd><p>The name of the international aviation bunkers flows in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::interface_industries$international_aviation_bunkers</code>.</p></dd>
+
+
 <dt>balancing_matrix</dt>
 <dd><p>The name of the Balancing matrix.
 Default is "B".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The new <code>.tidy_iea_df</code> with international bunkers ascribed to the Balancing matrix.</p>
+    
+
+<p>The new <code>.tidy_iea_df</code> with international bunkers ascribed to the Balancing matrix.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -128,7 +142,7 @@ most likely using the <code><a href="https://rdrr.io/pkg/IEATools/man/add_psut_m
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

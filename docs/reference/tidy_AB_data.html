@@ -30,7 +30,7 @@ These data are used as an example in many place in the package."><!-- mathjax --
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -71,7 +71,7 @@ These data are used as an example in many place in the package.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="va">tidy_AB_data</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="va">tidy_AB_data</span></span></code></pre></div>
     </div>
 
     <div id="format">
@@ -81,22 +81,22 @@ These data are used as an example in many place in the package.</p>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">tidy_AB_data</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tidy_AB_data</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 99 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 89 more rows, and 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.s…¹  Year Ledge…² Flow.…³ Flow  Product Unit </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Blast … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Electr… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Heat    ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Kerose… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Motor … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Natura… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Blast … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Coke o… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Motor … ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Natura… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 89 more rows, 1 more variable: E.dot &lt;dbl&gt;, and abbreviated variable</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   names ¹​Last.stage, ²​Ledger.side, ³​Flow.aggregation.point</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -111,7 +111,7 @@ These data are used as an example in many place in the package.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
