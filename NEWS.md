@@ -4,7 +4,7 @@ output: html_document
 ---
 
 
-# ECCTools 0.1.5
+# ECCTools 0.1.5 (02/02/2023)
 
 * Package adapted so that it works with recent releases of the tidyverse packages (both errors and warnings removed)
 * Extract EROIs functions removed as they are part of the EROITools package
