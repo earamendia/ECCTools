@@ -1,7 +1,7 @@
 Package: ECCTools
 Title: ECCTools Assists With Energy Conversion Chain Analysis
-Version: 0.1.4
-Date: 28/07/2022
+Version: 0.1.5
+Date: 02/02/2023
 Authors@R: 
     c(person(given = "Emmanuel",
            family = "Aramendia",

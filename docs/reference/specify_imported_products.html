@@ -32,7 +32,7 @@ or not domestically produced.'><!-- mathjax --><script src="https://cdnjs.cloudf
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -75,81 +75,112 @@ or not domestically produced.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">specify_imported_products</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  V_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,
-  Y_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,
-  U_feed_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,
-  U_EIOU_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>,
-  balancing_matrix <span class="op">=</span> <span class="st">"B"</span>,
-  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,
-  domestic <span class="op">=</span> <span class="st">"Domestic"</span>,
-  imported <span class="op">=</span> <span class="st">"Imported"</span>,
-  origin <span class="op">=</span> <span class="st">"Origin"</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  country <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,
-  method <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">method</span>,
-  energy_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">energy_type</span>,
-  last_stage <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">last_stage</span>,
-  year <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,
-  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,
-  unit <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">unit</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,
-  exports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">exports</span>,
-  imports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">imports</span>,
-  Share_Imports_By_Product <span class="op">=</span> <span class="st">"Share_Imports_By_Product"</span>,
-  Total_Consumption_By_Product <span class="op">=</span> <span class="st">"Total_Consumption_By_Product"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">specify_imported_products</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  V_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
+<span>  Y_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">Y</span>,</span>
+<span>  U_feed_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">U_feed</span>,</span>
+<span>  U_EIOU_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">U_eiou</span>,</span>
+<span>  balancing_matrix <span class="op">=</span> <span class="st">"B"</span>,</span>
+<span>  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,</span>
+<span>  domestic <span class="op">=</span> <span class="st">"Domestic"</span>,</span>
+<span>  imported <span class="op">=</span> <span class="st">"Imported"</span>,</span>
+<span>  origin <span class="op">=</span> <span class="st">"Origin"</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  country <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,</span>
+<span>  method <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">method</span>,</span>
+<span>  energy_type <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">energy_type</span>,</span>
+<span>  last_stage <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">last_stage</span>,</span>
+<span>  year <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">year</span>,</span>
+<span>  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,</span>
+<span>  unit <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">unit</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,</span>
+<span>  exports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">exports</span>,</span>
+<span>  imports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">imports</span>,</span>
+<span>  Share_Imports_By_Product <span class="op">=</span> <span class="st">"Share_Imports_By_Product"</span>,</span>
+<span>  Total_Consumption_By_Product <span class="op">=</span> <span class="st">"Total_Consumption_By_Product"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>The <code>.tidy_iea_df</code> that needs being specified.</p></dd>
+
+
 <dt>V_matrix</dt>
 <dd><p>The name of the V matrix.
 Default is <code>IEATools::psut_cols$V</code>.</p></dd>
+
+
 <dt>Y_matrix</dt>
 <dd><p>The name of the Y matrix.
 Default is <code>IEATools::psut_cols$Y</code>.</p></dd>
+
+
 <dt>U_feed_matrix</dt>
 <dd><p>The name of the U_feed matrix.
 Default is <code>IEATools::psut_cols$U_feed</code>.</p></dd>
+
+
 <dt>U_EIOU_matrix</dt>
 <dd><p>The name of the U_eiou matrix.
 Default is <code>IEATools::psut_cols$U_eiou</code>.</p></dd>
+
+
 <dt>balancing_matrix</dt>
 <dd><p>The name of the Balancing matrix.
 Default is "B".</p></dd>
+
+
 <dt>matnames</dt>
 <dd><p>The name of the matrix names column.
 Default is <code>IEATools::mat_meta_cols$matnames</code>.</p></dd>
+
+
 <dt>domestic</dt>
 <dd><p>The string that indicates that the product is of domestic origin in the new origin column.
 Default is "Domestic".</p></dd>
+
+
 <dt>imported</dt>
 <dd><p>The string that indicates that the product is of imported origin in the new origin column.
 Default is "Imported".</p></dd>
+
+
 <dt>origin</dt>
 <dd><p>The name of the column that specifies the origin of each product.</p></dd>
+
+
 <dt>flow, country, method, energy_type, last_stage, year, product, unit, e_dot</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
+
+
 <dt>exports</dt>
 <dd><p>The name of the Exports flows in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::interface_industries$exports</code>.</p></dd>
+
+
 <dt>imports</dt>
 <dd><p>The name of the Imports flows in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::interface_industries$imports</code>.</p></dd>
+
+
 <dt>Share_Imports_By_Product</dt>
 <dd><p>The name of the temporary column that contains the share of imports for each product, by country.
 Default is "Share_Imports_By_Product".</p></dd>
+
+
 <dt>Total_Consumption_By_Product</dt>
 <dd><p>The name of the temporary column that contains total consumption by product?
 Default is "Total_Consumption_By_Product".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>.tidy_iea_df</code> that includes only flows belonging to the Y, U_eiou, U_feed, or Balancing matrices,
+    
+
+<p>A <code>.tidy_iea_df</code> that includes only flows belonging to the Y, U_eiou, U_feed, or Balancing matrices,
 and for which flows are specified in terms of flows or imported or domestic products.</p>
     </div>
     <div id="details">
@@ -160,25 +191,26 @@ Note that matrices names need to be added first, most likely using the <code><a 
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu">specify_imported_products</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu">specify_imported_products</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 73 × 13</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Industry             </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption Other                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 63 more rows, and 6 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Origin &lt;chr&gt;, Unit &lt;chr&gt;, matnames &lt;chr&gt;, E.dot &lt;dbl&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.…¹  Year Ledge…² Flow.…³ Flow  Product Origin</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Blast … Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Electr… Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Heat    Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Kerose… Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Motor … Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Indust… Iron… Natura… Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Blast … Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Coke o… Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Coke o… Impor…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final    <span style="text-decoration: underline;">2</span>018 Consum… Other   Resi… Motor … Domes…</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 63 more rows, 3 more variables: Unit &lt;chr&gt;, matnames &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   E.dot &lt;dbl&gt;, and abbreviated variable names ¹​Last.stage, ²​Ledger.side,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​Flow.aggregation.point</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -193,7 +225,7 @@ Note that matrices names need to be added first, most likely using the <code><a 
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

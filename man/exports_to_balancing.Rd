@@ -8,6 +8,7 @@ exports_to_balancing(
   .tidy_iea_df,
   flow = IEATools::iea_cols$flow,
   matnames = IEATools::mat_meta_cols$matnames,
+  ledger_side = IEATools::iea_cols$ledger_side,
   e_dot = IEATools::iea_cols$e_dot,
   exports = IEATools::interface_industries$exports,
   balancing_matrix = "B"
@@ -16,10 +17,14 @@ exports_to_balancing(
 \arguments{
 \item{.tidy_iea_df}{The \code{.tidy_iea_df} for which export flows need to be relocated in the Balancing matrix.}
 
-\item{flow, e_dot}{See \code{IEATools::iea_cols}.}
+\item{flow}{See \code{IEATools::iea_cols}.}
 
 \item{matnames}{The column name of the column containing matrices names.
 Default is \code{IEATools::mat_meta_cols$matnames}.}
+
+\item{ledger_side}{See \code{IEATools::iea_cols}.}
+
+\item{e_dot}{See \code{IEATools::iea_cols}.}
 
 \item{exports}{The string that identifies export flows.
 Default is \code{IEATools::interface_industries$exports}.}

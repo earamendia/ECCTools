@@ -32,7 +32,7 @@ previously re-directed to the Balancing matrix by the analyst - those are also k
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -75,45 +75,60 @@ previously re-directed to the Balancing matrix by the analyst - those are also k
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">specify_MR_V</span><span class="op">(</span>
-  <span class="va">.tidy_iea_df</span>,
-  V_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,
-  balancing_matrix <span class="op">=</span> <span class="st">"B"</span>,
-  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,
-  imports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">imports</span>,
-  country <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,
-  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,
-  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,
-  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,
-  aggregate_country_name <span class="op">=</span> <span class="st">"World"</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">specify_MR_V</span><span class="op">(</span></span>
+<span>  <span class="va">.tidy_iea_df</span>,</span>
+<span>  V_matrix <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/psut_cols.html" class="external-link">psut_cols</a></span><span class="op">$</span><span class="va">V</span>,</span>
+<span>  balancing_matrix <span class="op">=</span> <span class="st">"B"</span>,</span>
+<span>  matnames <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/mat_meta_cols.html" class="external-link">mat_meta_cols</a></span><span class="op">$</span><span class="va">matnames</span>,</span>
+<span>  imports <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/interface_industries.html" class="external-link">interface_industries</a></span><span class="op">$</span><span class="va">imports</span>,</span>
+<span>  country <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">country</span>,</span>
+<span>  flow <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">flow</span>,</span>
+<span>  product <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">product</span>,</span>
+<span>  e_dot <span class="op">=</span> <span class="fu">IEATools</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">iea_cols</a></span><span class="op">$</span><span class="va">e_dot</span>,</span>
+<span>  aggregate_country_name <span class="op">=</span> <span class="st">"World"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>.tidy_iea_df</dt>
 <dd><p>The <code>.tidy_iea_df</code> from which the Multi-Regional R matrix needs to be created.</p></dd>
+
+
 <dt>V_matrix</dt>
 <dd><p>The name of the V matrix.
 Default is <code>IEATools::psut_cols$V</code>.</p></dd>
+
+
 <dt>balancing_matrix</dt>
 <dd><p>The name of the Balancing matrix.
 Default is "B".</p></dd>
+
+
 <dt>matnames</dt>
 <dd><p>The name of the matrix names column.
 Default is <code>IEATools::mat_meta_cols$matnames</code>.</p></dd>
+
+
 <dt>imports</dt>
 <dd><p>The name of the Imports flows in the <code>.tidy_iea_df</code>.
 Default is <code>IEATools::interface_industries$imports</code>.</p></dd>
+
+
 <dt>country, flow, product, e_dot</dt>
 <dd><p>See <code><a href="https://rdrr.io/pkg/IEATools/man/iea_cols.html" class="external-link">IEATools::iea_cols</a></code>.</p></dd>
+
+
 <dt>aggregate_country_name</dt>
 <dd><p>The name of the new region that gathers all flows of the <code>.tidy_iea_df</code>.
 Default is "World".</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A <code>.tidy_iea_df</code> representing the Multi-Regional Supply (V) matrix, with all flows specified by country.</p>
+    
+
+<p>A <code>.tidy_iea_df</code> representing the Multi-Regional Supply (V) matrix, with all flows specified by country.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -124,33 +139,33 @@ Note: matrix names need to be added, most likely using the <code><a href="https:
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu">specify_MR_V</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span class="r-in"> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu">specify_MR_V</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
+<span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 18 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.poi…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Transformation proce…</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 5 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   matnames &lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.s…¹  Year Ledge…² Flow.…³ Flow  Product Unit </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Bl… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Co… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Co… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_El… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_He… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Cr… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Na… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_He… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Ke… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Mo… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Na… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_Bl… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_Co… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_El… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_He… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">16</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_He… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">17</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_Ke… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">18</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {B}_… {B}_Mo… ktoe </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 2 more variables: E.dot &lt;dbl&gt;, matnames &lt;chr&gt;, and abbreviated</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   variable names ¹​Last.stage, ²​Ledger.side, ³​Flow.aggregation.point</span></span>
 </code></pre></div>
     </div>
   </div>
@@ -165,7 +180,7 @@ Note: matrix names need to be added, most likely using the <code><a href="https:
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

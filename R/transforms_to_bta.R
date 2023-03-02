@@ -153,7 +153,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
       "{product}" := paste0("{", .data[[country]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[origin]])
+    dplyr::select(-tidyselect::all_of(origin))
 
   # (3.i) Specifying foreign consumption with the provided trade matrix
   tidy_imported_consumption_with_bt_matrix <- tidy_iea_df_specified_imports %>%
@@ -167,7 +167,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[[origin]])
+    dplyr::select(-tidyselect::all_of(c(provenience, Share_Exports_By_Product, origin)))
 
   # (3.ii) Specifying the rest with the global market assumption GMA
   tidy_imported_consumption_with_gma_bt_matrix_with_nas <- tidy_iea_df_specified_imports %>%
@@ -175,7 +175,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
     dplyr::left_join(bilateral_trade_df,
                      by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})) %>%
     dplyr::filter(is.na(.data[[Share_Exports_By_Product]])) %>%
-    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]]) %>%
+    dplyr::select(-tidyselect::all_of(c(provenience, Share_Exports_By_Product))) %>%
     dplyr::left_join(
       calc_bilateral_trade_df_gma(.tidy_iea_df),
       by = c({country}, {method}, {energy_type}, {last_stage}, {year}, {product})
@@ -189,8 +189,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
       "{product}" := paste0("{", .data[[provenience]], "}_", .data[[product]]),
       "{country}" := aggregate_country_name
     ) %>%
-    dplyr::select(-.data[[provenience]], -.data[[Share_Exports_By_Product]], -.data[[origin]])
-
+    dplyr::select(-tidyselect::all_of(c(provenience, Share_Exports_By_Product, origin)))
 
   # (3.iii) Where there are NAs - i.e. where an imported product is not exported by any country, use the global production mix!
   tidy_imported_consumption_with_gma_bt_matrix_whout_nas <- tidy_imported_consumption_with_gma_bt_matrix_with_nas %>%
@@ -204,8 +203,7 @@ specify_MR_Y_U_bta <- function(.tidy_iea_df,
       "{e_dot}" := .data[[e_dot]] * Share_Global_Production_By_Product,
       "{product}" := stringr::str_c("{", .data[["Producing_Country"]], "}_", .data[[product]])
     ) %>%
-    dplyr::select(-.data[[Producing_Country]], -.data[[Share_Global_Production_By_Product]])
-
+    dplyr::select(-tidyselect::all_of(c(Producing_Country, Share_Global_Production_By_Product)))
 
   # (3.iv) Bind rows of the tidy_imported_consumption_with_gma_bt_matrix data frame
   tidy_imported_consumption_with_gma_bt_matrix <- tidy_imported_consumption_with_gma_bt_matrix_with_nas %>%
