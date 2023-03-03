@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
       </span>
     </div>
 
@@ -190,7 +190,7 @@ The boundary column indicates whether the EROI includes:</p><ul><li><p>Only ener
 <span class="r-in"><span> <span class="fu">Recca</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/Recca/man/calc_erois.html" class="external-link">calc_erois</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Rows: 2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Columns: 43</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Columns: 39</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ Country       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "B"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ Method        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ Energy.type   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "E", "E"</span>
@@ -227,31 +227,14 @@ The boundary column indicates whether the EROI includes:</p><ul><li><p>Only ener
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ E_EIOU        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[5 x 6]&gt;&gt;, &lt;&lt;matrix[5 x 4]&gt;&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ e_EIOU        <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_g_p      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_n_p      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_g_i      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_n_i      <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_g_p_feed <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_n_p_feed <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[12 x 1]&gt;&gt;, &lt;&lt;matrix[9 x 1]&gt;&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_g_i_feed <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $ eroi_n_i_feed <span style="color: #949494; font-style: italic;">&lt;list&gt;</span> &lt;&lt;matrix[6 x 1]&gt;&gt;, &lt;&lt;matrix[4 x 1]&gt;&gt;</span>
 <span class="r-in"><span><span class="co"># Let's then extract EROIs in a tidy format:</span></span></span>
 <span class="r-in"><span><span class="va">calculated_erois_raw</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span> <span class="fu">extract_tidy_product_erois</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span> <span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 72 × 9</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Type  Boundary  Product      EROI</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Blast furn…  8.95</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Coke oven … 19.3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Coking coal 92.5 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Crude oil   34.0 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Electricity 28.3 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Heat        19.9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Kerosene t…  9.07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Motor gaso…  9.07</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross All       Natural gas 31.9 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Gross Feedstock Blast furn…  9.57</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 62 more rows</span></span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in extract_tidy_product_erois(.):</span> could not find function "extract_tidy_product_erois"</span>
 </code></pre></div>
     </div>
   </div>
