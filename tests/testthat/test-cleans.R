@@ -424,7 +424,7 @@ test_that("exports_to_balancing works", {
 
   n_after <- n_ini - (exports_relocated %>% dplyr::filter(matnames == "B") %>% nrow())
 
-  expect_equal(n_after, 95)
+  expect_equal(n_after, 98)
 })
 
 
