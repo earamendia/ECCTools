@@ -9,7 +9,7 @@ test_that("specify_elect_heat_renewables works",{
 
   # Loading AB_data
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
 
   # Specifying AB data
   tidy_AB_data <- AB_data %>%
@@ -227,7 +227,7 @@ test_that("specify_elect_heat_fossil_fuels function works", {
 
   # Loading AB_data
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
 
   # Specifying AB data
   tidy_AB_data <- AB_data %>%
@@ -471,7 +471,7 @@ test_that("specify_other_elec_heat_production works", {
 
   # Loading AB_data
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
 
   # Specifying AB data
   tidy_AB_data <- AB_data %>%
@@ -702,7 +702,7 @@ test_that("specify_elect_heat_markets works",{
 
   # Loading AB_data
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
 
   # Specifying AB data
   tidy_AB_data <- AB_data %>%
@@ -865,7 +865,7 @@ test_that("specify_elect_heat_nuclear works", {
 
   # Loading AB_data
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df()
+    IEATools::load_tidy_iea_df(unit_val = "ktoe")
 
   # Specifying AB data
   tidy_AB_data <- AB_data %>%

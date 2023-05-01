@@ -9,7 +9,7 @@ test_that("calc_bilateral_trade_df_gma works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   bilateral_trade_df_gma <- AB_data %>%
@@ -60,7 +60,7 @@ test_that("check_bilateral_trade_df works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   bilateral_trade_df_gma <- AB_data %>%
@@ -112,7 +112,7 @@ test_that("specify_MR_Y_U_bta works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   MR_Y_U_bta <- AB_data %>%
@@ -219,7 +219,7 @@ test_that("transform_to_bta works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   # First checking whether gma and bta, without trade matrix, give the same result:

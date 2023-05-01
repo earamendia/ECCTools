@@ -10,7 +10,7 @@
 A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
 tidy_AB_data <- A_B_path %>%
-  IEATools::load_tidy_iea_df() %>%
+  IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
   IEATools::specify_all()
 
 usethis::use_data(tidy_AB_data, overwrite = TRUE)

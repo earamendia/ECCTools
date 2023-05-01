@@ -9,7 +9,7 @@ test_that("calc_total_consumption_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   total_consumption_by_product <- AB_data %>%
@@ -61,7 +61,7 @@ test_that("calc_imports_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   imports_by_product <- AB_data %>%
@@ -93,7 +93,7 @@ test_that("calc_share_imports_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   share_imports_by_product <- AB_data %>%
@@ -145,7 +145,7 @@ test_that("calc_global_exports works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   global_exports_per_product <- AB_data %>%
@@ -171,7 +171,7 @@ test_that("calc_share_exports_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   share_global_exports_per_product <- AB_data %>%
@@ -205,7 +205,7 @@ test_that("calc_national_production_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   national_production_by_product <- AB_data %>%
@@ -261,7 +261,7 @@ test_that("calc_global_production_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   global_production_by_product <- AB_data %>%
@@ -300,7 +300,7 @@ test_that("calc_share_global_production_by_product works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   share_production_by_product <- AB_data %>%
