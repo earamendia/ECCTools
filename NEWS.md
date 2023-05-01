@@ -4,6 +4,14 @@ output: html_document
 ---
 
 
+# ECCTools 0.1.6
+
+* Tests and code adapted so that it is compatible with latest releases of IEATools, matsindf, matsbyname, and RCLabels
+* Warnings on the many-to-many joins removed
+* All tests passing ()
+* Tests coverage at 100%.
+
+
 # ECCTools 0.1.5 (02/02/2023)
 
 * Package adapted so that it works with recent releases of the tidyverse packages (both errors and warnings removed)
