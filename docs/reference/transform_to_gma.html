@@ -18,7 +18,7 @@ countries into a new tidy_iea_df that represents a Global Energy Conversion Chai
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
       </span>
     </div>
 
@@ -92,7 +92,7 @@ adopting the Global Market Assumption.</p></dd>
     <p>This function runs sequentially the following functions:</p><ul><li><p><code><a href="specify_MR_R.html">specify_MR_R()</a></code>;</p></li>
 <li><p><code><a href="specify_MR_V.html">specify_MR_V()</a></code>;</p></li>
 <li><p><code><a href="specify_MR_Y_U_gma.html">specify_MR_Y_U_gma()</a></code>;
-and then binds all rows obtained using <code><a href="https://dplyr.tidyverse.org/reference/bind.html" class="external-link">dplyr::bind_rows()</a></code>.</p></li>
+and then binds all rows obtained using <code><a href="https://dplyr.tidyverse.org/reference/bind_rows.html" class="external-link">dplyr::bind_rows()</a></code>.</p></li>
 </ul><p>Note: running this function to transform to the Global Market Assumption only makes sense when the country coverage is
 global, or close to global (i.e. only countries consuming a very small fraction of global energy consumption, and only
 producing a very small fraction of global energy production, are missing).</p>
@@ -103,22 +103,22 @@ producing a very small fraction of global energy production, are missing).</p>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">tidy_AB_data</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span><span class="fu">transform_to_gma</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 98 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.s…¹  Year Ledge…² Flow.…³ Flow  Product Unit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {A}_… {A}_Co… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {A}_… {A}_Co… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {A}_… {A}_Cr… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {A}_… {A}_Na… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {B}_… {B}_Co… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {B}_… {B}_Cr… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Total … {B}_… {B}_Na… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Bl… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Co… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Supply  Transf… {A}_… {A}_Co… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 88 more rows, 2 more variables: E.dot &lt;dbl&gt;, matnames &lt;chr&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​Last.stage, ²​Ledger.side,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​Flow.aggregation.point</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 101 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Ledger.side</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply     </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 91 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: Flow.aggregation.point &lt;chr&gt;, Flow &lt;chr&gt;, Product &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Unit &lt;chr&gt;, E.dot &lt;dbl&gt;, matnames &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

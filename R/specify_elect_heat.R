@@ -244,7 +244,7 @@ specify_elect_heat_renewables <- function(.tidy_iea_df,
   # Modifying EIOU flows to change the industry consuming (-> "Renewable energy plants")
   modified_eiou_flows <- .tidy_iea_df %>%
     dplyr::filter((.data[[flow_aggregation_point]] == eiou_flows) & (.data[[flow]] %in% elect_heat_producer_industries)) %>%
-    dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type}, {method}, {unit}, {ledger_side}, {flow})) %>%
+    dplyr::left_join(share_output_renewables, by = c({country}, {year}, {last_stage}, {energy_type}, {method}, {unit}, {ledger_side}, {flow}), relationship = "many-to-many") %>%
     dplyr::mutate(
       "{e_dot_renewables}" := .data[[e_dot]] * .data[[share_renewables_From_Func]],
       "{e_dot_rest}" := .data[[e_dot]] * (1 - .data[[share_renewables_From_Func]])
@@ -423,7 +423,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
       .data[[flow_aggregation_point]] == transformation_processes & .data[[flow]] %in% elect_heat_producer_industries
     ) %>%
     dplyr::filter(.data[[e_dot]] > 0) %>%
-    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
+    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow}), relationship = "many-to-many") %>%
     dplyr::mutate(
       "{share_inputs_from_Func}" := dplyr::case_when(
         is.na(.data[[share_inputs_from_Func]]) ~ 1,
@@ -456,7 +456,7 @@ specify_elect_heat_fossil_fuels <- function(.tidy_iea_df,
     dplyr::filter(
       .data[[flow_aggregation_point]] == eiou_flows & .data[[flow]] %in% elect_heat_producer_industries
     ) %>%
-    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow})) %>%
+    dplyr::left_join(share_inputs_intermediary_data, by = c({country}, {year}, {last_stage}, {method}, {energy_type}, {flow}), relationship = "many-to-many") %>%
     dplyr::mutate(
       "{share_inputs_from_Func}" := dplyr::case_when(
         is.na(.data[[share_inputs_from_Func]]) ~ 1,

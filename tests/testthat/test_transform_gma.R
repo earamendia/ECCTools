@@ -10,7 +10,7 @@ test_that("specify_MR_R works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   AB_resources_MR <- AB_data %>%
@@ -56,7 +56,7 @@ test_that("specify_MR_V works", {
 
   # We wheck what happens when we add an balancing flow to the supply side.
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
@@ -153,7 +153,7 @@ test_that("specify_imported_products works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   defined_imported_products <- AB_data %>%
@@ -234,7 +234,7 @@ test_that("specify_imported_products works", {
 
   # We add a stock changes flow that will go to the Balancing matrix for a more comprehensive test.
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
@@ -313,7 +313,7 @@ test_that("specify_MR_Y_U_gma works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
   AB_MR_Y_U_gma <- AB_data %>%
@@ -391,7 +391,7 @@ test_that("specify_MR_Y_U_gma works", {
 
   # We add a stock changes flow that will go to the Balancing matrix for a more comprehensive test.
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
@@ -468,7 +468,7 @@ test_that("transform_to_gma works", {
   A_B_path <- system.file("extdata/A_B_data_full_2018_format.csv", package = "ECCTools")
 
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all()
 
 
@@ -618,7 +618,7 @@ test_that("transform_to_gma works", {
 
   # Then just check with stock changes and Balancing matrix too.
   AB_data <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     IEATools::specify_all() %>%
     tibble::add_row(
       Country = "A",
