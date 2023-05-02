@@ -8,6 +8,7 @@ DTA
 ECC
 EROI
 EROIs
+EROITools
 EIOU
 Feedstock
 IEA
@@ -51,3 +52,9 @@ io
 netzeropos
 rowtypes
 standardise
+RCLabels
+matsbyname
+matsindf
+tidyverse
+elec
+README
