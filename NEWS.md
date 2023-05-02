@@ -4,15 +4,16 @@ output: html_document
 ---
 
 
-# ECCTools 0.1.6
+# ECCTools 0.1.6 (02/05/2023)
 
 * Tests and code adapted so that it is compatible with latest releases of IEATools, matsindf, matsbyname, and RCLabels
 * Warnings on the many-to-many joins removed
-* All tests passing ()
+* All tests passing (309)
 * Tests coverage at 100%.
 
 
 # ECCTools 0.1.5 (02/02/2023)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7692105.svg)](https://doi.org/10.5281/zenodo.7692105)
 
 * Package adapted so that it works with recent releases of the tidyverse packages (both errors and warnings removed)
 * Extract EROIs functions removed as they are part of the EROITools package
