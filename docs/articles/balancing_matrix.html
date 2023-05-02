@@ -33,7 +33,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
       </span>
     </div>
 
@@ -86,7 +86,7 @@
       <h1 data-toc-skip>Using the balancing matrix</h1>
                         <h4 data-toc-skip class="author">Emmanuel Aramendia</h4>
             
-            <h4 data-toc-skip class="date">2023-03-03</h4>
+            <h4 data-toc-skip class="date">2023-05-02</h4>
       
       
       <div class="hidden name"><code>balancing_matrix.Rmd</code></div>
@@ -154,7 +154,7 @@
 <span>                  Ledger.side <span class="op">=</span> <span class="st">"Supply"</span>, Flow.aggregation.point <span class="op">=</span> <span class="st">"Total primary energy supply"</span>, </span>
 <span>                  Flow <span class="op">=</span> <span class="st">"Imports [of Coke oven coke]"</span>, Product <span class="op">=</span> <span class="st">"Coke oven coke"</span>, Unit <span class="op">=</span> <span class="st">"ktoe"</span>, E.dot <span class="op">=</span> <span class="fl">200</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Rows: 105</span></span>
+<pre><code><span><span class="co">## Rows: 108</span></span>
 <span><span class="co">## Columns: 11</span></span>
 <span><span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span></span>
 <span><span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span></span>
@@ -201,7 +201,7 @@
 <span>  <span class="fu"><a href="../reference/stat_diffs_to_balancing.html">stat_diffs_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/stock_changes_to_balancing.html">stock_changes_to_balancing</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://pillar.r-lib.org/reference/glimpse.html" class="external-link">glimpse</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Rows: 105</span></span>
+<pre><code><span><span class="co">## Rows: 108</span></span>
 <span><span class="co">## Columns: 12</span></span>
 <span><span class="co">## $ Country                <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "A", "A", "A", "A", "A", "A", "A", "A", "A", "A…</span></span>
 <span><span class="co">## $ Method                 <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> "PCM", "PCM", "PCM", "PCM", "PCM", "PCM", "PCM"…</span></span>

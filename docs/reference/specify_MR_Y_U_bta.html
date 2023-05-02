@@ -18,7 +18,7 @@ according to the Bilateral Trade Assumption. See details for more explanations."
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
       </span>
     </div>
 
@@ -169,22 +169,22 @@ Note that matrices names need to be added first, most likely using the <code><a 
 <span class="r-in"><span><span class="fu">IEATools</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/IEATools/man/add_psut_matnames.html" class="external-link">add_psut_matnames</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span><span class="fu">specify_MR_Y_U_bta</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 73 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.s…¹  Year Ledge…² Flow.…³ Flow  Product Unit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {A}_… {A}_Bl… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {A}_… {A}_El… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {A}_… {A}_He… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {A}_… {A}_Ke… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {A}_… {A}_Mo… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {A}_… {A}_Na… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {B}_… {A}_Na… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {B}_… {B}_Bl… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {B}_… {B}_Co… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> World   PCM    E           Final     <span style="text-decoration: underline;">2</span>018 Consum… Indust… {B}_… {B}_El… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 63 more rows, 2 more variables: matnames &lt;chr&gt;, E.dot &lt;dbl&gt;, and</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​Last.stage, ²​Ledger.side,</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ³​Flow.aggregation.point</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 76 × 12</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Country Method Energy.type Last.stage  Year Ledger.side</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> World   PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Consumption</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 66 more rows</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 6 more variables: Flow.aggregation.point &lt;chr&gt;, Flow &lt;chr&gt;, Product &lt;chr&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   Unit &lt;chr&gt;, matnames &lt;chr&gt;, E.dot &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

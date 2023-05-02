@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
       </span>
     </div>
 
@@ -105,14 +105,13 @@ Default is <code>IEATools::interface_industries$imports</code>.</p></dd>
 <span class="r-in"><span><span class="fu">calc_imports_by_product</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 11</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energy.type Last.st…¹  Year Ledge…² Flow.…³ Flow  Product Unit </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E           Final      <span style="text-decoration: underline;">2</span>018 Supply  Total … Impo… Coke o… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> B       PCM    E           Final      <span style="text-decoration: underline;">2</span>018 Supply  Total … Impo… Coking… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> B       PCM    E           Final      <span style="text-decoration: underline;">2</span>018 Supply  Total … Impo… Crude … ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> B       PCM    E           Final      <span style="text-decoration: underline;">2</span>018 Supply  Total … Impo… Natura… ktoe </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: Imports &lt;dbl&gt;, and abbreviated variable names</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ¹​Last.stage, ²​Ledger.side, ³​Flow.aggregation.point</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 Supply      Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 4 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;, Unit &lt;chr&gt;, Imports &lt;dbl&gt;</span></span>
 </code></pre></div>
     </div>
   </div>

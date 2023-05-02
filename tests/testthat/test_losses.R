@@ -6,7 +6,7 @@ test_that("specify_losses_as_industry works",{
 
   # Loading data
   AB_data_with_losses <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     # Adding losses of coke oven coke
     tibble::add_row(
       Country = "A",
@@ -157,7 +157,7 @@ test_that("specify_losses_as_industry works",{
 
   # Checking what happens if there are more losses than domestic supply...! (I.e. the rest of supply comes from imports or so...)
   AB_data_big_losses <- A_B_path %>%
-    IEATools::load_tidy_iea_df() %>%
+    IEATools::load_tidy_iea_df(unit_val = "ktoe") %>%
     # Adding losses of coke oven coke
     tibble::add_row(
       Country = "A",

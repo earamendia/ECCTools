@@ -18,7 +18,7 @@ The Balancing matrix is akin to an additional final demand matrix."><!-- mathjax
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">ECCTools</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
       </span>
     </div>
 
@@ -136,14 +136,14 @@ most likely using the <code><a href="https://rdrr.io/pkg/IEATools/man/add_psut_m
 <span class="r-in"><span><span class="fu">exports_to_balancing</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 4 × 12</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energ…¹ Last.…²  Year Ledge…³ Flow.…⁴ Flow  Product Unit  E.dot</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 balanc… Total … Expo… Coking… ktoe   <span style="text-decoration: underline;">2</span>000</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 balanc… Total … Expo… Crude … ktoe   <span style="text-decoration: underline;">3</span>500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> A       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 balanc… Total … Expo… Natura… ktoe   <span style="text-decoration: underline;">2</span>500</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> B       PCM    E       Final    <span style="text-decoration: underline;">2</span>018 balanc… Total … Expo… Coke o… ktoe    400</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 1 more variable: matnames &lt;chr&gt;, and abbreviated variable names</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   ¹​Energy.type, ²​Last.stage, ³​Ledger.side, ⁴​Flow.aggregation.point</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Country Method Energy.type Last.stage  Year Ledger.side Flow.aggregation.point</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>  <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">1</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 balancing   Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">2</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 balancing   Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">3</span> A       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 balancing   Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">4</span> B       PCM    E           Final       <span style="text-decoration: underline;">2</span>018 balancing   Total primary energy …</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 5 more variables: Flow &lt;chr&gt;, Product &lt;chr&gt;, Unit &lt;chr&gt;, E.dot &lt;dbl&gt;,</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   matnames &lt;chr&gt;</span></span>
 </code></pre></div>
     </div>
   </div>
