@@ -42,7 +42,7 @@ To modify the final demand without loosing energy balance, one can simply redire
 
 ### Initialising data
 
-Let us use the AB world example introduced in the [Get started]() vignette, but let us add flows, so that:
+Let us use the AB world example introduced in the [Get started](ECCTools.html) vignette, but let us add flows, so that:
 
 1.  Statistical differences provide 100 ktoe of crude oil in country A. To keep balance between supply and use, we assume that these 100 ktoe are consumed by a submarine race organised in country A.
 2.  Stock changes provide 400 ktoe of coke oven coke in country B. To keep balance between supply and use, we assume that these 400 ktoe are consumed by the organisation of large bonfires in country B, and that coke oven coke is an excellent fuel for bonfires.
