@@ -5,6 +5,7 @@ output: html_document
 
 
 # ECCTools 0.1.6 (02/05/2023)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.7885910.svg)](https://doi.org/10.5281/zenodo.7885910)
 
 * Tests and code adapted so that it is compatible with latest releases of IEATools, matsindf, matsbyname, and RCLabels
 * Warnings on the many-to-many joins removed
